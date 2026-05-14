@@ -256,6 +256,27 @@ data record(timestamp=now()-165m, series="A", val=120),
 
 ## Authentication
 
+### DTCTL Installation
+
+If `dtctl` is not installed, install it first:
+
+**Windows (PowerShell):**
+```powershell
+irm https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.ps1 | iex
+```
+
+**macOS/Linux (Homebrew):**
+```bash
+brew install dynatrace-oss/tap/dtctl
+```
+
+**macOS/Linux (shell script):**
+```bash
+curl -fsSL https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.sh | sh
+```
+
+After install, verify with `dtctl version`.
+
 ### DTCTL Authentication (for deployment)
 
 **Browser login (recommended — zero-friction):**

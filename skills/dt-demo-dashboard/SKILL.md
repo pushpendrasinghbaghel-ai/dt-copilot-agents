@@ -137,16 +137,19 @@ data record(timestamp=now()-165m, series="A", val=120),
 
 ### Phase 3: Deploy (< 1 minute)
 
-7. **Check DTCTL auth**: if not authenticated, prompt the user to run `dtctl auth login` (opens browser for SSO) or `dtctl auth login --token <TOKEN>`
-8. **Save** the dashboard JSON to the working directory
-9. **Deploy** with DTCTL (uses your current DTCTL context; override with `--context <name>`):
+7. **Check dtctl is installed** (`dtctl version`). If not, install it:
+   - macOS/Linux: `brew install dynatrace-oss/tap/dtctl` or `curl -fsSL https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.sh | sh`
+   - Windows: `irm https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.ps1 | iex`
+8. **Authenticate**: run `dtctl auth login` (opens browser for SSO) or `dtctl auth login --token <TOKEN>`
+9. **Save** the dashboard JSON to the working directory
+10. **Deploy** with DTCTL (uses your current DTCTL context; override with `--context <name>`):
    ```powershell
    dtctl apply -f <filename>.json
    ```
-10. **Capture the dashboard ID** from the output
-11. **Add the ID** back into the JSON file for future updates
-12. **Verify** (if Dynatrace MCP is connected): run at least one timeseries query via MCP `execute_dql`. If MCP is not available, tell the user they can optionally connect one (see `knowledge/dashboard-generator.md` → Authentication) — then skip. Inline `data record()` queries are self-contained.
-13. **Report the dashboard URL** to the user (get tenant URL from DTCTL output):
+11. **Capture the dashboard ID** from the output
+12. **Add the ID** back into the JSON file for future updates
+13. **Verify** (if Dynatrace MCP is connected): run at least one timeseries query via MCP `execute_dql`. If MCP is not available, tell the user they can optionally connect one (see `knowledge/dashboard-generator.md` → Authentication) — then skip. Inline `data record()` queries are self-contained.
+14. **Report the dashboard URL** to the user (get tenant URL from DTCTL output):
     ```
     https://<YOUR_TENANT>.apps.dynatrace.com/ui/apps/dynatrace.dashboards/#/dashboard/<DASHBOARD_ID>
     ```

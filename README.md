@@ -144,13 +144,31 @@ dt-copilot-agents/
 All platforms share the same **knowledge base** (`knowledge/dashboard-generator.md`). Each platform gets a thin wrapper in its native format that references this shared knowledge. When you update the knowledge, all platforms benefit.
 
 ## Prerequisites
-- `dtctl` CLI installed ([download](https://docs.dynatrace.com/docs/manage/dtctl))
 - Web access (for company research)
 - Platform-specific: VS Code + Copilot extension, Claude Code CLI, Cursor IDE, or Windsurf IDE
 
 ## Configuration
 
-### Step 1: Authenticate DTCTL (browser login — recommended)
+### Step 1: Install DTCTL CLI
+
+**macOS/Linux (Homebrew):**
+```bash
+brew install dynatrace-oss/tap/dtctl
+```
+
+**macOS/Linux (shell script):**
+```bash
+curl -fsSL https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.sh | sh
+```
+
+**Windows (PowerShell):**
+```powershell
+irm https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.ps1 | iex
+```
+
+Verify: `dtctl version`
+
+### Step 2: Authenticate DTCTL (browser login — recommended)
 
 ```bash
 # Opens your browser for Dynatrace SSO — no tokens to copy-paste
@@ -167,7 +185,7 @@ The agent uses your **current DTCTL context** by default. Switch contexts with:
 dtctl config use-context <your-context-name>
 ```
 
-### Step 2: Connect Dynatrace MCP Server (optional — for DQL verification)
+### Step 3: Connect Dynatrace MCP Server (optional — for DQL verification)
 
 MCP enables the agent to verify DQL queries against your live tenant. **It's optional** — deployment works without it.
 

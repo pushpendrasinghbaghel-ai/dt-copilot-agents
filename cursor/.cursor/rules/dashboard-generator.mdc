@@ -20,7 +20,9 @@ CEO, CIO, CTO, CISO, SRE, IT Head, Application Ops, MLOps, Platform Engineering,
 
 ## Authentication
 
-**DTCTL**: Run `dtctl auth login` (opens browser for SSO). Or: `dtctl auth login --token <TOKEN>`
+**Install DTCTL** (if not installed): macOS/Linux `brew install dynatrace-oss/tap/dtctl`; Windows `irm https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.ps1 | iex`
+
+**Authenticate**: Run `dtctl auth login` (opens browser for SSO). Or: `dtctl auth login --token <TOKEN>`
 
 **MCP (optional)**: Add to `.cursor/mcp.json`:
 ```json

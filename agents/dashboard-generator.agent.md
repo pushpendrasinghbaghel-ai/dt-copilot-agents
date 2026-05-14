@@ -32,7 +32,8 @@ You are a specialist at generating and deploying Dynatrace dashboards for any pe
 - Save the file as `<company-slug>-dashboard.json` in the current working directory
 
 ### Step 3: Deploy
-- Check DTCTL auth: if not authenticated, prompt user to run `dtctl auth login` (opens browser for SSO) or `dtctl auth login --token <TOKEN>`
+- Check if `dtctl` is installed (`dtctl version`). If not, install it: macOS/Linux `brew install dynatrace-oss/tap/dtctl` or `curl -fsSL https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.sh | sh`; Windows `irm https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.ps1 | iex`
+- Check DTCTL auth: if not authenticated, run `dtctl auth login` (opens browser for SSO) or `dtctl auth login --token <TOKEN>`
 - Run: `dtctl apply -f <filename>.json` (uses current DTCTL context; override with `--context <name>`)
 - Capture the dashboard ID from the output
 - Update the JSON file with the assigned ID for future re-deployments

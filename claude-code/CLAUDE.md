@@ -29,12 +29,41 @@ Read the full procedure and rules from `knowledge/dashboard-generator.md` before
 
 ## Authentication
 
-**DTCTL (for deployment)** — browser login, no tokens to copy:
+### DTCTL Setup (for deployment)
+
+Before deploying, ensure `dtctl` is installed and authenticated.
+
+**Check if installed:**
+```bash
+dtctl version
+```
+
+**If not installed — install it:**
+
+macOS/Linux:
+```bash
+brew install dynatrace-oss/tap/dtctl
+# OR
+curl -fsSL https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.sh | sh
+```
+
+Windows (PowerShell):
+```powershell
+irm https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.ps1 | iex
+```
+
+**Authenticate (browser SSO — no tokens to copy):**
 ```bash
 dtctl auth login              # Opens browser for Dynatrace SSO
 ```
 
-**Dynatrace MCP (optional — for DQL verification):**
+**Token-based (for CI/automation):**
+```bash
+dtctl auth login --token <API_TOKEN>
+```
+
+### Dynatrace MCP (optional — for DQL verification)
+
 Add to your project `.mcp.json`:
 ```json
 {
