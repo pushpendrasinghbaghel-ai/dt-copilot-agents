@@ -1,0 +1,47 @@
+{
+  "name": "dt-copilot-agents",
+  "version": "1.0.0",
+  "description": "Cross-platform AI agents for generating Dynatrace demo dashboards. Supports VS Code Copilot, Claude Code, Cursor, Windsurf, M365 Copilot, and OpenAI GPTs.",
+  "keywords": [
+    "dynatrace",
+    "copilot",
+    "agent",
+    "dashboard",
+    "demo",
+    "vscode",
+    "claude-code",
+    "cursor",
+    "windsurf",
+    "openai",
+    "ai-agent",
+    "sre",
+    "observability",
+    "devops",
+    "cio",
+    "ciso",
+    "mlops"
+  ],
+  "author": "Pushpendra Singh Baghel",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pushpendrasinghbaghel-ai/dt-copilot-agents.git"
+  },
+  "homepage": "https://github.com/pushpendrasinghbaghel-ai/dt-copilot-agents#readme",
+  "bin": {
+    "dt-copilot-agents": "./bin/cli.js"
+  },
+  "files": [
+    "bin/",
+    "agents/",
+    "skills/",
+    "knowledge/",
+    "claude-code/",
+    "cursor/",
+    "windsurf/",
+    "m365-copilot/",
+    "openai/",
+    "install.ps1",
+    "README.md"
+  ]
+}

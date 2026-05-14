@@ -35,7 +35,21 @@ Generates and deploys realistic persona-specific dashboards with synthetic data 
 
 ## Installation
 
-### All Platforms (Windows)
+### Quick Install via npm (Any Platform)
+```bash
+# Install to all platforms at once
+npx dt-copilot-agents install
+
+# Or target a specific platform
+npx dt-copilot-agents install vscode
+npx dt-copilot-agents install claude-code ./my-project
+npx dt-copilot-agents install cursor .
+
+# See supported personas and archetypes
+npx dt-copilot-agents info
+```
+
+### All Platforms (Windows PowerShell)
 ```powershell
 git clone https://github.com/pushpendrasinghbaghel-ai/dt-copilot-agents.git
 cd dt-copilot-agents
@@ -136,4 +150,4 @@ All platforms share the same **knowledge base** (`knowledge/dashboard-generator.
 
 ## License
 
-Internal use — Dynatrace Labs.
+MIT — see [LICENSE](LICENSE).
