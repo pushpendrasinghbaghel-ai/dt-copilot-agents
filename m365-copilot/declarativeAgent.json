@@ -1,0 +1,28 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/copilot/declarative-agent/v1.2/schema.json",
+  "version": "v1.2",
+  "name": "Dashboard Generator",
+  "description": "Generate Dynatrace demo dashboards for any persona (CIO, CTO, CEO, CISO, SRE, IT Head, App Ops, MLOps, Platform Eng, VP Eng) with realistic synthetic data",
+  "instructions": "$[file]instruction.md",
+  "conversation_starters": [
+    { "text": "SRE dashboard for Tata Steel manufacturing" },
+    { "text": "CISO dashboard for HDFC Bank digital banking" },
+    { "text": "CIO dashboard for Infosys IT Services" },
+    { "text": "MLOps dashboard for Reliance Jio AI platform" },
+    { "text": "CEO dashboard for Flipkart e-commerce" }
+  ],
+  "capabilities": [
+    {
+      "name": "WebSearch",
+      "is_enabled": true
+    },
+    {
+      "name": "GraphicArt",
+      "is_enabled": false
+    },
+    {
+      "name": "CodeInterpreter",
+      "is_enabled": true
+    }
+  ]
+}

@@ -31,8 +31,7 @@ Generates and deploys realistic persona-specific dashboards with synthetic data 
 | **VS Code Copilot** | `.agent.md` + skill | `.\install.ps1 -Platform vscode` | Yes |
 | **Claude Code** | `CLAUDE.md` + `.claude/commands/` | Copy to project root | Yes |
 | **Cursor** | `.cursor/rules/*.mdc` | Copy to project root | Yes |
-| **Windsurf** | `.windsurfrules` | Copy to project root | Yes |
-| **OpenAI GPT** | System prompt + knowledge file | Create Custom GPT | No (manual deploy) |
+| **Windsurf** | `.windsurfrules` | Copy to project root | Yes || **M365 Copilot** | Declarative Agent + instruction.md | Teams Toolkit deploy | Via Power Automate || **OpenAI GPT** | System prompt + knowledge file | Create Custom GPT | No (manual deploy) |
 
 ## Installation
 
@@ -81,6 +80,14 @@ cp -r knowledge <project>/knowledge
 4. Enable Web Browsing + Code Interpreter
 5. See `openai/README.md` for detailed setup
 
+### Microsoft 365 Copilot
+See `m365-copilot/README.md` for three integration options:
+- **Declarative Agent** (recommended) — deploy via Teams Toolkit, use `@Dashboard Generator` in Teams
+- **Copilot Studio** — no-code, upload knowledge + instructions
+- **SharePoint + Copilot Chat** — simplest, just upload the knowledge file
+
+Note: M365 Copilot cannot run `dtctl` directly. Use Power Automate for auto-deployment, or deploy manually.
+
 ## Architecture
 
 ```
@@ -104,6 +111,11 @@ dt-copilot-agents/
 │
 ├── windsurf/                           # Windsurf
 │   └── .windsurfrules
+│
+├── m365-copilot/                       # Microsoft 365 Copilot
+│   ├── declarativeAgent.json
+│   ├── instruction.md
+│   └── README.md
 │
 ├── openai/                             # OpenAI / ChatGPT
 │   ├── system-prompt.txt
