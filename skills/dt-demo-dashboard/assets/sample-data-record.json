@@ -1,0 +1,18 @@
+{
+  "region": "Maharashtra",
+  "city": "Mumbai",
+  "orders": 612,
+  "gmv_cr": 31.82,
+  "category": "Cement",
+  "brand": "UltraTech",
+  "segment": "Contractor",
+  "fulfillment_status": "Delivered",
+  "sla_met": true,
+  "payment_method": "Credit",
+  "service_name": "OrderService",
+  "response_time_ms": 122,
+  "error_rate_pct": 1.52,
+  "status_code": 200,
+  "endpoint": "/api/v1/orders",
+  "http_method": "POST"
+}
