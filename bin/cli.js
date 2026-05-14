@@ -17,11 +17,19 @@ function copyRecursive(src, dest) {
   if (!fs.existsSync(src)) return;
   const stat = fs.statSync(src);
   if (stat.isDirectory()) {
+    // If dest exists as a file, remove it so we can create a directory
+    if (fs.existsSync(dest) && !fs.statSync(dest).isDirectory()) {
+      fs.unlinkSync(dest);
+    }
     fs.mkdirSync(dest, { recursive: true });
     for (const child of fs.readdirSync(src)) {
       copyRecursive(path.join(src, child), path.join(dest, child));
     }
   } else {
+    // If dest exists as a directory, remove it so we can write a file
+    if (fs.existsSync(dest) && fs.statSync(dest).isDirectory()) {
+      fs.rmSync(dest, { recursive: true, force: true });
+    }
     fs.mkdirSync(path.dirname(dest), { recursive: true });
     fs.copyFileSync(src, dest);
   }
@@ -88,21 +96,25 @@ function install(platform, dir) {
 
   for (const p of platforms) {
     console.log(`[${p}]`);
-    switch (p) {
-      case 'vscode':
-        installVSCode();
-        break;
-      case 'claude-code':
-        installClaudeCode(dir);
-        break;
-      case 'cursor':
-        installCursor(dir);
-        break;
-      case 'windsurf':
-        installWindsurf(dir);
-        break;
-      default:
-        console.log(`  Unknown platform: ${p}`);
+    try {
+      switch (p) {
+        case 'vscode':
+          installVSCode();
+          break;
+        case 'claude-code':
+          installClaudeCode(dir);
+          break;
+        case 'cursor':
+          installCursor(dir);
+          break;
+        case 'windsurf':
+          installWindsurf(dir);
+          break;
+        default:
+          console.log(`  Unknown platform: ${p}`);
+      }
+    } catch (err) {
+      console.error(`  ✗ Error: ${err.message}`);
     }
     console.log('');
   }
