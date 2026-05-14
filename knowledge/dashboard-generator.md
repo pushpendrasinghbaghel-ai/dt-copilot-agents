@@ -254,6 +254,101 @@ data record(timestamp=now()-165m, series="A", val=120),
 
 ---
 
+## Authentication
+
+### DTCTL Authentication (for deployment)
+
+**Browser login (recommended — zero-friction):**
+```bash
+# Opens your browser for Dynatrace SSO — one-time per context
+dtctl auth login
+
+# Or login to a specific context
+dtctl auth login --context <context-name>
+```
+After browser login, `dtctl` stores the token automatically. No manual copy-paste needed.
+
+**Token-based (for CI/automation):**
+```bash
+dtctl auth login --token <API_TOKEN> --context <context-name>
+```
+
+### Dynatrace MCP Server (Optional — for DQL verification)
+
+If a Dynatrace MCP server is connected, the agent can verify DQL queries against the live tenant after deployment. MCP is **optional** — deployment works via `dtctl` without it.
+
+#### VS Code — Install from MCP Gallery (one-click):
+1. Open Command Palette → **MCP: Add Server**
+2. Search for **"Dynatrace"** and install
+3. When prompted, enter your tenant URL — it opens a browser for SSO authentication
+4. Done — MCP tools like `execute_dql` are now available
+
+**Alternative — remote MCP with token:**
+Add to VS Code `mcp.json` (File → Preferences → MCP Servers):
+```json
+{
+  "servers": {
+    "Dynatrace": {
+      "type": "http",
+      "url": "https://<YOUR_TENANT>.apps.dynatrace.com/platform-reserved/mcp-gateway/v0.1/servers/dynatrace-mcp/mcp",
+      "headers": {
+        "Authorization": "Bearer ${input:DT_PLATFORM_TOKEN}"
+      }
+    }
+  },
+  "inputs": [
+    {
+      "id": "DT_PLATFORM_TOKEN",
+      "type": "promptString",
+      "description": "Dynatrace platform token",
+      "password": true
+    }
+  ]
+}
+```
+
+#### Claude Code — add to project `.mcp.json`:
+```json
+{
+  "mcpServers": {
+    "dynatrace": {
+      "type": "http",
+      "url": "https://<YOUR_TENANT>.apps.dynatrace.com/platform-reserved/mcp-gateway/v0.1/servers/dynatrace-mcp/mcp",
+      "headers": {
+        "Authorization": "Bearer <YOUR_PLATFORM_TOKEN>"
+      }
+    }
+  }
+}
+```
+Generate a platform token at: `https://<YOUR_TENANT>.apps.dynatrace.com/ui/apps/dynatrace.classic.tokens` with scopes: `Read entities`, `Read settings`, `Read SLO`.
+
+#### Cursor — add to `.cursor/mcp.json`:
+```json
+{
+  "mcpServers": {
+    "dynatrace": {
+      "url": "https://<YOUR_TENANT>.apps.dynatrace.com/platform-reserved/mcp-gateway/v0.1/servers/dynatrace-mcp/mcp",
+      "headers": {
+        "Authorization": "Bearer <YOUR_PLATFORM_TOKEN>"
+      }
+    }
+  }
+}
+```
+
+#### Windsurf — configure via Windsurf MCP settings with the same remote URL pattern above.
+
+#### Local MCP Server (Fallback)
+
+If remote MCP is unavailable:
+```bash
+npx @dynatrace-oss/dynatrace-mcp-server
+```
+See [@dynatrace-oss/dynatrace-mcp-server](https://www.npmjs.com/package/@dynatrace-oss/dynatrace-mcp-server) for full setup.
+
+---
+
 ## Deploy & Verify
 
 1. **Save** the dashboard JSON to the working directory as `<company-slug>-dashboard.json`
@@ -264,10 +359,10 @@ data record(timestamp=now()-165m, series="A", val=120),
    Or specify a context explicitly: `dtctl apply -f <filename>.json --context <context-name>`
 3. **Capture the dashboard ID** from the output
 4. **Add the ID** back into the JSON file for future updates
-5. **Verify** at least one timeseries query returns data
+5. **Verify** (if MCP is connected): run at least one timeseries query via `execute_dql` to confirm it returns data. If MCP is not available, skip — the inline `data record()` queries are self-contained.
 6. **Report the dashboard URL** — get your tenant URL from `dtctl config current-context`:
    ```
-   https://<YOUR_TENANT>.apps.dynatracelabs.com/ui/apps/dynatrace.dashboards/#/dashboard/<DASHBOARD_ID>
+   https://<YOUR_TENANT>.apps.dynatrace.com/ui/apps/dynatrace.dashboards/#/dashboard/<DASHBOARD_ID>
    ```
 
 ---

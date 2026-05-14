@@ -1,6 +1,6 @@
 {
   "name": "dt-copilot-agents",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Cross-platform AI agents for generating Dynatrace demo dashboards. Supports VS Code Copilot, Claude Code, Cursor, Windsurf, M365 Copilot, and OpenAI GPTs.",
   "keywords": [
     "dynatrace",

@@ -144,26 +144,45 @@ dt-copilot-agents/
 All platforms share the same **knowledge base** (`knowledge/dashboard-generator.md`). Each platform gets a thin wrapper in its native format that references this shared knowledge. When you update the knowledge, all platforms benefit.
 
 ## Prerequisites
-- `dtctl` CLI installed and configured with a Dynatrace context (for deployment)
+- `dtctl` CLI installed ([download](https://docs.dynatrace.com/docs/manage/dtctl))
 - Web access (for company research)
 - Platform-specific: VS Code + Copilot extension, Claude Code CLI, Cursor IDE, or Windsurf IDE
 
 ## Configuration
 
-Before deploying dashboards, set up your DTCTL context to point to your Dynatrace tenant:
+### Step 1: Authenticate DTCTL (browser login — recommended)
 
 ```bash
-# List available contexts
-dtctl config get-contexts
+# Opens your browser for Dynatrace SSO — no tokens to copy-paste
+dtctl auth login
 
-# Set your active context
-dtctl config use-context <your-context-name>
-
-# Or specify context per command
-dtctl apply -f <dashboard>.json --context <your-context-name>
+# Or for a specific context
+dtctl auth login --context <your-context-name>
 ```
 
-The agent uses your **current DTCTL context** by default — no hardcoded tenant. This means the same agent works across any Dynatrace environment (sprint, production, demo, etc.).
+**Alternative (CI/automation):** `dtctl auth login --token <API_TOKEN>`
+
+The agent uses your **current DTCTL context** by default. Switch contexts with:
+```bash
+dtctl config use-context <your-context-name>
+```
+
+### Step 2: Connect Dynatrace MCP Server (optional — for DQL verification)
+
+MCP enables the agent to verify DQL queries against your live tenant. **It's optional** — deployment works without it.
+
+#### VS Code — One-click from MCP Gallery:
+1. Command Palette → **MCP: Add Server** → search **"Dynatrace"** → install
+2. Enter your tenant URL when prompted — authenticates via browser SSO
+
+#### VS Code / Claude Code / Cursor — Remote MCP with token:
+```
+URL:  https://<YOUR_TENANT>.apps.dynatrace.com/platform-reserved/mcp-gateway/v0.1/servers/dynatrace-mcp/mcp
+Auth: Bearer <YOUR_PLATFORM_TOKEN>
+```
+Generate a platform token at: `https://<YOUR_TENANT>.apps.dynatrace.com/ui/apps/dynatrace.classic.tokens`
+
+See `knowledge/dashboard-generator.md` → **Authentication** section for platform-specific config snippets (VS Code `mcp.json`, Claude Code `.mcp.json`, Cursor `.cursor/mcp.json`).
 
 ## License
 

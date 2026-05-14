@@ -27,6 +27,31 @@ Read the full procedure and rules from `knowledge/dashboard-generator.md` before
 - DTCTL deployment commands
 - Data realism rules
 
+## Authentication
+
+**DTCTL (for deployment)** — browser login, no tokens to copy:
+```bash
+dtctl auth login              # Opens browser for Dynatrace SSO
+```
+
+**Dynatrace MCP (optional — for DQL verification):**
+Add to your project `.mcp.json`:
+```json
+{
+  "mcpServers": {
+    "dynatrace": {
+      "type": "http",
+      "url": "https://<YOUR_TENANT>.apps.dynatrace.com/platform-reserved/mcp-gateway/v0.1/servers/dynatrace-mcp/mcp",
+      "headers": {
+        "Authorization": "Bearer <YOUR_PLATFORM_TOKEN>"
+      }
+    }
+  }
+}
+```
+Generate a platform token at: `https://<YOUR_TENANT>.apps.dynatrace.com/ui/apps/dynatrace.classic.tokens`
+MCP is optional — deployment works via `dtctl` without it.
+
 ## Critical Rules
 
 - ALL data uses inline `data record()` DQL — never `fetch logs` or `fetch events`

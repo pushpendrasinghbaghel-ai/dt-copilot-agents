@@ -103,3 +103,5 @@ Always output the complete JSON file. Tell the user to deploy with:
 dtctl apply -f <filename>.json
 ```
 If the user needs a specific context: `dtctl apply -f <filename>.json --context <context-name>`
+
+Note: If the user has a Dynatrace MCP server connected, they can verify DQL queries via `execute_dql`. Otherwise, the inline `data record()` queries are self-contained and will work without verification.

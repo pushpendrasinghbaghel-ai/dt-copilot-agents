@@ -18,12 +18,23 @@ When asked to create a dashboard, demo dashboard, or persona-specific dashboard:
 ## Supported Personas
 CEO, CIO, CTO, CISO, SRE, IT Head, Application Ops, MLOps, Platform Engineering, VP Engineering
 
+## Authentication
+
+**DTCTL**: Run `dtctl auth login` (opens browser for SSO). Or: `dtctl auth login --token <TOKEN>`
+
+**MCP (optional)**: Add to `.cursor/mcp.json`:
+```json
+{"mcpServers":{"dynatrace":{"url":"https://<YOUR_TENANT>.apps.dynatrace.com/platform-reserved/mcp-gateway/v0.1/servers/dynatrace-mcp/mcp","headers":{"Authorization":"Bearer <YOUR_PLATFORM_TOKEN>"}}}}
+```
+MCP is optional — deployment works via `dtctl` without it.
+
 ## Quick Reference
 
 - ALL data: inline `data record()` — NEVER `fetch logs` or `fetch events`
 - Timeseries: timestamps `now()-165m` to `now()-15m`, `toDouble()` cast, `interval: 15m`
 - Dashboard JSON: version `21`, grid width `20`, exactly 20 tiles
 - Deploy: `dtctl apply -f <file>.json` (uses current DTCTL context)
+- Verify: if MCP connected, run a DQL query via `execute_dql` to confirm data
 - Use REAL company data — research first, generic = fake
 
 See `knowledge/dashboard-generator.md` for the complete procedure, grid layout, visualization types, and color reference.

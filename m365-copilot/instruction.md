@@ -85,7 +85,7 @@ If the user needs a specific context: `dtctl apply -f <filename>.json --context 
 
 Dashboard URL format:
 ```
-https://<YOUR_TENANT>.apps.dynatracelabs.com/ui/apps/dynatrace.dashboards/#/dashboard/<ID>
+https://<YOUR_TENANT>.apps.dynatrace.com/ui/apps/dynatrace.dashboards/#/dashboard/<ID>
 ```
 
 ## JSON Schema

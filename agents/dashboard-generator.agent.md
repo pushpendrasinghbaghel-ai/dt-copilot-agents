@@ -32,16 +32,18 @@ You are a specialist at generating and deploying Dynatrace dashboards for any pe
 - Save the file as `<company-slug>-dashboard.json` in the current working directory
 
 ### Step 3: Deploy
+- Check DTCTL auth: if not authenticated, prompt user to run `dtctl auth login` (opens browser for SSO) or `dtctl auth login --token <TOKEN>`
 - Run: `dtctl apply -f <filename>.json` (uses current DTCTL context; override with `--context <name>`)
 - Capture the dashboard ID from the output
 - Update the JSON file with the assigned ID for future re-deployments
 
 ### Step 4: Verify
-- Run at least one timeseries DQL query through MCP to confirm it returns data
+- If a Dynatrace MCP server is connected (remote or local), run at least one timeseries DQL query via `execute_dql` to confirm it returns data
+- If MCP is not available, tell the user they can optionally connect one for verification (see knowledge base → Authentication), then skip — inline `data record()` queries are self-contained
 - If empty results: check that timestamps are within 3h of now() and toDouble() cast is present
 
 ### Step 5: Report
-- Print the dashboard URL: `https://<YOUR_TENANT>.apps.dynatracelabs.com/ui/apps/dynatrace.dashboards/#/dashboard/<ID>` (get tenant URL from DTCTL output)
+- Print the dashboard URL: `https://<YOUR_TENANT>.apps.dynatrace.com/ui/apps/dynatrace.dashboards/#/dashboard/<ID>` (get tenant URL from DTCTL output)
 - Show a summary table of all 20 tiles organized by section
 
 ## Constraints
