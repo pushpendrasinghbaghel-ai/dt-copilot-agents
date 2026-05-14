@@ -21,7 +21,10 @@ Generates and deploys realistic persona-specific dashboards with synthetic data 
 - Researches the company/business automatically via web
 - Generates 20-tile dashboards with inline DQL `data record()` queries (zero ingestion needed)
 - Supports 5 industry archetypes: E-Commerce, Manufacturing, SaaS, Financial Services, Retail
+- Auto-installs `dtctl` CLI if missing (Homebrew, curl, or PowerShell one-liner)
+- Authenticates via browser SSO (`dtctl auth login`) — no tokens to copy-paste
 - Deploys directly to Dynatrace tenant via DTCTL CLI
+- Optionally verifies DQL queries via Dynatrace MCP server
 - Uses real company data (plant names, brands, products, regions)
 
 ## Platform Support
@@ -31,7 +34,11 @@ Generates and deploys realistic persona-specific dashboards with synthetic data 
 | **VS Code Copilot** | `.agent.md` + skill | `.\install.ps1 -Platform vscode` | Yes |
 | **Claude Code** | `CLAUDE.md` + `.claude/commands/` | Copy to project root | Yes |
 | **Cursor** | `.cursor/rules/*.mdc` | Copy to project root | Yes |
-| **Windsurf** | `.windsurfrules` | Copy to project root | Yes || **M365 Copilot** | Declarative Agent + instruction.md | Teams Toolkit deploy | Via Power Automate || **OpenAI GPT** | System prompt + knowledge file | Create Custom GPT | No (manual deploy) |
+| **Windsurf** | `.windsurfrules` | Copy to project root | Yes |
+| **M365 Copilot** | Declarative Agent + instruction.md | Teams Toolkit deploy | Via Power Automate |
+| **OpenAI GPT** | System prompt + knowledge file | Create Custom GPT | No (manual deploy) |
+
+> **Auto-setup:** The agent automatically installs `dtctl` and authenticates via browser SSO if not already set up — no manual prerequisite steps needed.
 
 ## Installation
 
@@ -48,6 +55,15 @@ npx dt-copilot-agents install cursor .
 # See supported personas and archetypes
 npx dt-copilot-agents info
 ```
+
+### Updating to Latest Version
+```bash
+# Update agent files in-place (re-run with @latest)
+npx dt-copilot-agents@latest install claude-code .
+npx dt-copilot-agents@latest install vscode
+npx dt-copilot-agents@latest install cursor .
+```
+After updating, tell your agent to re-read the instructions and continue where it left off.
 
 ### All Platforms (Windows PowerShell)
 ```powershell
