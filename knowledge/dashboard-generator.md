@@ -257,27 +257,28 @@ data record(timestamp=now()-165m, series="A", val=120),
 ## Deploy & Verify
 
 1. **Save** the dashboard JSON to the working directory as `<company-slug>-dashboard.json`
-2. **Deploy** with DTCTL:
+2. **Deploy** with DTCTL (uses your current DTCTL context — set with `dtctl config use-context <name>`):
    ```bash
-   dtctl apply -f <filename>.json --context sprint
+   dtctl apply -f <filename>.json
    ```
+   Or specify a context explicitly: `dtctl apply -f <filename>.json --context <context-name>`
 3. **Capture the dashboard ID** from the output
 4. **Add the ID** back into the JSON file for future updates
 5. **Verify** at least one timeseries query returns data
-6. **Report the dashboard URL**:
+6. **Report the dashboard URL** — get your tenant URL from `dtctl config current-context`:
    ```
-   https://<tenant>.sprint.apps.dynatracelabs.com/ui/apps/dynatrace.dashboards/#/dashboard/<DASHBOARD_ID>
+   https://<YOUR_TENANT>.apps.dynatracelabs.com/ui/apps/dynatrace.dashboards/#/dashboard/<DASHBOARD_ID>
    ```
 
 ---
 
 ## Hard Constraints
 
-- **NEVER use `fetch logs` or `fetch events`** — sprint tenant has no ingested data for demos
+- **NEVER use `fetch logs` or `fetch events`** — demo dashboards use inline `data record()` only
 - **NEVER use timestamps older than 3 hours** in timeseries queries
 - **ALWAYS use `toDouble()` cast** before `makeTimeseries` aggregation
 - **Dashboard grid is 20 units wide**, version must be `21`
-- **DTCTL context is `sprint`** — deploy with `--context sprint`
+- **DTCTL deploys to your current context** — override with `--context <name>` if needed
 - **Target: complete dashboard in under 5 minutes** from request to deployed URL
 - **NEVER use `@dynatrace-sdk/client-classic-environment-v2`** patterns
 - **DO NOT generate fewer than 20 tiles** — the dashboard must look rich and complete

@@ -7,7 +7,7 @@ When asked to create a dashboard, demo dashboard, or persona-specific dashboard:
 3. Research the company using web search for real business data
 4. Match the persona archetype + industry archetype from the knowledge base
 5. Generate 20 tiles with the right KPIs, metrics, and language for that persona
-6. Deploy with `dtctl apply -f <file>.json --context sprint`
+6. Deploy with `dtctl apply -f <file>.json` (uses current DTCTL context)
 
 ## Supported Personas
 CEO, CIO, CTO, CISO, SRE, IT Head, Application Ops, MLOps, Platform Engineering, VP Engineering
@@ -17,7 +17,7 @@ CEO, CIO, CTO, CISO, SRE, IT Head, Application Ops, MLOps, Platform Engineering,
 - ALL data: inline `data record()` — NEVER `fetch logs` or `fetch events`
 - Timeseries: timestamps `now()-165m` to `now()-15m`, `toDouble()` cast, `interval: 15m`
 - Dashboard JSON: version `21`, grid width `20`, exactly 20 tiles
-- Deploy: `dtctl apply -f <file>.json --context sprint`
+- Deploy: `dtctl apply -f <file>.json` (uses current DTCTL context)
 - Use REAL company data — research first, generic = fake
 
 See `knowledge/dashboard-generator.md` for the complete procedure, grid layout, visualization types, and color reference.

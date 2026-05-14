@@ -33,5 +33,5 @@ Read the full procedure and rules from `knowledge/dashboard-generator.md` before
 - Timeseries timestamps must be within 3 hours of `now()`
 - Always `toDouble()` before `makeTimeseries`
 - Dashboard version is `21`, grid is 20 units wide
-- Deploy with: `dtctl apply -f <file>.json --context sprint`
+- Deploy with: `dtctl apply -f <file>.json` (uses current DTCTL context)
 - Research the company first — generic data looks fake

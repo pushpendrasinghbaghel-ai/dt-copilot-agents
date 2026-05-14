@@ -10,7 +10,7 @@ Generate a Dynatrace dashboard for: $ARGUMENTS
 6. Use REAL company data from research (actual plant names, brands, products, regions)
 7. Use the persona's language style (e.g., SRE = error budgets/SLOs, CISO = threat landscape/compliance)
 8. Save as `<company-slug>-<persona>-dashboard.json`
-9. Deploy with: `dtctl apply -f <filename>.json --context sprint`
+9. Deploy with: `dtctl apply -f <filename>.json` (uses current DTCTL context)
 10. Report the dashboard URL
 
 ## Critical Rules

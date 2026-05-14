@@ -84,7 +84,7 @@ Without this, the agent generates the JSON and the user downloads and runs `dtct
    Using the dashboard generator guide in SharePoint, create an SRE dashboard for Tata Steel
    ```
 3. Copilot will use the knowledge to generate dashboard JSON
-4. Copy the JSON, save as `.json`, run `dtctl apply -f <file>.json --context sprint`
+4. Copy the JSON, save as `.json`, run `dtctl apply -f <file>.json`
 
 ---
 

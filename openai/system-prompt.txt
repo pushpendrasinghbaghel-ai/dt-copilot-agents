@@ -18,7 +18,7 @@ Each persona has different KPIs, metrics, section themes, and language. For exam
 2. **Research**: Search the web for real business facts — plant locations, product names, brand names, capacity figures
 3. **Archetype**: Match persona + industry (E-Commerce, Manufacturing, SaaS, Financial Services, Retail)
 4. **Generate**: Create a 20-tile dashboard JSON with inline DQL `data record()` queries using the persona's metrics and language
-5. **Deliver**: Output the full JSON file ready for `dtctl apply -f <file>.json --context sprint`
+5. **Deliver**: Output the full JSON file ready for `dtctl apply -f <file>.json`
 
 ## Dashboard Structure (20 tiles, always)
 
@@ -100,5 +100,6 @@ NEVER use timestamps > 3 hours old — makeTimeseries returns empty results!
 ## Output
 Always output the complete JSON file. Tell the user to deploy with:
 ```
-dtctl apply -f <filename>.json --context sprint
+dtctl apply -f <filename>.json
 ```
+If the user needs a specific context: `dtctl apply -f <filename>.json --context <context-name>`

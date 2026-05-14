@@ -32,7 +32,7 @@ You are a specialist at generating and deploying Dynatrace dashboards for any pe
 - Save the file as `<company-slug>-dashboard.json` in the current working directory
 
 ### Step 3: Deploy
-- Run: `dtctl apply -f <filename>.json --context sprint`
+- Run: `dtctl apply -f <filename>.json` (uses current DTCTL context; override with `--context <name>`)
 - Capture the dashboard ID from the output
 - Update the JSON file with the assigned ID for future re-deployments
 
@@ -41,7 +41,7 @@ You are a specialist at generating and deploying Dynatrace dashboards for any pe
 - If empty results: check that timestamps are within 3h of now() and toDouble() cast is present
 
 ### Step 5: Report
-- Print the dashboard URL: `https://ihh1992h.sprint.apps.dynatracelabs.com/ui/apps/dynatrace.dashboards/#/dashboard/<ID>`
+- Print the dashboard URL: `https://<YOUR_TENANT>.apps.dynatracelabs.com/ui/apps/dynatrace.dashboards/#/dashboard/<ID>` (get tenant URL from DTCTL output)
 - Show a summary table of all 20 tiles organized by section
 
 ## Constraints
@@ -50,7 +50,7 @@ You are a specialist at generating and deploying Dynatrace dashboards for any pe
 - DO NOT generate fewer than 20 tiles — the dashboard must look rich and complete
 - DO NOT use any `@dynatrace-sdk/client-classic-environment-v2` patterns
 - DO NOT skip the research phase — dashboards with generic data look fake in CIO meetings
-- ONLY deploy to context `sprint` unless user explicitly specifies another context
+- Deploy to the user's current DTCTL context unless they explicitly specify `--context <name>`
 - ALWAYS include `toDouble()` cast before makeTimeseries aggregation
 - ALWAYS use dashboard JSON version 21 with 20-unit-wide grid
 

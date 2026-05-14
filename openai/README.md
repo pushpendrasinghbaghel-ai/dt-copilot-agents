@@ -25,5 +25,5 @@
 
 ## Limitations vs VS Code Agent
 - **No DTCTL deployment** — GPT can generate the JSON but can't run shell commands to deploy
-- **Manual deploy step** — download the JSON, then run `dtctl apply -f <file>.json --context sprint` locally
+- **Manual deploy step** — download the JSON, then run `dtctl apply -f <file>.json` locally
 - **No MCP verification** — can't verify DQL queries against live tenant

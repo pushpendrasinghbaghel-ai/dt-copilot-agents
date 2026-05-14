@@ -79,12 +79,13 @@ NEVER use timestamps older than 3 hours — makeTimeseries returns empty!
 
 Generate the complete JSON dashboard file. Tell the user to deploy with:
 ```
-dtctl apply -f <filename>.json --context sprint
+dtctl apply -f <filename>.json
 ```
+If the user needs a specific context: `dtctl apply -f <filename>.json --context <context-name>`
 
 Dashboard URL format:
 ```
-https://<tenant>.sprint.apps.dynatracelabs.com/ui/apps/dynatrace.dashboards/#/dashboard/<ID>
+https://<YOUR_TENANT>.apps.dynatracelabs.com/ui/apps/dynatrace.dashboards/#/dashboard/<ID>
 ```
 
 ## JSON Schema

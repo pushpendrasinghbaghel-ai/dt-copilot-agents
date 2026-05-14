@@ -148,6 +148,23 @@ All platforms share the same **knowledge base** (`knowledge/dashboard-generator.
 - Web access (for company research)
 - Platform-specific: VS Code + Copilot extension, Claude Code CLI, Cursor IDE, or Windsurf IDE
 
+## Configuration
+
+Before deploying dashboards, set up your DTCTL context to point to your Dynatrace tenant:
+
+```bash
+# List available contexts
+dtctl config get-contexts
+
+# Set your active context
+dtctl config use-context <your-context-name>
+
+# Or specify context per command
+dtctl apply -f <dashboard>.json --context <your-context-name>
+```
+
+The agent uses your **current DTCTL context** by default — no hardcoded tenant. This means the same agent works across any Dynatrace environment (sprint, production, demo, etc.).
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
