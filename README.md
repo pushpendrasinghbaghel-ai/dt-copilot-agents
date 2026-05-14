@@ -5,7 +5,17 @@ Cross-platform AI agents for Dynatrace demo workflows. Works on **VS Code Copilo
 ## What's Included
 
 ### Dashboard Generator
-Generates and deploys realistic CIO Command Center dashboards with synthetic data for customer meetings — in under 5 minutes.
+Generates and deploys realistic persona-specific dashboards with synthetic data for customer meetings — in under 5 minutes.
+
+**Supported Personas:**
+| Executive | Technical / Operations |
+|---|---|
+| CEO — Business Impact | SRE — Reliability & SLOs |
+| CIO — IT Strategy (default) | IT Head — Infrastructure |
+| CTO — Technology & Innovation | Application Ops — APM |
+| CISO — Security & Compliance | MLOps — AI/Model Operations |
+| | Platform Engineering — Developer Experience |
+| | VP Engineering — Delivery & Quality |
 
 **Features:**
 - Researches the company/business automatically via web
@@ -39,6 +49,7 @@ cd dt-copilot-agents
 ```powershell
 .\install.ps1 -Platform vscode
 # Restart VS Code → select "Dashboard Generator" from @ agent picker
+# Then: "SRE dashboard for Tata Steel" or "CISO dashboard for HDFC Bank"
 ```
 
 ### Claude Code
@@ -47,7 +58,7 @@ cd dt-copilot-agents
 cp claude-code/CLAUDE.md <project>/CLAUDE.md
 cp -r claude-code/.claude <project>/.claude
 cp -r knowledge <project>/knowledge
-# Then use: /dashboard Tata Steel manufacturing
+# Then: /dashboard SRE dashboard for Tata Steel
 ```
 
 ### Cursor

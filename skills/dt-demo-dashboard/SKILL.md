@@ -1,12 +1,14 @@
 ---
 name: dt-demo-dashboard
-description: 'Generate and deploy Dynatrace demo dashboards with realistic synthetic data for customer meetings. Use when: creating CIO dashboards, generating demo data, building business dashboards, customer demo, synthetic data dashboard, deploy dashboard to tenant, DTCTL dashboard. Generates inline DQL data record() queries, creates 20-tile dashboard JSON, and deploys via DTCTL CLI.'
-argument-hint: 'Company name and business context, e.g. "Grasim VSF & Chemicals manufacturing operations"'
+description: 'Generate and deploy Dynatrace demo dashboards for any persona (CIO, CTO, CEO, CISO, SRE, IT Head, App Ops, MLOps, Platform Eng, VP Eng) with realistic synthetic data. Use when: creating CIO dashboards, SRE dashboards, CISO dashboards, generating demo data, building persona-specific dashboards, customer demo, deploy dashboard to tenant, DTCTL dashboard.'
+argument-hint: 'Persona + company, e.g. "SRE dashboard for Tata Steel" or "CISO dashboard for HDFC Bank"'
 ---
 
 # Dynatrace Demo Dashboard Generator
 
-Generate and deploy realistic CIO Command Center dashboards with synthetic inline data for customer demos. Dashboards render instantly with zero ingestion dependencies.
+Generate and deploy realistic persona-specific dashboards with synthetic inline data for customer demos. Supports 10+ personas (CIO, CTO, CEO, CISO, SRE, IT Head, App Ops, MLOps, Platform Eng, VP Eng). Dashboards render instantly with zero ingestion dependencies.
+
+The full persona archetype reference, DQL rules, layout grid, and visualization guide are in `knowledge/dashboard-generator.md`. Read that file for the complete procedure.
 
 ## When to Use
 - Preparing for a customer CIO/CTO/VP-Eng meeting

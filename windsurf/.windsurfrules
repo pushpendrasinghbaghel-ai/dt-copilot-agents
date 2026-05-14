@@ -1,11 +1,16 @@
 # Dynatrace Demo Dashboard Generator
 
-When asked to create a dashboard, demo dashboard, CIO dashboard, or generate synthetic Dynatrace data:
+When asked to create a dashboard, demo dashboard, or persona-specific dashboard:
 
 1. Read the full knowledge base from `knowledge/dashboard-generator.md` in the project root
-2. Research the company using web search for real business data
-3. Follow the 20-tile layout with inline DQL `data record()` queries
-4. Deploy with `dtctl apply -f <file>.json --context sprint`
+2. **Identify the persona** from the request (CIO, SRE, CISO, MLOps, etc.) — default to CIO
+3. Research the company using web search for real business data
+4. Match the persona archetype + industry archetype from the knowledge base
+5. Generate 20 tiles with the right KPIs, metrics, and language for that persona
+6. Deploy with `dtctl apply -f <file>.json --context sprint`
+
+## Supported Personas
+CEO, CIO, CTO, CISO, SRE, IT Head, Application Ops, MLOps, Platform Engineering, VP Engineering
 
 ## Quick Reference
 

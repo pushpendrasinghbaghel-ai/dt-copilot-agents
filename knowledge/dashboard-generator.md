@@ -1,13 +1,14 @@
 # Dynatrace Demo Dashboard Generator — Knowledge Base
 
 ## Purpose
-Generate and deploy realistic CIO Command Center dashboards with synthetic inline data for customer demos. Dashboards render instantly with zero ingestion dependencies.
+Generate and deploy realistic persona-specific dashboards with synthetic inline data for customer demos. Supports any executive or technical persona — CIO, CTO, CEO, CISO, SRE, IT Head, Application Ops, MLOps, Platform Engineering, VP Engineering, and more. Dashboards render instantly with zero ingestion dependencies.
 
 ## When to Use
-- Preparing for a customer CIO/CTO/VP-Eng meeting
-- Need a quick demo dashboard with realistic business data
+- Preparing for a customer meeting with any persona (CIO, CTO, CISO, SRE, IT Head, etc.)
+- Need a quick demo dashboard with realistic business + technical data
 - Building a proof-of-concept for a Dynatrace pitch
-- Creating industry-specific dashboards (manufacturing, e-commerce, retail, SaaS, fintech, etc.)
+- Creating industry-specific or role-specific dashboards
+- Demonstrating Dynatrace value to different stakeholders in the same organization
 
 ---
 
@@ -29,6 +30,54 @@ Generate and deploy realistic CIO Command Center dashboards with synthetic inlin
 | **SaaS / Platform** | MRR, Active Users, Churn%, API Uptime | Feature usage, Revenue by plan, DAU trend, Top accounts | API latency, Error rates, Response time table, Request volume | Incidents, Deployment frequency, SLA compliance, Recent events |
 | **Financial Services** | AUM, Transactions, STP Rate%, System Uptime | Channel volume, Product mix, Transaction trend, Top branches | API perf, Error rate, Response time, Request volume | Fraud alerts, Reconciliation, Settlement, Recent transactions |
 | **Retail / Omnichannel** | Revenue, Footfall, Basket Size, Online Share% | Store performance, Category revenue, Traffic trend, Top SKUs | POS uptime, App sessions, Loyalty engagement, Inventory | Fulfillment, Returns, CSAT, Recent orders |
+
+### Persona Archetypes
+
+The **persona** determines which metrics matter, what language to use, and what decisions the dashboard enables. Combine persona + industry archetype to generate the right dashboard.
+
+If the user doesn't specify a persona, **default to CIO**. If they specify both persona and industry, combine them.
+
+#### Executive Personas
+
+| Persona | Header | KPI Strip (4 tiles) | Section 2 | Section 3 | Section 4 | Language Style |
+|---|---|---|---|---|---|---|
+| **CEO** | `👔 CEO Business Impact Center` | Revenue Impact (₹), Customer Experience Score, Business Continuity %, Digital Revenue Share % | Revenue by business unit (bar), Digital vs traditional mix (donut), Revenue trend (line), Top revenue generators (table) | Customer impact — sessions affected, NPS correlation, user satisfaction trend, customer segment health (table) | Risk register, business continuity status, competitive benchmark, executive alerts | Board-level language, ₹/$ values, business outcomes only, no technical jargon |
+| **CIO** | `🏛️ CIO Command Center` | Primary Business Metric, Volume/Count, System Health %, SLA/Quality % | Business performance breakdown (bar), Category/segment mix (donut), Trend over time (line), Top entities (table) | Platform health — latency, errors, response times, request volume | Operations — maintenance, fulfillment, alerts, recent events | Strategic IT language, business-IT alignment, transformation metrics |
+| **CTO** | `⚙️ CTO Technology Command Center` | Platform Uptime %, Deployment Frequency, Tech Debt Score, API Success Rate % | Architecture health by service (bar), Technology stack distribution (donut), Deployment velocity trend (line), Service dependency health (table) | Innovation metrics — feature lead time, experiment throughput, modernization progress trend, tech radar (table) | Platform reliability — incidents, DORA metrics, tech debt backlog, recent deployments | Technical strategy language, architecture decisions, innovation velocity |
+| **CISO** | `🛡️ CISO Security Command Center` | Security Score, Open Vulnerabilities, Mean Time to Remediate (days), Compliance Score % | Vulnerabilities by severity (bar), Attack surface by category (donut), Security incidents trend (line), Top risk assets (table) | Compliance — framework coverage by standard (bar), audit findings (table), compliance trend (line), data classification (donut) | Threat landscape — active threats (table), incident response status (pie), MITRE ATT&CK coverage (bar), recent security events | Security language, risk quantification, compliance frameworks, zero-trust references |
+
+#### Technical / Operations Personas
+
+| Persona | Header | KPI Strip (4 tiles) | Section 2 | Section 3 | Section 4 | Language Style |
+|---|---|---|---|---|---|---|
+| **SRE** | `🔧 SRE Reliability Dashboard` | Error Budget Remaining %, P99 Latency (ms), MTTR (min), Incident Count (24h) | SLO status by service (bar), Error budget burn by team (donut), Latency percentiles trend (line), SLO compliance (table) | Incident management — incidents by severity (bar), on-call rotation (table), MTTR trend (line), incident category (pie) | Toil & automation — toil hours by category (table), change failure rate (pie), capacity headroom (bar), recent incidents | SRE language — error budgets, SLOs/SLIs, toil, blast radius, blameless, reliability |
+| **IT Head / VP Infrastructure** | `🖥️ IT Infrastructure Command Center` | Infrastructure Uptime %, Active Hosts, Storage Utilization %, Network Health Score | Host health by datacenter (bar), OS distribution (donut), CPU/Memory utilization trend (line), Top hosts by load (table) | Cost & capacity — cloud spend by service (bar), cost allocation (table), capacity forecast trend (line), reserved vs on-demand (donut) | Operations — patching compliance (table), maintenance windows (pie), ticket backlog (bar), recent infrastructure events | Infrastructure language, capacity planning, cost optimization, availability |
+| **Application Ops** | `📱 Application Operations Center` | App Availability %, Avg Response Time (ms), Error Rate %, Active User Sessions | Response time by service (bar), Error distribution by type (donut), Apdex score trend (line), Slowest endpoints (table) | Release health — deployment success by app (bar), version distribution (table), crash rate trend (line), feature flag status (donut) | Dependencies — downstream health (table), database query performance (pie), external API status (bar), recent app events | APM language — Apdex, response time, throughput, error rate, user sessions |
+| **MLOps / AI Ops** | `🤖 MLOps AI Operations Center` | Model Accuracy %, Avg Inference Latency (ms), Token Cost ($/day), Model Drift Score | Model performance by endpoint (bar), Token usage by model (donut), Inference latency trend (line), Top models by volume (table) | Cost & efficiency — cost per 1K tokens by provider (bar), GPU utilization (table), cost trend (line), model size distribution (donut) | Quality & safety — hallucination rate by model (table), data drift status (pie), prompt injection attempts (bar), recent AI events | ML language — inference, tokens, embeddings, drift, RLHF, guardrails, RAG, fine-tuning |
+| **Platform Engineering** | `🏗️ Platform Engineering Dashboard` | Developer Satisfaction (DSAT) %, Self-Service Adoption %, Avg Build Time (min), Platform Availability % | IDP adoption by team (bar), Service catalog usage (donut), CI/CD pipeline duration trend (line), Golden path compliance (table) | Developer experience — onboarding time by team (bar), template usage (table), developer wait time trend (line), toolchain satisfaction (donut) | Platform health — build failures (table), infrastructure provisioning time (pie), API gateway status (bar), recent platform events | Platform engineering language — golden paths, IDP, self-service, paved roads, developer experience |
+| **VP Engineering** | `📊 VP Engineering — Delivery & Quality` | Deployment Frequency (/day), Lead Time for Changes (hrs), Change Failure Rate %, Sprint Velocity | DORA metrics by team (bar), Code quality distribution (donut), Velocity trend (line), Team performance (table) | Quality gates — test coverage by service (bar), bug density (table), escaped defects trend (line), technical debt by area (donut) | Team health — team capacity (table), sprint burndown status (pie), cross-team dependencies (bar), recent engineering events | Engineering management language — DORA, velocity, sprint, quality gates, tech debt |
+
+#### Persona Selection Logic
+
+1. If user says **"SRE dashboard for Tata Steel"** → use SRE persona + Manufacturing industry
+2. If user says **"dashboard for Grasim CIO"** → use CIO persona + determine industry from research
+3. If user says **"CISO dashboard"** (no company) → use CISO persona + generic enterprise context
+4. If user says **"dashboard for Infosys"** (no persona) → default to CIO persona + SaaS/IT Services industry
+5. If user says **"MLOps dashboard for a bank"** → use MLOps persona + Financial Services industry
+
+#### Header Format by Persona
+
+```
+# {EMOJI} {COMPANY} — {BUSINESS_LINE}
+## {PERSONA_TITLE} | {SUBTITLE}
+
+**{TAGLINE — what this dashboard answers for this persona}**
+```
+
+Examples:
+- `# 🔧 Tata Steel — Steel Manufacturing\n## SRE Reliability Dashboard | Production Systems\n\n**Tracking SLOs, error budgets, and incident response across 26 plants**`
+- `# 🛡️ HDFC Bank — Digital Banking\n## CISO Security Command Center | Threat & Compliance\n\n**Real-time security posture across 6,300+ branches and digital channels**`
+- `# 🤖 Infosys — Enterprise AI Services\n## MLOps AI Operations Center | Model Fleet Health\n\n**Monitoring inference performance, token economics, and model drift across client deployments**`
 
 ### Phase 2: Build Dashboard JSON (< 3 minutes)
 

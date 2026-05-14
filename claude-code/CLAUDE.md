@@ -1,13 +1,20 @@
 # Dynatrace Demo Dashboard Generator
 
-You have access to a dashboard generation workflow for creating CIO Command Center dashboards with synthetic data.
+You have access to a dashboard generation workflow for creating persona-specific dashboards with synthetic data.
+
+## Supported Personas
+CIO, CTO, CEO, CISO, SRE, IT Head, Application Ops, MLOps, Platform Engineering, VP Engineering — and any custom persona.
 
 ## Available Commands
 
-Use `/dashboard` slash command to generate a dashboard. Example:
+Use `/dashboard` slash command to generate a dashboard. Examples:
 ```
-/dashboard Tata Steel manufacturing operations
+/dashboard SRE dashboard for Tata Steel
+/dashboard CISO dashboard for HDFC Bank
+/dashboard MLOps dashboard for Infosys
+/dashboard CEO dashboard for Reliance Retail
 ```
+If no persona is specified, defaults to CIO.
 
 ## Knowledge Base
 
