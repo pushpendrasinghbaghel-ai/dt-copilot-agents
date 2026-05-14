@@ -1,10 +1,10 @@
 # Dynatrace Copilot Agents
 
-VS Code custom agents and skills for Dynatrace demo workflows. Clone this repo and run the install script to set up on any machine.
+Cross-platform AI agents for Dynatrace demo workflows. Works on **VS Code Copilot**, **Claude Code**, **Cursor**, **Windsurf**, and **OpenAI GPTs**.
 
 ## What's Included
 
-### 🎯 Dashboard Generator Agent
+### Dashboard Generator
 Generates and deploys realistic CIO Command Center dashboards with synthetic data for customer meetings — in under 5 minutes.
 
 **Features:**
@@ -14,46 +14,102 @@ Generates and deploys realistic CIO Command Center dashboards with synthetic dat
 - Deploys directly to Dynatrace tenant via DTCTL CLI
 - Uses real company data (plant names, brands, products, regions)
 
-**Usage:** Select `Dashboard Generator` from the `@` agent picker in VS Code chat, then type:
-```
-Tata Steel manufacturing operations for CIO meeting
-```
+## Platform Support
+
+| Platform | Format | Deployment | Auto-deploy via DTCTL |
+|---|---|---|---|
+| **VS Code Copilot** | `.agent.md` + skill | `.\install.ps1 -Platform vscode` | Yes |
+| **Claude Code** | `CLAUDE.md` + `.claude/commands/` | Copy to project root | Yes |
+| **Cursor** | `.cursor/rules/*.mdc` | Copy to project root | Yes |
+| **Windsurf** | `.windsurfrules` | Copy to project root | Yes |
+| **OpenAI GPT** | System prompt + knowledge file | Create Custom GPT | No (manual deploy) |
 
 ## Installation
 
-### Quick Install (Windows)
+### All Platforms (Windows)
 ```powershell
-.\install.ps1
+git clone https://github.com/pushpendrasinghbaghel-ai/dt-copilot-agents.git
+cd dt-copilot-agents
+.\install.ps1                        # All platforms
+.\install.ps1 -Platform vscode       # VS Code only
+.\install.ps1 -Platform claude-code  # Claude Code only
 ```
 
-### Manual Install
-1. Copy `agents/dashboard-generator.agent.md` → `%APPDATA%\Code\User\prompts\`
-2. Copy `skills/dt-demo-dashboard/` → `%USERPROFILE%\.agents\skills\`
+### VS Code Copilot
+```powershell
+.\install.ps1 -Platform vscode
+# Restart VS Code → select "Dashboard Generator" from @ agent picker
+```
 
-### Prerequisites
-- VS Code with GitHub Copilot extension
-- `dtctl` CLI installed and configured with a Dynatrace context
-- `gh` CLI (for GitHub operations, optional)
+### Claude Code
+```bash
+# Copy to your project directory:
+cp claude-code/CLAUDE.md <project>/CLAUDE.md
+cp -r claude-code/.claude <project>/.claude
+cp -r knowledge <project>/knowledge
+# Then use: /dashboard Tata Steel manufacturing
+```
 
-## File Structure
+### Cursor
+```bash
+cp -r cursor/.cursor <project>/.cursor
+cp -r knowledge <project>/knowledge
+# Then ask: "Create a dashboard for Tata Steel manufacturing"
+```
+
+### Windsurf
+```bash
+cp windsurf/.windsurfrules <project>/.windsurfrules
+cp -r knowledge <project>/knowledge
+```
+
+### OpenAI Custom GPT
+1. Go to ChatGPT → Explore GPTs → Create
+2. Paste `openai/system-prompt.txt` into Instructions
+3. Upload `knowledge/dashboard-generator.md` as Knowledge
+4. Enable Web Browsing + Code Interpreter
+5. See `openai/README.md` for detailed setup
+
+## Architecture
 
 ```
 dt-copilot-agents/
-├── README.md
-├── install.ps1              # Windows installer script
-├── agents/
-│   └── dashboard-generator.agent.md   # The agent definition
-└── skills/
-    └── dt-demo-dashboard/
-        ├── SKILL.md                    # Core skill with procedures & rules
-        └── assets/
-            ├── dashboard-skeleton.json # 20-tile grid layout template
-            └── sample-data-record.json # Example DQL data record
+├── knowledge/                          # Shared knowledge (platform-agnostic)
+│   └── dashboard-generator.md          # Complete procedure, DQL rules, layout grid
+│
+├── agents/                             # VS Code Copilot
+│   └── dashboard-generator.agent.md
+├── skills/                             # VS Code Copilot skill
+│   └── dt-demo-dashboard/
+│       ├── SKILL.md
+│       └── assets/
+│
+├── claude-code/                        # Claude Code
+│   ├── CLAUDE.md
+│   └── .claude/commands/dashboard.md
+│
+├── cursor/                             # Cursor
+│   └── .cursor/rules/dashboard-generator.mdc
+│
+├── windsurf/                           # Windsurf
+│   └── .windsurfrules
+│
+├── openai/                             # OpenAI / ChatGPT
+│   ├── system-prompt.txt
+│   └── README.md
+│
+├── install.ps1                         # Cross-platform installer
+└── README.md
 ```
 
-## Updating
+### How It Works
 
-After pulling changes, re-run `.\install.ps1` to sync files to their VS Code locations.
+All platforms share the same **knowledge base** (`knowledge/dashboard-generator.md`). Each platform gets a thin wrapper in its native format that references this shared knowledge. When you update the knowledge, all platforms benefit.
+
+## Prerequisites
+- `dtctl` CLI installed and configured with a Dynatrace context (for deployment)
+- Web access (for company research)
+- Platform-specific: VS Code + Copilot extension, Claude Code CLI, Cursor IDE, or Windsurf IDE
 
 ## License
 

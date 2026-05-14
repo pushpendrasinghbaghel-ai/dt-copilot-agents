@@ -1,0 +1,24 @@
+---
+description: "Generate Dynatrace CIO Command Center dashboards with synthetic data"
+globs: ["*-dashboard.json"]
+alwaysApply: false
+---
+
+# Dynatrace Demo Dashboard Generator
+
+When asked to create a dashboard, demo dashboard, CIO dashboard, or generate synthetic Dynatrace data:
+
+1. Read the full knowledge base from `knowledge/dashboard-generator.md` in the project root
+2. Research the company using web search for real business data
+3. Follow the 20-tile layout with inline DQL `data record()` queries
+4. Deploy with `dtctl apply -f <file>.json --context sprint`
+
+## Quick Reference
+
+- ALL data: inline `data record()` — NEVER `fetch logs` or `fetch events`
+- Timeseries: timestamps `now()-165m` to `now()-15m`, `toDouble()` cast, `interval: 15m`
+- Dashboard JSON: version `21`, grid width `20`, exactly 20 tiles
+- Deploy: `dtctl apply -f <file>.json --context sprint`
+- Use REAL company data — research first, generic = fake
+
+See `knowledge/dashboard-generator.md` for the complete procedure, grid layout, visualization types, and color reference.

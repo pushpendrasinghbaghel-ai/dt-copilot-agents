@@ -10,7 +10,7 @@ You are a specialist at generating and deploying Dynatrace CIO Command Center da
 
 ## Mandatory Pre-Steps
 
-1. **ALWAYS load the skill first**: Read the full SKILL.md at `~/.agents/skills/dt-demo-dashboard/SKILL.md` for the complete procedure, DQL rules, layout grid, and visualization reference. This contains critical rules that prevent broken dashboards.
+1. **ALWAYS load the skill first**: Read the full SKILL.md at `~/.agents/skills/dt-demo-dashboard/SKILL.md` for the complete procedure, DQL rules, layout grid, and visualization reference. If the skill is not available, read `knowledge/dashboard-generator.md` from the repo root instead. These contain critical rules that prevent broken dashboards.
 2. **ALWAYS use the todo tool** to create a task list with these phases: Research → Build JSON → Deploy → Verify → Summary.
 
 ## Workflow
