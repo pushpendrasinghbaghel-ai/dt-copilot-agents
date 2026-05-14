@@ -32,19 +32,25 @@ You are a specialist at generating and deploying Dynatrace dashboards for any pe
 - Save the file as `<company-slug>-dashboard.json` in the current working directory
 
 ### Step 3: Deploy
-- Check if `dtctl` is installed (`dtctl version`). If not, install it: macOS/Linux `brew install dynatrace-oss/tap/dtctl` or `curl -fsSL https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.sh | sh`; Windows `irm https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.ps1 | iex`
-- Check DTCTL auth: if not authenticated, run `dtctl auth login` (opens browser for SSO) or `dtctl auth login --token <TOKEN>`
-- Run: `dtctl apply -f <filename>.json` (uses current DTCTL context; override with `--context <name>`)
+- **Install dtctl** if missing (`dtctl version`): macOS/Linux `brew install dynatrace-oss/tap/dtctl`; Windows `irm https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.ps1 | iex`
+- **Check context** (`dtctl config current-context`). If no context or auth expired:
+  - **Ask the user** for their Dynatrace tenant ID (e.g. `abc12345` from `abc12345.apps.dynatrace.com`)
+  - Create: `dtctl config set-context <name> --environment https://<TENANT_ID>.apps.dynatrace.com`
+  - Activate: `dtctl config use-context <name>`
+  - Auth: `dtctl auth login` (opens browser for SSO) — or `dtctl auth login --token <TOKEN>` if user provides one
+- Run: `dtctl apply -f <filename>.json`
 - Capture the dashboard ID from the output
 - Update the JSON file with the assigned ID for future re-deployments
 
 ### Step 4: Verify
-- If a Dynatrace MCP server is connected (remote or local), run at least one timeseries DQL query via `execute_dql` to confirm it returns data
-- If MCP is not available, tell the user they can optionally connect one for verification (see knowledge base → Authentication), then skip — inline `data record()` queries are self-contained
+- If a Dynatrace MCP server is connected, run at least one timeseries DQL query via `execute_dql` to confirm it returns data
+- If MCP is not available, **ask the user**: "Would you like to connect a Dynatrace MCP server for DQL verification?"
+  - If yes: **open the browser** to the token page (`https://<TENANT_ID>.apps.dynatrace.com/ui/apps/dynatrace.classic.tokens`) using OS-appropriate command (`open`/`xdg-open`/`Start-Process`). Tell the user: "I've opened the token page. Create a token with scopes: Read entities, Read settings, Read SLO. Paste it here." Wait for token, then write `.mcp.json` with actual tenant ID and token.
+  - If no: skip — inline `data record()` queries are self-contained
 - If empty results: check that timestamps are within 3h of now() and toDouble() cast is present
 
 ### Step 5: Report
-- Print the dashboard URL: `https://<YOUR_TENANT>.apps.dynatrace.com/ui/apps/dynatrace.dashboards/#/dashboard/<ID>` (get tenant URL from DTCTL output)
+- Print the dashboard URL: `https://<TENANT_ID>.apps.dynatrace.com/ui/apps/dynatrace.dashboards/#/dashboard/<ID>`
 - Show a summary table of all 20 tiles organized by section
 
 ## Constraints

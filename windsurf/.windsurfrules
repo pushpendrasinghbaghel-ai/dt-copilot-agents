@@ -16,12 +16,19 @@ CEO, CIO, CTO, CISO, SRE, IT Head, Application Ops, MLOps, Platform Engineering,
 
 **Install DTCTL** (if not installed): macOS/Linux `brew install dynatrace-oss/tap/dtctl`; Windows `irm https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.ps1 | iex`
 
-**Authenticate**: Run `dtctl auth login` (opens browser for SSO). Or: `dtctl auth login --token <TOKEN>`
+**Check context** (`dtctl config current-context`). If no context:
+- **Ask the user** for their tenant ID (e.g. `abc12345` from `abc12345.apps.dynatrace.com`)
+- `dtctl config set-context <name> --environment https://<TENANT_ID>.apps.dynatrace.com`
+- `dtctl config use-context <name>`
+- `dtctl auth login` (opens browser for SSO) — or `dtctl auth login --token <TOKEN>`
 
-**MCP (optional)**: Connect the Dynatrace remote MCP server:
+**MCP (optional)**: After deploy, ask user if they want DQL verification. If yes:
+- **Open browser** to token page: `open "https://<TENANT_ID>.apps.dynatrace.com/ui/apps/dynatrace.classic.tokens"` (or `xdg-open`/`Start-Process`)
+- Tell user: "I've opened the token page. Create a token with scopes: Read entities, Read settings, Read SLO. Paste it here."
+- Wait for token, then configure MCP with:
 ```
-URL: https://<YOUR_TENANT>.apps.dynatrace.com/platform-reserved/mcp-gateway/v0.1/servers/dynatrace-mcp/mcp
-Auth: Bearer <YOUR_PLATFORM_TOKEN>
+URL: https://<TENANT_ID>.apps.dynatrace.com/platform-reserved/mcp-gateway/v0.1/servers/dynatrace-mcp/mcp
+Auth: Bearer <TOKEN>
 ```
 MCP is optional — deployment works via `dtctl` without it.
 

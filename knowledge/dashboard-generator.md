@@ -254,111 +254,75 @@ data record(timestamp=now()-165m, series="A", val=120),
 
 ---
 
-## Authentication
+## Authentication — Interactive Setup
 
-### DTCTL Installation
+The agent MUST check prerequisites and **ask the user interactively** for any missing details. Never silently skip or use placeholder values.
 
-If `dtctl` is not installed, install it first:
+### Step A: Install DTCTL (if missing)
 
-**Windows (PowerShell):**
-```powershell
-irm https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.ps1 | iex
-```
+Run `dtctl version`. If the command fails (not found):
+1. Detect the OS
+2. Install automatically:
+   - **macOS/Linux**: `brew install dynatrace-oss/tap/dtctl` or `curl -fsSL https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.sh | sh`
+   - **Windows**: `irm https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.ps1 | iex`
+3. Verify with `dtctl version`
 
-**macOS/Linux (Homebrew):**
-```bash
-brew install dynatrace-oss/tap/dtctl
-```
+### Step B: Configure DTCTL Context (ask user for tenant)
 
-**macOS/Linux (shell script):**
-```bash
-curl -fsSL https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.sh | sh
-```
+Run `dtctl config current-context`. If no context exists or auth has expired:
+1. **Ask the user**: _"What is your Dynatrace tenant ID? (e.g. `abc12345` from `abc12345.apps.dynatrace.com`)"_
+2. Create the context:
+   ```bash
+   dtctl config set-context <name> --environment https://<TENANT_ID>.apps.dynatrace.com
+   dtctl config use-context <name>
+   ```
+3. Authenticate via browser SSO:
+   ```bash
+   dtctl auth login
+   ```
+   This opens the browser — the user logs in and the token is stored automatically.
+4. **Alternative** — if the user provides a token instead:
+   ```bash
+   dtctl auth login --token <TOKEN> --context <name>
+   ```
 
-After install, verify with `dtctl version`.
+### Step C: Configure MCP Server (optional — ask if user wants DQL verification)
 
-### DTCTL Authentication (for deployment)
+After deployment, ask: _"Would you like to connect a Dynatrace MCP server for DQL verification? (yes/no)"_
 
-**Browser login (recommended — zero-friction):**
-```bash
-# Opens your browser for Dynatrace SSO — one-time per context
-dtctl auth login
+If yes:
+1. Use the tenant ID from Step B (don't ask again)
+2. **Open the browser** to the token generation page — let the user create a token without leaving the flow:
+   - macOS: `open "https://<TENANT_ID>.apps.dynatrace.com/ui/apps/dynatrace.classic.tokens"`
+   - Linux: `xdg-open "https://<TENANT_ID>.apps.dynatrace.com/ui/apps/dynatrace.classic.tokens"`
+   - Windows: `Start-Process "https://<TENANT_ID>.apps.dynatrace.com/ui/apps/dynatrace.classic.tokens"`
+3. Tell the user: _"I've opened the Dynatrace Access Tokens page in your browser. Create a token with scopes: **Read entities, Read settings, Read SLO**. Paste the token here when ready."_
+4. **Wait for the user** to paste the token
+5. Write the MCP config file in the project root with the user's actual values:
 
-# Or login to a specific context
-dtctl auth login --context <context-name>
-```
-After browser login, `dtctl` stores the token automatically. No manual copy-paste needed.
+   **For Claude Code** — write `.mcp.json`:
+   ```json
+   {
+     "mcpServers": {
+       "dynatrace": {
+         "type": "http",
+         "url": "https://<TENANT_ID>.apps.dynatrace.com/platform-reserved/mcp-gateway/v0.1/servers/dynatrace-mcp/mcp",
+         "headers": {
+           "Authorization": "Bearer <TOKEN>"
+         }
+       }
+     }
+   }
+   ```
 
-**Token-based (for CI/automation):**
-```bash
-dtctl auth login --token <API_TOKEN> --context <context-name>
-```
+   **For Cursor** — write `.cursor/mcp.json` (same structure, without `type` field)
 
-### Dynatrace MCP Server (Optional — for DQL verification)
+   **For Windsurf** — configure via Windsurf MCP settings
 
-If a Dynatrace MCP server is connected, the agent can verify DQL queries against the live tenant after deployment. MCP is **optional** — deployment works via `dtctl` without it.
-
-#### VS Code — Install from MCP Gallery (one-click):
-1. Open Command Palette → **MCP: Add Server**
-2. Search for **"Dynatrace"** and install
-3. When prompted, enter your tenant URL — it opens a browser for SSO authentication
-4. Done — MCP tools like `execute_dql` are now available
-
-**Alternative — remote MCP with token:**
-Add to VS Code `mcp.json` (File → Preferences → MCP Servers):
-```json
-{
-  "servers": {
-    "Dynatrace": {
-      "type": "http",
-      "url": "https://<YOUR_TENANT>.apps.dynatrace.com/platform-reserved/mcp-gateway/v0.1/servers/dynatrace-mcp/mcp",
-      "headers": {
-        "Authorization": "Bearer ${input:DT_PLATFORM_TOKEN}"
-      }
-    }
-  },
-  "inputs": [
-    {
-      "id": "DT_PLATFORM_TOKEN",
-      "type": "promptString",
-      "description": "Dynatrace platform token",
-      "password": true
-    }
-  ]
-}
-```
-
-#### Claude Code — add to project `.mcp.json`:
-```json
-{
-  "mcpServers": {
-    "dynatrace": {
-      "type": "http",
-      "url": "https://<YOUR_TENANT>.apps.dynatrace.com/platform-reserved/mcp-gateway/v0.1/servers/dynatrace-mcp/mcp",
-      "headers": {
-        "Authorization": "Bearer <YOUR_PLATFORM_TOKEN>"
-      }
-    }
-  }
-}
-```
-Generate a platform token at: `https://<YOUR_TENANT>.apps.dynatrace.com/ui/apps/dynatrace.classic.tokens` with scopes: `Read entities`, `Read settings`, `Read SLO`.
-
-#### Cursor — add to `.cursor/mcp.json`:
-```json
-{
-  "mcpServers": {
-    "dynatrace": {
-      "url": "https://<YOUR_TENANT>.apps.dynatrace.com/platform-reserved/mcp-gateway/v0.1/servers/dynatrace-mcp/mcp",
-      "headers": {
-        "Authorization": "Bearer <YOUR_PLATFORM_TOKEN>"
-      }
-    }
-  }
-}
-```
-
-#### Windsurf — configure via Windsurf MCP settings with the same remote URL pattern above.
+   **For VS Code** — write to user `mcp.json` (File → Preferences → MCP Servers) with `${input:DT_PLATFORM_TOKEN}` prompt pattern, OR use MCP Gallery one-click install:
+   1. Open Command Palette → **MCP: Add Server**
+   2. Search for **"Dynatrace"** and install
+   3. It opens a browser for SSO authentication — zero tokens needed
 
 #### Local MCP Server (Fallback)
 

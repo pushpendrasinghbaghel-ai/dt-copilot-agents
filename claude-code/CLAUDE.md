@@ -27,58 +27,49 @@ Read the full procedure and rules from `knowledge/dashboard-generator.md` before
 - DTCTL deployment commands
 - Data realism rules
 
-## Authentication
+## Authentication — Interactive Setup
 
-### DTCTL Setup (for deployment)
+Before deploying, the agent MUST check and set up prerequisites interactively. Never skip or use placeholders.
 
-Before deploying, ensure `dtctl` is installed and authenticated.
+### DTCTL Setup
 
-**Check if installed:**
-```bash
-dtctl version
-```
+1. Run `dtctl version`. If not found, install it:
+   - macOS/Linux: `brew install dynatrace-oss/tap/dtctl` or `curl -fsSL https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.sh | sh`
+   - Windows: `irm https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.ps1 | iex`
 
-**If not installed — install it:**
+2. Run `dtctl config current-context`. If no context or auth expired:
+   - **Ask the user**: "What is your Dynatrace tenant ID? (e.g. `abc12345` from `abc12345.apps.dynatrace.com`)"
+   - Create context: `dtctl config set-context <name> --environment https://<TENANT_ID>.apps.dynatrace.com`
+   - Set active: `dtctl config use-context <name>`
+   - Authenticate: `dtctl auth login` (opens browser for SSO)
+   - Alternative: `dtctl auth login --token <TOKEN>` if user provides a token
 
-macOS/Linux:
-```bash
-brew install dynatrace-oss/tap/dtctl
-# OR
-curl -fsSL https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.sh | sh
-```
+### MCP Setup (optional — for DQL verification)
 
-Windows (PowerShell):
-```powershell
-irm https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.ps1 | iex
-```
+After deployment, ask: "Would you like to connect a Dynatrace MCP server for DQL verification?"
 
-**Authenticate (browser SSO — no tokens to copy):**
-```bash
-dtctl auth login              # Opens browser for Dynatrace SSO
-```
-
-**Token-based (for CI/automation):**
-```bash
-dtctl auth login --token <API_TOKEN>
-```
-
-### Dynatrace MCP (optional — for DQL verification)
-
-Add to your project `.mcp.json`:
+If yes:
+1. Use the tenant ID from above (don't ask again)
+2. **Open the browser** to the token page so the user can create one without leaving the flow:
+   - macOS: `open "https://<TENANT_ID>.apps.dynatrace.com/ui/apps/dynatrace.classic.tokens"`
+   - Linux: `xdg-open "https://<TENANT_ID>.apps.dynatrace.com/ui/apps/dynatrace.classic.tokens"`
+   - Windows: `Start-Process "https://<TENANT_ID>.apps.dynatrace.com/ui/apps/dynatrace.classic.tokens"`
+3. Tell the user: "I've opened the Dynatrace Access Tokens page in your browser. Create a token with scopes: **Read entities, Read settings, Read SLO**. Paste the token here when ready."
+4. **Wait for the user** to paste the token
+5. Write `.mcp.json` in the project root with the user's actual tenant ID and token:
 ```json
 {
   "mcpServers": {
     "dynatrace": {
       "type": "http",
-      "url": "https://<YOUR_TENANT>.apps.dynatrace.com/platform-reserved/mcp-gateway/v0.1/servers/dynatrace-mcp/mcp",
+      "url": "https://<TENANT_ID>.apps.dynatrace.com/platform-reserved/mcp-gateway/v0.1/servers/dynatrace-mcp/mcp",
       "headers": {
-        "Authorization": "Bearer <YOUR_PLATFORM_TOKEN>"
+        "Authorization": "Bearer <TOKEN>"
       }
     }
   }
 }
 ```
-Generate a platform token at: `https://<YOUR_TENANT>.apps.dynatrace.com/ui/apps/dynatrace.classic.tokens`
 MCP is optional — deployment works via `dtctl` without it.
 
 ## Critical Rules
