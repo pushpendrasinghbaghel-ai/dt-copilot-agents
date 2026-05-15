@@ -12,6 +12,21 @@ const platform = args[1] || 'all';
 const targetDir = args[2] || process.cwd();
 
 const packageRoot = path.resolve(__dirname, '..');
+const currentVersion = require(path.join(packageRoot, 'package.json')).version;
+
+function checkForUpdates() {
+  try {
+    const latest = execSync('npm view dt-copilot-agents version', { encoding: 'utf8', timeout: 5000 }).trim();
+    if (latest && latest !== currentVersion) {
+      console.log(`\n  ┌──────────────────────────────────────────────────────┐`);
+      console.log(`  │  Update available: ${currentVersion} → ${latest}                      │`);
+      console.log(`  │  Run: npx dt-copilot-agents@latest install           │`);
+      console.log(`  └──────────────────────────────────────────────────────┘\n`);
+    }
+  } catch (e) {
+    // Silently ignore — network unavailable or npm not reachable
+  }
+}
 
 function copyRecursive(src, dest) {
   if (!fs.existsSync(src)) return;
@@ -190,14 +205,17 @@ switch (command) {
       process.exit(1);
     }
     install(platform, path.resolve(targetDir));
+    checkForUpdates();
     break;
   case 'info':
     showInfo();
+    checkForUpdates();
     break;
   case 'help':
   case '--help':
   case '-h':
     showHelp();
+    checkForUpdates();
     break;
   default:
     console.error(`Unknown command: ${command}`);
