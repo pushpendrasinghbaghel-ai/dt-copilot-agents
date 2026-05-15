@@ -106,32 +106,45 @@ Tile 19: categoricalBarChart or table (additional breakdown)
 Tile 20: table (recent events/orders/alerts — live feed style)
 ```
 
-5. **Layout** — Use the standard 20-wide grid:
+5. **Layout — CRITICAL: Copy this layout block EXACTLY as-is.** This places tiles side-by-side (2 per row). Do NOT put each tile on its own row. The grid is 20 units wide.
 
 ```json
-{
-  "1":  {"h":2,"w":20,"x":0,"y":0},
-  "2":  {"h":4,"w":5,"x":0,"y":2},
-  "3":  {"h":4,"w":5,"x":5,"y":2},
-  "4":  {"h":4,"w":5,"x":10,"y":2},
-  "5":  {"h":4,"w":5,"x":15,"y":2},
-  "6":  {"h":1,"w":20,"x":0,"y":6},
-  "7":  {"h":7,"w":10,"x":0,"y":7},
-  "8":  {"h":7,"w":10,"x":10,"y":7},
-  "9":  {"h":7,"w":10,"x":0,"y":14},
-  "10": {"h":7,"w":10,"x":10,"y":14},
-  "11": {"h":1,"w":20,"x":0,"y":21},
-  "12": {"h":7,"w":10,"x":0,"y":22},
-  "13": {"h":7,"w":10,"x":10,"y":22},
-  "14": {"h":7,"w":10,"x":0,"y":29},
-  "15": {"h":7,"w":10,"x":10,"y":29},
-  "16": {"h":1,"w":20,"x":0,"y":36},
-  "17": {"h":7,"w":7,"x":0,"y":37},
-  "18": {"h":7,"w":7,"x":7,"y":37},
-  "19": {"h":7,"w":6,"x":14,"y":37},
-  "20": {"h":8,"w":20,"x":0,"y":44}
+"layouts": {
+  "0": {
+    "content": {
+      "1":  {"h":2,"w":20,"x":0,"y":0},
+      "2":  {"h":4,"w":5,"x":0,"y":2},
+      "3":  {"h":4,"w":5,"x":5,"y":2},
+      "4":  {"h":4,"w":5,"x":10,"y":2},
+      "5":  {"h":4,"w":5,"x":15,"y":2},
+      "6":  {"h":1,"w":20,"x":0,"y":6},
+      "7":  {"h":7,"w":10,"x":0,"y":7},
+      "8":  {"h":7,"w":10,"x":10,"y":7},
+      "9":  {"h":7,"w":10,"x":0,"y":14},
+      "10": {"h":7,"w":10,"x":10,"y":14},
+      "11": {"h":1,"w":20,"x":0,"y":21},
+      "12": {"h":7,"w":10,"x":0,"y":22},
+      "13": {"h":7,"w":10,"x":10,"y":22},
+      "14": {"h":7,"w":10,"x":0,"y":29},
+      "15": {"h":7,"w":10,"x":10,"y":29},
+      "16": {"h":1,"w":20,"x":0,"y":36},
+      "17": {"h":7,"w":7,"x":0,"y":37},
+      "18": {"h":7,"w":7,"x":7,"y":37},
+      "19": {"h":7,"w":6,"x":14,"y":37},
+      "20": {"h":8,"w":20,"x":0,"y":44}
+    },
+    "type": "grid"
+  }
 }
 ```
+
+**Layout rules:**
+- Row 1 (y=0): Full-width header (w=20)
+- Row 2 (y=2): 4 KPI cards side-by-side (w=5 each, x=0/5/10/15)
+- Sections 2-3: Charts in 2-column layout (w=10 each, x=0 and x=10)
+- Section 4: 3-column layout (w=7, w=7, w=6)
+- Bottom: Full-width table (w=20)
+- **NEVER set all tiles to w=20 (full width) — that wastes space and looks terrible**
 
 6. **ALL queries use `data record(...)` inline DQL** — NEVER use `fetch logs`, `fetch events`, or any data source that requires ingestion.
 
@@ -363,6 +376,7 @@ See [@dynatrace-oss/dynatrace-mcp-server](https://www.npmjs.com/package/@dynatra
 - **NEVER use `@dynatrace-sdk/client-classic-environment-v2`** patterns
 - **DO NOT generate fewer than 20 tiles** — the dashboard must look rich and complete
 - **DO NOT skip the research phase** — dashboards with generic data look fake in CIO meetings
+- **NEVER put one tile per row** — use the exact layout grid from above. KPIs go 4-across (w=5), charts go 2-across (w=10), section 4 goes 3-across (w=7+7+6). Copy the layouts block verbatim.
 
 ---
 

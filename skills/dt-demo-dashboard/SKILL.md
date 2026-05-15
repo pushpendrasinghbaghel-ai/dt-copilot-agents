@@ -62,7 +62,37 @@ Tile 19: categoricalBarChart or table (additional breakdown)
 Tile 20: table (recent events/orders/alerts — live feed style)
 ```
 
-5. **Layout** — Use the standard 20-wide grid. Reference [dashboard skeleton](./assets/dashboard-skeleton.json) for exact positions.
+5. **Layout — CRITICAL: Copy this exact layout block into the JSON.** Do NOT put each tile on its own row.
+
+```json
+"layouts": {
+  "0": {
+    "content": {
+      "1":  {"h":2,"w":20,"x":0,"y":0},
+      "2":  {"h":4,"w":5,"x":0,"y":2},
+      "3":  {"h":4,"w":5,"x":5,"y":2},
+      "4":  {"h":4,"w":5,"x":10,"y":2},
+      "5":  {"h":4,"w":5,"x":15,"y":2},
+      "6":  {"h":1,"w":20,"x":0,"y":6},
+      "7":  {"h":7,"w":10,"x":0,"y":7},
+      "8":  {"h":7,"w":10,"x":10,"y":7},
+      "9":  {"h":7,"w":10,"x":0,"y":14},
+      "10": {"h":7,"w":10,"x":10,"y":14},
+      "11": {"h":1,"w":20,"x":0,"y":21},
+      "12": {"h":7,"w":10,"x":0,"y":22},
+      "13": {"h":7,"w":10,"x":10,"y":22},
+      "14": {"h":7,"w":10,"x":0,"y":29},
+      "15": {"h":7,"w":10,"x":10,"y":29},
+      "16": {"h":1,"w":20,"x":0,"y":36},
+      "17": {"h":7,"w":7,"x":0,"y":37},
+      "18": {"h":7,"w":7,"x":7,"y":37},
+      "19": {"h":7,"w":6,"x":14,"y":37},
+      "20": {"h":8,"w":20,"x":0,"y":44}
+    },
+    "type": "grid"
+  }
+}
+```
 
 6. **ALL queries use `data record(...)` inline DQL** — NEVER use `fetch logs`, `fetch events`, or any data source that requires ingestion.
 

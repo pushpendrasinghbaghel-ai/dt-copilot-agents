@@ -78,5 +78,6 @@ MCP is optional — deployment works via `dtctl` without it.
 - Timeseries timestamps must be within 3 hours of `now()`
 - Always `toDouble()` before `makeTimeseries`
 - Dashboard version is `21`, grid is 20 units wide
+- **CRITICAL: Use the exact layout grid from knowledge/dashboard-generator.md — tiles must be placed side-by-side (2 per row), NOT one tile per row. Copy the layouts block verbatim.**
 - Deploy with: `dtctl apply -f <file>.json` (uses current DTCTL context)
 - Research the company first — generic data looks fake
