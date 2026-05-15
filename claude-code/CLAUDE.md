@@ -79,6 +79,11 @@ MCP is optional — deployment works via `dtctl` without it.
 - Always `toDouble()` before `makeTimeseries`
 - Dashboard version is `21`, grid is 20 units wide
 - **CRITICAL: Use the layout grid from knowledge/dashboard-generator.md — tiles must be placed side-by-side (2+ per row), NOT one tile per row. Use asymmetric widths: bar charts/tables get w=12, donuts/pies get w=8. Pair tiles so widths sum to 20. Alternate wide-left/wide-right for visual variety.**
+- **MANDATORY LAYOUT** — copy this EXACT grid into every dashboard (DO NOT generate your own, DO NOT use w=10+10 or w=20 on data tiles):
+```json
+"layouts":{"0":{"content":{"1":{"h":2,"w":20,"x":0,"y":0},"2":{"h":4,"w":5,"x":0,"y":2},"3":{"h":4,"w":5,"x":5,"y":2},"4":{"h":4,"w":5,"x":10,"y":2},"5":{"h":4,"w":5,"x":15,"y":2},"6":{"h":1,"w":20,"x":0,"y":6},"7":{"h":7,"w":12,"x":0,"y":7},"8":{"h":7,"w":8,"x":12,"y":7},"9":{"h":7,"w":8,"x":0,"y":14},"10":{"h":7,"w":12,"x":8,"y":14},"11":{"h":1,"w":20,"x":0,"y":21},"12":{"h":7,"w":12,"x":0,"y":22},"13":{"h":7,"w":8,"x":12,"y":22},"14":{"h":7,"w":8,"x":0,"y":29},"15":{"h":7,"w":12,"x":8,"y":29},"16":{"h":1,"w":20,"x":0,"y":36},"17":{"h":7,"w":7,"x":0,"y":37},"18":{"h":7,"w":7,"x":7,"y":37},"19":{"h":7,"w":6,"x":14,"y":37},"20":{"h":8,"w":20,"x":0,"y":44}},"type":"grid"}}
+```
+Tiles 7+8=12+8, 9+10=8+12, 12+13=12+8, 14+15=8+12, 17+18+19=7+7+6. Verify before saving.
 - **NEVER use `fieldsRename` with string literals** — `fieldsRename foo = "Bar"` is a DQL syntax error. Keep original field names or use `fieldsAdd NewName = oldField | fieldsRemove oldField`.
 - **ALWAYS validate ALL DQL queries via MCP `verify_dql` BEFORE deploying** — run every data tile query through verification. Do NOT deploy first and fix later.
 - Deploy with: `dtctl apply -f <file>.json` (uses current DTCTL context)

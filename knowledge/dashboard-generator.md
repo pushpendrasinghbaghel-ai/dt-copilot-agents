@@ -106,7 +106,7 @@ Tile 19: categoricalBarChart or table (additional breakdown)
 Tile 20: table (recent events/orders/alerts — live feed style)
 ```
 
-5. **Layout — CRITICAL: Use this layout grid.** The grid is 20 units wide. Tiles MUST be placed side-by-side to use screen real estate well. Use **content-aware widths** — bar charts and tables get more space, donuts and pies get less.
+5. **MANDATORY LAYOUT — COPY THIS GRID VERBATIM.** Do NOT generate your own layout. Do NOT use w=10+10 or w=20 on data tiles. Use these EXACT positions:
 
 ```json
 "layouts": {
@@ -138,15 +138,19 @@ Tile 20: table (recent events/orders/alerts — live feed style)
 }
 ```
 
-**Layout rules:**
+**Layout rules — ENFORCED, NOT OPTIONAL:**
 - Row 1 (y=0): Full-width header (w=20)
 - Row 2 (y=2): 4 KPI cards side-by-side (w=5 each, x=0/5/10/15)
-- Sections 2-3: **Asymmetric 2-column layout** — alternate wider/narrower to match content:
+- Sections 2-3: **Asymmetric 2-column layout** — ALWAYS alternate wider/narrower:
   - Row with bar chart (w=12) + donut/pie (w=8)
   - Row with line/area chart (w=8) + table (w=12)
-  - Alternates wide-left/wide-right for visual variety
 - Section 4: 3-column layout (w=7, w=7, w=6)
 - Bottom: Full-width events table (w=20)
+
+**FORBIDDEN widths (if you see these, the layout is WRONG):**
+- w=20 on any data tile (tiles 2-5, 7-10, 12-15, 17-19) = WRONG
+- w=10+10 on any row = WRONG (too symmetric, looks boring)
+- Any tile alone on a row (except headers and tile 20) = WRONG
 
 **Content-aware width guide (grid = 20 units):**
 
@@ -167,20 +171,41 @@ Tile 20: table (recent events/orders/alerts — live feed style)
 - Two tables (w=10 + w=10) ✅
 - Three tiles (w=7 + w=7 + w=6) ✅
 
-**❌ BAD LAYOUT — NEVER DO THIS:**
+**❌ BAD LAYOUT — IF YOUR OUTPUT LOOKS LIKE THIS, START OVER:**
 ```json
 // WRONG: Every tile on its own row = wasted space, ugly, unprofessional
 "7":  {"h":7,"w":20,"x":0,"y":7},
 "8":  {"h":7,"w":20,"x":0,"y":14},
 "9":  {"h":7,"w":20,"x":0,"y":21},
 "10": {"h":7,"w":20,"x":0,"y":28}
+
+// ALSO WRONG: Symmetric w=10+10 is lazy and boring
+"7":  {"h":7,"w":10,"x":0,"y":7},
+"8":  {"h":7,"w":10,"x":10,"y":7},
+"9":  {"h":7,"w":10,"x":0,"y":14},
+"10": {"h":7,"w":10,"x":10,"y":14}
 ```
 
-**Post-generation layout check — verify before saving:**
+**✅ CORRECT LAYOUT — asymmetric widths (12+8 / 8+12):**
+```json
+"7":  {"h":7,"w":12,"x":0,"y":7},
+"8":  {"h":7,"w":8,"x":12,"y":7},
+"9":  {"h":7,"w":8,"x":0,"y":14},
+"10": {"h":7,"w":12,"x":8,"y":14}
+```
+
+**POST-GENERATION LAYOUT VALIDATION — MANDATORY before saving the file:**
 1. ✅ KPI tiles: 4 tiles at w=5 (x=0/5/10/15)
-2. ✅ Section tiles: every row has 2+ tiles, widths sum to 20
-3. ✅ NO data tile has w=20 (only markdown headers and the bottom events table)
-4. ✅ Adjacent tiles don't overlap (x + w of left tile = x of right tile)
+2. ✅ Tiles 7+8: w=12+8 (widths sum to 20)
+3. ✅ Tiles 9+10: w=8+12 (widths sum to 20)
+4. ✅ Tiles 12+13: w=12+8 (widths sum to 20)
+5. ✅ Tiles 14+15: w=8+12 (widths sum to 20)
+6. ✅ Tiles 17+18+19: w=7+7+6 (widths sum to 20)
+7. ✅ NO data tile has w=20 (only markdown headers tile 1/6/11/16 and the bottom feed tile 20)
+8. ✅ NO row uses w=10+10
+9. ✅ Adjacent tiles don't overlap (x + w of left tile = x of right tile)
+
+**If ANY check fails, fix the layout before proceeding.**
 
 6. **ALL queries use `data record(...)` inline DQL** — NEVER use `fetch logs`, `fetch events`, or any data source that requires ingestion.
 

@@ -39,6 +39,11 @@ MCP is optional — deployment works via `dtctl` without it.
 - **NEVER use `fieldsRename` with string literals** — `fieldsRename foo = "Bar"` is a DQL syntax error. Keep original field names.
 - **ALWAYS validate ALL DQL queries via MCP `verify_dql` BEFORE deploying** — run every data tile query through verification. Do NOT deploy broken queries.
 - **NEVER put one tile per row** — use asymmetric widths: bar charts/tables w=12, donuts/pies w=8. Pair tiles to sum to 20 per row.
+- **MANDATORY LAYOUT** — copy this EXACT grid into every dashboard (DO NOT generate your own, DO NOT use w=10+10 or w=20 on data tiles):
+```json
+"layouts":{"0":{"content":{"1":{"h":2,"w":20,"x":0,"y":0},"2":{"h":4,"w":5,"x":0,"y":2},"3":{"h":4,"w":5,"x":5,"y":2},"4":{"h":4,"w":5,"x":10,"y":2},"5":{"h":4,"w":5,"x":15,"y":2},"6":{"h":1,"w":20,"x":0,"y":6},"7":{"h":7,"w":12,"x":0,"y":7},"8":{"h":7,"w":8,"x":12,"y":7},"9":{"h":7,"w":8,"x":0,"y":14},"10":{"h":7,"w":12,"x":8,"y":14},"11":{"h":1,"w":20,"x":0,"y":21},"12":{"h":7,"w":12,"x":0,"y":22},"13":{"h":7,"w":8,"x":12,"y":22},"14":{"h":7,"w":8,"x":0,"y":29},"15":{"h":7,"w":12,"x":8,"y":29},"16":{"h":1,"w":20,"x":0,"y":36},"17":{"h":7,"w":7,"x":0,"y":37},"18":{"h":7,"w":7,"x":7,"y":37},"19":{"h":7,"w":6,"x":14,"y":37},"20":{"h":8,"w":20,"x":0,"y":44}},"type":"grid"}}
+```
+Tiles 7+8=12+8, 9+10=8+12, 12+13=12+8, 14+15=8+12, 17+18+19=7+7+6. Verify before saving.
 - Dashboard JSON: version `21`, grid width `20`, exactly 20 tiles
 - Deploy: `dtctl apply -f <file>.json` (uses current DTCTL context)
 - Verify: if MCP connected, run a DQL query via `execute_dql` to confirm data

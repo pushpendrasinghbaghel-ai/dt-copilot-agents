@@ -62,7 +62,7 @@ Tile 19: categoricalBarChart or table (additional breakdown)
 Tile 20: table (recent events/orders/alerts — live feed style)
 ```
 
-5. **Layout — CRITICAL: Use content-aware asymmetric widths.** Do NOT put each tile on its own row.
+5. **MANDATORY LAYOUT — COPY THIS GRID VERBATIM.** Do NOT generate your own layout. Do NOT use w=10+10 or w=20 on data tiles.
 
 ```json
 "layouts": {
@@ -100,8 +100,11 @@ Tile 20: table (recent events/orders/alerts — live feed style)
 - `lineChart` / `areaChart` → **w=8–12** (flexible)
 - Pair widths to sum to 20: bar(12)+donut(8), chart(8)+table(12)
 - Alternate wide-left/wide-right across rows for visual variety
-- **NEVER set all tiles to w=20** — that wastes space and looks terrible
-- **Post-check: verify every row has 2+ tiles and widths sum to 20**
+**FORBIDDEN widths (if you see these, the layout is WRONG):**
+- w=20 on any data tile (tiles 2-5, 7-10, 12-15, 17-19) = WRONG
+- w=10+10 on any row = WRONG (too symmetric, looks boring)
+- Any tile alone on a row (except headers and tile 20) = WRONG
+- **Post-check: verify tiles 7+8=12+8, 9+10=8+12, 12+13=12+8, 14+15=8+12, 17+18+19=7+7+6**
 
 6. **ALL queries use `data record(...)` inline DQL** — NEVER use `fetch logs`, `fetch events`, or any data source that requires ingestion.
 

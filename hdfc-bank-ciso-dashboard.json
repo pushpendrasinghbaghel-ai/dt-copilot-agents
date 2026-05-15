@@ -1,0 +1,204 @@
+{
+  "id": "d0d5e339-ad39-4c6f-873d-5f262ea8152d",
+  "name": "🛡️ HDFC Bank — CISO Security Command Center",
+  "content": {
+    "layouts": {
+      "0": {
+        "content": {
+          "1":  {"h":2,"w":20,"x":0,"y":0},
+          "2":  {"h":4,"w":5,"x":0,"y":2},
+          "3":  {"h":4,"w":5,"x":5,"y":2},
+          "4":  {"h":4,"w":5,"x":10,"y":2},
+          "5":  {"h":4,"w":5,"x":15,"y":2},
+          "6":  {"h":1,"w":20,"x":0,"y":6},
+          "7":  {"h":7,"w":12,"x":0,"y":7},
+          "8":  {"h":7,"w":8,"x":12,"y":7},
+          "9":  {"h":7,"w":8,"x":0,"y":14},
+          "10": {"h":7,"w":12,"x":8,"y":14},
+          "11": {"h":1,"w":20,"x":0,"y":21},
+          "12": {"h":7,"w":12,"x":0,"y":22},
+          "13": {"h":7,"w":8,"x":12,"y":22},
+          "14": {"h":7,"w":8,"x":0,"y":29},
+          "15": {"h":7,"w":12,"x":8,"y":29},
+          "16": {"h":1,"w":20,"x":0,"y":36},
+          "17": {"h":7,"w":7,"x":0,"y":37},
+          "18": {"h":7,"w":7,"x":7,"y":37},
+          "19": {"h":7,"w":6,"x":14,"y":37},
+          "20": {"h":8,"w":20,"x":0,"y":44}
+        },
+        "type": "grid"
+      }
+    },
+    "tiles": {
+      "1": {
+        "content": "# 🛡️ HDFC Bank — India's Largest Private Sector Bank\n## CISO Security Command Center | Threat & Compliance\n\n**Real-time security posture across 9,545 branches, 21,417 ATMs, and 120M+ customer accounts — D-SIB compliant**",
+        "type": "markdown"
+      },
+      "2": {
+        "query": "data record(value=92.4)\n| fieldsKeep value",
+        "title": "Security Score",
+        "type": "data",
+        "visualization": "singleValue",
+        "visualizationSettings": {
+          "singleValue": {"autoscale":true,"label":"Enterprise Posture","showLabel":true},
+          "thresholds": [{"color":"#dc172a","value":0},{"color":"#f5d565","value":70},{"color":"#6bcb77","value":85}]
+        }
+      },
+      "3": {
+        "query": "data record(value=347)\n| fieldsKeep value",
+        "title": "Open Vulnerabilities",
+        "type": "data",
+        "visualization": "singleValue",
+        "visualizationSettings": {
+          "singleValue": {"autoscale":true,"label":"Across All Systems","showLabel":true},
+          "thresholds": [{"color":"#6bcb77","value":0},{"color":"#f5d565","value":200},{"color":"#dc172a","value":500}]
+        }
+      },
+      "4": {
+        "query": "data record(value=4.2)\n| fieldsKeep value",
+        "title": "MTTR (Days)",
+        "type": "data",
+        "visualization": "singleValue",
+        "visualizationSettings": {
+          "singleValue": {"autoscale":true,"label":"Mean Time to Remediate","showLabel":true},
+          "thresholds": [{"color":"#6bcb77","value":0},{"color":"#f5d565","value":7},{"color":"#dc172a","value":14}]
+        }
+      },
+      "5": {
+        "query": "data record(value=96.8)\n| fieldsKeep value",
+        "title": "Compliance Score %",
+        "type": "data",
+        "visualization": "singleValue",
+        "visualizationSettings": {
+          "singleValue": {"autoscale":true,"label":"RBI + DPDP + CERT-In","showLabel":true},
+          "thresholds": [{"color":"#dc172a","value":0},{"color":"#f5d565","value":80},{"color":"#6bcb77","value":90}]
+        }
+      },
+      "6": {
+        "content": "## 🔍 Vulnerability & Attack Surface",
+        "type": "markdown"
+      },
+      "7": {
+        "query": "data record(severity=\"Critical\", count=42),\n     record(severity=\"High\", count=127),\n     record(severity=\"Medium\", count=98),\n     record(severity=\"Low\", count=80)\n| sort count desc\n| fieldsKeep severity, count",
+        "title": "Open Vulnerabilities by Severity",
+        "type": "data",
+        "visualization": "categoricalBarChart",
+        "visualizationSettings": {
+          "categoricalBarChart": {"truncationMode":"middle"},
+          "thresholds": [{"color":"#dc172a","value":0}]
+        }
+      },
+      "8": {
+        "query": "data record(surface=\"Web Applications\", exposure=28.4),\n     record(surface=\"API Endpoints\", exposure=22.1),\n     record(surface=\"Mobile Apps\", exposure=16.7),\n     record(surface=\"Network Infra\", exposure=12.3),\n     record(surface=\"ATM / POS\", exposure=8.9),\n     record(surface=\"Third-Party\", exposure=6.4),\n     record(surface=\"Cloud Services\", exposure=5.2)\n| sort exposure desc\n| fieldsKeep surface, exposure",
+        "title": "Attack Surface by Category (%)",
+        "type": "data",
+        "visualization": "donutChart",
+        "visualizationSettings": {
+          "thresholds": [{"color":"#dc172a","value":0}]
+        }
+      },
+      "9": {
+        "query": "data record(timestamp=now()-165m, series=\"Blocked\", val=1842),\n     record(timestamp=now()-165m, series=\"Detected\", val=324),\n     record(timestamp=now()-165m, series=\"Escalated\", val=18),\n     record(timestamp=now()-150m, series=\"Blocked\", val=1920),\n     record(timestamp=now()-150m, series=\"Detected\", val=298),\n     record(timestamp=now()-150m, series=\"Escalated\", val=22),\n     record(timestamp=now()-135m, series=\"Blocked\", val=1780),\n     record(timestamp=now()-135m, series=\"Detected\", val=342),\n     record(timestamp=now()-135m, series=\"Escalated\", val=15),\n     record(timestamp=now()-120m, series=\"Blocked\", val=2040),\n     record(timestamp=now()-120m, series=\"Detected\", val=310),\n     record(timestamp=now()-120m, series=\"Escalated\", val=24),\n     record(timestamp=now()-105m, series=\"Blocked\", val=1890),\n     record(timestamp=now()-105m, series=\"Detected\", val=328),\n     record(timestamp=now()-105m, series=\"Escalated\", val=19),\n     record(timestamp=now()-90m, series=\"Blocked\", val=2150),\n     record(timestamp=now()-90m, series=\"Detected\", val=356),\n     record(timestamp=now()-90m, series=\"Escalated\", val=27),\n     record(timestamp=now()-75m, series=\"Blocked\", val=1960),\n     record(timestamp=now()-75m, series=\"Detected\", val=314),\n     record(timestamp=now()-75m, series=\"Escalated\", val=21),\n     record(timestamp=now()-60m, series=\"Blocked\", val=2210),\n     record(timestamp=now()-60m, series=\"Detected\", val=368),\n     record(timestamp=now()-60m, series=\"Escalated\", val=29),\n     record(timestamp=now()-45m, series=\"Blocked\", val=2080),\n     record(timestamp=now()-45m, series=\"Detected\", val=332),\n     record(timestamp=now()-45m, series=\"Escalated\", val=23),\n     record(timestamp=now()-30m, series=\"Blocked\", val=2280),\n     record(timestamp=now()-30m, series=\"Detected\", val=372),\n     record(timestamp=now()-30m, series=\"Escalated\", val=31),\n     record(timestamp=now()-15m, series=\"Blocked\", val=2120),\n     record(timestamp=now()-15m, series=\"Detected\", val=348),\n     record(timestamp=now()-15m, series=\"Escalated\", val=25)\n| fieldsAdd val = toDouble(val)\n| makeTimeseries incidents = avg(val), by: {series}, interval: 15m",
+        "title": "Security Incidents Trend (per 15 min)",
+        "type": "data",
+        "visualization": "areaChart",
+        "visualizationSettings": {
+          "thresholds": [{"color":"#dc172a","value":0}]
+        }
+      },
+      "10": {
+        "query": "data record(asset=\"Core Banking (Finacle)\", risk_score=78, vulns=34, last_scan=\"2h ago\"),\n     record(asset=\"Mobile Banking App\", risk_score=72, vulns=28, last_scan=\"1h ago\"),\n     record(asset=\"Net Banking Portal\", risk_score=68, vulns=42, last_scan=\"3h ago\"),\n     record(asset=\"UPI Payment Gateway\", risk_score=65, vulns=18, last_scan=\"45m ago\"),\n     record(asset=\"ATM Switch (Euronet)\", risk_score=61, vulns=22, last_scan=\"4h ago\"),\n     record(asset=\"Card Management System\", risk_score=58, vulns=31, last_scan=\"2h ago\"),\n     record(asset=\"SWIFT Gateway\", risk_score=54, vulns=12, last_scan=\"1h ago\"),\n     record(asset=\"WhatsApp Banking API\", risk_score=48, vulns=15, last_scan=\"30m ago\"),\n     record(asset=\"HDB Financial Services\", risk_score=46, vulns=24, last_scan=\"5h ago\"),\n     record(asset=\"HDFC Securities Trading\", risk_score=42, vulns=19, last_scan=\"3h ago\")\n| sort risk_score desc\n| fieldsKeep asset, risk_score, vulns, last_scan",
+        "title": "Top Risk Assets — Risk Score & Vulnerability Count",
+        "type": "data",
+        "visualization": "table",
+        "visualizationSettings": {
+          "thresholds": [{"color":"#dc172a","value":0}]
+        }
+      },
+      "11": {
+        "content": "## 📋 Compliance & Regulatory Posture",
+        "type": "markdown"
+      },
+      "12": {
+        "query": "data record(framework=\"RBI Cyber Security Framework\", coverage=98.2),\n     record(framework=\"DPDP Act 2023\", coverage=94.5),\n     record(framework=\"CERT-In Directive\", coverage=97.1),\n     record(framework=\"PCI-DSS v4.0\", coverage=96.8),\n     record(framework=\"ISO 27001:2022\", coverage=99.1),\n     record(framework=\"SWIFT CSP\", coverage=97.4),\n     record(framework=\"SOC 2 Type II\", coverage=95.2),\n     record(framework=\"SEBI Cybersec\", coverage=93.8),\n     record(framework=\"IRDAI Guidelines\", coverage=91.6)\n| sort coverage desc\n| fieldsKeep framework, coverage",
+        "title": "Compliance Framework Coverage (%)",
+        "type": "data",
+        "visualization": "categoricalBarChart",
+        "visualizationSettings": {
+          "categoricalBarChart": {"truncationMode":"middle"},
+          "thresholds": [{"color":"#dc172a","value":0},{"color":"#f5d565","value":80},{"color":"#6bcb77","value":90}]
+        }
+      },
+      "13": {
+        "query": "data record(category=\"Critical\", findings=3, remediated=2, overdue=1),\n     record(category=\"High\", findings=14, remediated=11, overdue=3),\n     record(category=\"Medium\", findings=28, remediated=24, overdue=4),\n     record(category=\"Low\", findings=42, remediated=38, overdue=4),\n     record(category=\"Informational\", findings=67, remediated=65, overdue=2)\n| fieldsKeep category, findings, remediated, overdue",
+        "title": "Audit Findings — Status by Severity",
+        "type": "data",
+        "visualization": "table",
+        "visualizationSettings": {
+          "thresholds": [{"color":"#14a8f5","value":0}]
+        }
+      },
+      "14": {
+        "query": "data record(timestamp=now()-165m, series=\"Overall\", val=94.2),\n     record(timestamp=now()-150m, series=\"Overall\", val=94.8),\n     record(timestamp=now()-135m, series=\"Overall\", val=95.1),\n     record(timestamp=now()-120m, series=\"Overall\", val=95.4),\n     record(timestamp=now()-105m, series=\"Overall\", val=95.7),\n     record(timestamp=now()-90m, series=\"Overall\", val=95.9),\n     record(timestamp=now()-75m, series=\"Overall\", val=96.1),\n     record(timestamp=now()-60m, series=\"Overall\", val=96.3),\n     record(timestamp=now()-45m, series=\"Overall\", val=96.5),\n     record(timestamp=now()-30m, series=\"Overall\", val=96.6),\n     record(timestamp=now()-15m, series=\"Overall\", val=96.8)\n| fieldsAdd val = toDouble(val)\n| makeTimeseries compliance_score = avg(val), by: {series}, interval: 15m",
+        "title": "Compliance Score Trend (%)",
+        "type": "data",
+        "visualization": "lineChart",
+        "visualizationSettings": {
+          "thresholds": [{"color":"#6bcb77","value":0}]
+        }
+      },
+      "15": {
+        "query": "data record(classification=\"Public\", pct=12.4),\n     record(classification=\"Internal\", pct=34.8),\n     record(classification=\"Confidential\", pct=31.2),\n     record(classification=\"Restricted (PII/PFI)\", pct=16.8),\n     record(classification=\"Highly Restricted (RBI)\", pct=4.8)\n| sort pct desc\n| fieldsKeep classification, pct",
+        "title": "Data Classification — Sensitivity Breakdown",
+        "type": "data",
+        "visualization": "donutChart",
+        "visualizationSettings": {
+          "thresholds": [{"color":"#14a8f5","value":0}]
+        }
+      },
+      "16": {
+        "content": "## ⚔️ Threat Landscape & Incident Response",
+        "type": "markdown"
+      },
+      "17": {
+        "query": "data record(threat=\"Phishing / Smishing\", active=248, severity=\"High\", trend=\"Rising\"),\n     record(threat=\"Card Skimming / Cloning\", active=87, severity=\"Critical\", trend=\"Stable\"),\n     record(threat=\"DDoS Attempts\", active=12, severity=\"Medium\", trend=\"Declining\"),\n     record(threat=\"Credential Stuffing\", active=156, severity=\"High\", trend=\"Rising\"),\n     record(threat=\"Malware / Ransomware\", active=34, severity=\"Critical\", trend=\"Stable\"),\n     record(threat=\"Insider Threat\", active=8, severity=\"High\", trend=\"Stable\"),\n     record(threat=\"API Abuse\", active=92, severity=\"Medium\", trend=\"Rising\"),\n     record(threat=\"Supply Chain Risk\", active=14, severity=\"High\", trend=\"Stable\")\n| sort active desc\n| fieldsKeep threat, active, severity, trend",
+        "title": "Active Threat Landscape",
+        "type": "data",
+        "visualization": "table",
+        "visualizationSettings": {
+          "thresholds": [{"color":"#dc172a","value":0}]
+        }
+      },
+      "18": {
+        "query": "data record(status=\"Resolved (< 4h)\", pct=62.4),\n     record(status=\"In Progress\", pct=18.7),\n     record(status=\"Escalated to CERT-In\", pct=4.2),\n     record(status=\"Awaiting Forensics\", pct=8.1),\n     record(status=\"Under Investigation\", pct=6.6)\n| sort pct desc\n| fieldsKeep status, pct",
+        "title": "Incident Response Status (%)",
+        "type": "data",
+        "visualization": "pieChart",
+        "visualizationSettings": {
+          "thresholds": [{"color":"#14a8f5","value":0}]
+        }
+      },
+      "19": {
+        "query": "data record(technique=\"Phishing (T1566)\", coverage=94),\n     record(technique=\"Brute Force (T1110)\", coverage=98),\n     record(technique=\"Exploitation (T1190)\", coverage=89),\n     record(technique=\"Lateral Movement (T1021)\", coverage=86),\n     record(technique=\"Data Exfil (T1048)\", coverage=91),\n     record(technique=\"C2 Comms (T1071)\", coverage=93)\n| sort coverage desc\n| fieldsKeep technique, coverage",
+        "title": "MITRE ATT&CK Coverage (%)",
+        "type": "data",
+        "visualization": "categoricalBarChart",
+        "visualizationSettings": {
+          "categoricalBarChart": {"truncationMode":"middle"},
+          "thresholds": [{"color":"#dc172a","value":0},{"color":"#f5d565","value":80},{"color":"#6bcb77","value":90}]
+        }
+      },
+      "20": {
+        "query": "data record(time=\"now()-2m\", event=\"Blocked 48 phishing domains targeting HDFC Bank customers\", severity=\"High\", source=\"SOC / Brand Protection\"),\n     record(time=\"now()-7m\", event=\"VAPT scan completed on Mobile Banking App v9.4 — 3 medium findings\", severity=\"Medium\", source=\"AppSec Team\"),\n     record(time=\"now()-12m\", event=\"PCI-DSS v4.0 quarterly ASV scan passed — all in-scope systems compliant\", severity=\"Low\", source=\"Compliance\"),\n     record(time=\"now()-18m\", event=\"Credential stuffing attack on Net Banking — 12,400 attempts blocked by WAF\", severity=\"High\", source=\"SOC / WAF\"),\n     record(time=\"now()-25m\", event=\"SWIFT CSP self-attestation submitted to SWIFT — all 32 controls met\", severity=\"Low\", source=\"Compliance\"),\n     record(time=\"now()-33m\", event=\"Anomalous API call pattern detected on UPI Gateway — investigation initiated\", severity=\"High\", source=\"API Security\"),\n     record(time=\"now()-40m\", event=\"RBI circular on digital lending compliance — gap assessment initiated\", severity=\"Medium\", source=\"Regulatory\"),\n     record(time=\"now()-48m\", event=\"ATM malware signature update deployed across 21,417 ATMs\", severity=\"Medium\", source=\"Endpoint Security\"),\n     record(time=\"now()-55m\", event=\"DPDP Act consent management module deployed in Mobile App\", severity=\"Low\", source=\"Privacy Team\"),\n     record(time=\"now()-63m\", event=\"Insider threat alert — unusual data access pattern by privileged user\", severity=\"Critical\", source=\"DLP / UEBA\"),\n     record(time=\"now()-72m\", event=\"CERT-In mandatory incident report filed for Q1 FY26\", severity=\"Low\", source=\"CERT-In Liaison\"),\n     record(time=\"now()-80m\", event=\"Third-party vendor risk assessment completed for 42 fintech partners\", severity=\"Medium\", source=\"Vendor Risk\"),\n     record(time=\"now()-88m\", event=\"SOC analyst training completed — 24 analysts certified in MITRE ATT&CK\", severity=\"Low\", source=\"SOC Training\"),\n     record(time=\"now()-95m\", event=\"DDoS mitigation drill completed — failover in 8.2 seconds\", severity=\"Medium\", source=\"Infra Security\"),\n     record(time=\"now()-110m\", event=\"Zero-day patch deployed for Core Banking — CVE-2026-28741 (CVSS 9.1)\", severity=\"Critical\", source=\"Patch Mgmt\")\n| fieldsKeep time, event, severity, source",
+        "title": "CISO Security Feed — Real-Time Events",
+        "type": "data",
+        "visualization": "table",
+        "visualizationSettings": {
+          "thresholds": [{"color":"#dc172a","value":0}]
+        }
+      }
+    },
+    "variables": [],
+    "version": 21
+  }
+}
