@@ -1,0 +1,204 @@
+{
+  "id": "f49757ee-33e0-43dc-b237-0ec21083d9c0",
+  "name": "🏦 HDFC Bank — CEO Business Impact Dashboard",
+  "content": {
+    "layouts": {
+      "0": {
+        "content": {
+          "1":  {"h":2,"w":20,"x":0,"y":0},
+          "2":  {"h":4,"w":5,"x":0,"y":2},
+          "3":  {"h":4,"w":5,"x":5,"y":2},
+          "4":  {"h":4,"w":5,"x":10,"y":2},
+          "5":  {"h":4,"w":5,"x":15,"y":2},
+          "6":  {"h":1,"w":20,"x":0,"y":6},
+          "7":  {"h":7,"w":10,"x":0,"y":7},
+          "8":  {"h":7,"w":10,"x":10,"y":7},
+          "9":  {"h":7,"w":10,"x":0,"y":14},
+          "10": {"h":7,"w":10,"x":10,"y":14},
+          "11": {"h":1,"w":20,"x":0,"y":21},
+          "12": {"h":7,"w":10,"x":0,"y":22},
+          "13": {"h":7,"w":10,"x":10,"y":22},
+          "14": {"h":7,"w":10,"x":0,"y":29},
+          "15": {"h":7,"w":10,"x":10,"y":29},
+          "16": {"h":1,"w":20,"x":0,"y":36},
+          "17": {"h":7,"w":7,"x":0,"y":37},
+          "18": {"h":7,"w":7,"x":7,"y":37},
+          "19": {"h":7,"w":6,"x":14,"y":37},
+          "20": {"h":8,"w":20,"x":0,"y":44}
+        },
+        "type": "grid"
+      }
+    },
+    "tiles": {
+      "1": {
+        "content": "# 🏦 HDFC Bank — India's Largest Private Sector Bank\n## CEO Business Impact Dashboard | Revenue ₹4.95L Cr | 120M+ Customers | 9,545 Branches",
+        "type": "markdown"
+      },
+      "2": {
+        "query": "data record(value=495000)\n| fieldsKeep value",
+        "title": "Total Revenue (₹ Cr)",
+        "type": "data",
+        "visualization": "singleValue",
+        "visualizationSettings": {
+          "singleValue": {"autoscale":true,"label":"FY26 Revenue","showLabel":true},
+          "thresholds": [{"color":"#14a8f5","value":0}]
+        }
+      },
+      "3": {
+        "query": "data record(value=76026)\n| fieldsKeep value",
+        "title": "Net Profit (₹ Cr)",
+        "type": "data",
+        "visualization": "singleValue",
+        "visualizationSettings": {
+          "singleValue": {"autoscale":true,"label":"FY26 PAT","showLabel":true},
+          "thresholds": [{"color":"#6bcb77","value":0}]
+        }
+      },
+      "4": {
+        "query": "data record(value=99.87)\n| fieldsKeep value",
+        "title": "Digital Uptime %",
+        "type": "data",
+        "visualization": "singleValue",
+        "visualizationSettings": {
+          "singleValue": {"autoscale":true,"label":"NetBanking + Mobile","showLabel":true},
+          "thresholds": [{"color":"#dc172a","value":0},{"color":"#f5d565","value":99},{"color":"#6bcb77","value":99.5}]
+        }
+      },
+      "5": {
+        "query": "data record(value=120.4)\n| fieldsKeep value",
+        "title": "Customers (Million)",
+        "type": "data",
+        "visualization": "singleValue",
+        "visualizationSettings": {
+          "singleValue": {"autoscale":true,"label":"Total Customer Base","showLabel":true},
+          "thresholds": [{"color":"#14a8f5","value":0}]
+        }
+      },
+      "6": {
+        "content": "## 📊 Revenue & Business Mix",
+        "type": "markdown"
+      },
+      "7": {
+        "query": "data record(segment=\"Retail Banking\", revenue=198000),\n     record(segment=\"Wholesale Banking\", revenue=123750),\n     record(segment=\"Treasury\", revenue=54450),\n     record(segment=\"Home Loans\", revenue=49500),\n     record(segment=\"Vehicle Loans\", revenue=29700),\n     record(segment=\"Credit Cards\", revenue=19800),\n     record(segment=\"Insurance (HDFC Life)\", revenue=9900),\n     record(segment=\"Wealth Management\", revenue=9900)\n| sort revenue desc\n| fieldsKeep segment, revenue",
+        "title": "Revenue by Business Segment (₹ Cr)",
+        "type": "data",
+        "visualization": "categoricalBarChart",
+        "visualizationSettings": {
+          "categoricalBarChart": {"truncationMode":"middle"},
+          "thresholds": [{"color":"#14a8f5","value":0}]
+        }
+      },
+      "8": {
+        "query": "data record(channel=\"Branch Banking\", share=31.2),\n     record(channel=\"Net Banking\", share=24.8),\n     record(channel=\"Mobile App\", share=22.5),\n     record(channel=\"UPI / PayZapp\", share=11.3),\n     record(channel=\"ATM / CDM\", share=5.7),\n     record(channel=\"WhatsApp Banking\", share=2.8),\n     record(channel=\"Phone Banking\", share=1.7)\n| sort share desc\n| fieldsKeep channel, share",
+        "title": "Transaction Volume by Channel (%)",
+        "type": "data",
+        "visualization": "donutChart",
+        "visualizationSettings": {
+          "thresholds": [{"color":"#14a8f5","value":0}]
+        }
+      },
+      "9": {
+        "query": "data record(timestamp=now()-165m, series=\"Retail\", val=4120),\n     record(timestamp=now()-165m, series=\"Wholesale\", val=2580),\n     record(timestamp=now()-165m, series=\"Digital\", val=3240),\n     record(timestamp=now()-150m, series=\"Retail\", val=4350),\n     record(timestamp=now()-150m, series=\"Wholesale\", val=2640),\n     record(timestamp=now()-150m, series=\"Digital\", val=3410),\n     record(timestamp=now()-135m, series=\"Retail\", val=4180),\n     record(timestamp=now()-135m, series=\"Wholesale\", val=2710),\n     record(timestamp=now()-135m, series=\"Digital\", val=3520),\n     record(timestamp=now()-120m, series=\"Retail\", val=4490),\n     record(timestamp=now()-120m, series=\"Wholesale\", val=2590),\n     record(timestamp=now()-120m, series=\"Digital\", val=3680),\n     record(timestamp=now()-105m, series=\"Retail\", val=4280),\n     record(timestamp=now()-105m, series=\"Wholesale\", val=2750),\n     record(timestamp=now()-105m, series=\"Digital\", val=3590),\n     record(timestamp=now()-90m, series=\"Retail\", val=4560),\n     record(timestamp=now()-90m, series=\"Wholesale\", val=2680),\n     record(timestamp=now()-90m, series=\"Digital\", val=3750),\n     record(timestamp=now()-75m, series=\"Retail\", val=4320),\n     record(timestamp=now()-75m, series=\"Wholesale\", val=2820),\n     record(timestamp=now()-75m, series=\"Digital\", val=3640),\n     record(timestamp=now()-60m, series=\"Retail\", val=4610),\n     record(timestamp=now()-60m, series=\"Wholesale\", val=2730),\n     record(timestamp=now()-60m, series=\"Digital\", val=3870),\n     record(timestamp=now()-45m, series=\"Retail\", val=4440),\n     record(timestamp=now()-45m, series=\"Wholesale\", val=2850),\n     record(timestamp=now()-45m, series=\"Digital\", val=3780),\n     record(timestamp=now()-30m, series=\"Retail\", val=4680),\n     record(timestamp=now()-30m, series=\"Wholesale\", val=2790),\n     record(timestamp=now()-30m, series=\"Digital\", val=3920),\n     record(timestamp=now()-15m, series=\"Retail\", val=4520),\n     record(timestamp=now()-15m, series=\"Wholesale\", val=2860),\n     record(timestamp=now()-15m, series=\"Digital\", val=3850)\n| fieldsAdd val = toDouble(val)\n| makeTimeseries txn_volume = avg(val), by: {series}, interval: 15m",
+        "title": "Transaction Volume Trend (per 15 min)",
+        "type": "data",
+        "visualization": "areaChart",
+        "visualizationSettings": {
+          "thresholds": [{"color":"#14a8f5","value":0}]
+        }
+      },
+      "10": {
+        "query": "data record(subsidiary=\"HDFC Life Insurance\", revenue=24680, growth=12.3, customers=4.8),\n     record(subsidiary=\"HDFC AMC (Mutual Fund)\", revenue=18540, growth=18.7, customers=8.2),\n     record(subsidiary=\"HDB Financial Services\", revenue=15320, growth=14.1, customers=12.5),\n     record(subsidiary=\"HDFC Securities\", revenue=8920, growth=22.4, customers=6.1),\n     record(subsidiary=\"HDFC ERGO Insurance\", revenue=7640, growth=9.8, customers=3.4),\n     record(subsidiary=\"HDFC Capital Advisors\", revenue=3210, growth=15.6, customers=0.4),\n     record(subsidiary=\"HDFC Credila (Education)\", revenue=2180, growth=11.2, customers=0.9)\n| sort revenue desc\n| fieldsKeep subsidiary, revenue, growth, customers",
+        "title": "Subsidiary Performance",
+        "type": "data",
+        "visualization": "table",
+        "visualizationSettings": {
+          "thresholds": [{"color":"#14a8f5","value":0}]
+        }
+      },
+      "11": {
+        "content": "## 🌍 Customer & Market Reach",
+        "type": "markdown"
+      },
+      "12": {
+        "query": "data record(region=\"Maharashtra\", customers=18.7),\n     record(region=\"Delhi NCR\", customers=14.2),\n     record(region=\"Karnataka\", customers=11.8),\n     record(region=\"Tamil Nadu\", customers=10.5),\n     record(region=\"Gujarat\", customers=9.3),\n     record(region=\"Uttar Pradesh\", customers=8.9),\n     record(region=\"West Bengal\", customers=7.6),\n     record(region=\"Telangana\", customers=7.2),\n     record(region=\"Rajasthan\", customers=6.4),\n     record(region=\"Madhya Pradesh\", customers=5.1),\n     record(region=\"Kerala\", customers=4.8),\n     record(region=\"Others\", customers=15.9)\n| sort customers desc\n| fieldsKeep region, customers",
+        "title": "Customer Base by Region (Million)",
+        "type": "data",
+        "visualization": "categoricalBarChart",
+        "visualizationSettings": {
+          "categoricalBarChart": {"truncationMode":"middle"},
+          "thresholds": [{"color":"#14a8f5","value":0}]
+        }
+      },
+      "13": {
+        "query": "data record(product=\"Savings Accounts\", accounts=68.4, aum=142000),\n     record(product=\"Current Accounts\", accounts=8.7, aum=98500),\n     record(product=\"Fixed Deposits\", accounts=22.1, aum=287000),\n     record(product=\"Home Loans\", accounts=4.8, aum=712000),\n     record(product=\"Personal Loans\", accounts=6.2, aum=185000),\n     record(product=\"Vehicle Loans\", accounts=3.9, aum=198000),\n     record(product=\"Credit Cards\", accounts=21.6, aum=94500),\n     record(product=\"Business Loans\", accounts=1.8, aum=265000),\n     record(product=\"Demat / Trading\", accounts=6.1, aum=54000),\n     record(product=\"Gold Loans\", accounts=2.4, aum=42000)\n| sort aum desc\n| fieldsKeep product, accounts, aum",
+        "title": "Product Portfolio — Accounts & AUM",
+        "type": "data",
+        "visualization": "table",
+        "visualizationSettings": {
+          "thresholds": [{"color":"#14a8f5","value":0}]
+        }
+      },
+      "14": {
+        "query": "data record(timestamp=now()-165m, series=\"Mobile Banking\", val=986),\n     record(timestamp=now()-165m, series=\"Net Banking\", val=742),\n     record(timestamp=now()-165m, series=\"UPI\", val=1240),\n     record(timestamp=now()-150m, series=\"Mobile Banking\", val=1020),\n     record(timestamp=now()-150m, series=\"Net Banking\", val=728),\n     record(timestamp=now()-150m, series=\"UPI\", val=1310),\n     record(timestamp=now()-135m, series=\"Mobile Banking\", val=1055),\n     record(timestamp=now()-135m, series=\"Net Banking\", val=715),\n     record(timestamp=now()-135m, series=\"UPI\", val=1380),\n     record(timestamp=now()-120m, series=\"Mobile Banking\", val=1090),\n     record(timestamp=now()-120m, series=\"Net Banking\", val=698),\n     record(timestamp=now()-120m, series=\"UPI\", val=1420),\n     record(timestamp=now()-105m, series=\"Mobile Banking\", val=1070),\n     record(timestamp=now()-105m, series=\"Net Banking\", val=735),\n     record(timestamp=now()-105m, series=\"UPI\", val=1360),\n     record(timestamp=now()-90m, series=\"Mobile Banking\", val=1110),\n     record(timestamp=now()-90m, series=\"Net Banking\", val=710),\n     record(timestamp=now()-90m, series=\"UPI\", val=1450),\n     record(timestamp=now()-75m, series=\"Mobile Banking\", val=1080),\n     record(timestamp=now()-75m, series=\"Net Banking\", val=745),\n     record(timestamp=now()-75m, series=\"UPI\", val=1390),\n     record(timestamp=now()-60m, series=\"Mobile Banking\", val=1130),\n     record(timestamp=now()-60m, series=\"Net Banking\", val=720),\n     record(timestamp=now()-60m, series=\"UPI\", val=1480),\n     record(timestamp=now()-45m, series=\"Mobile Banking\", val=1095),\n     record(timestamp=now()-45m, series=\"Net Banking\", val=750),\n     record(timestamp=now()-45m, series=\"UPI\", val=1410),\n     record(timestamp=now()-30m, series=\"Mobile Banking\", val=1145),\n     record(timestamp=now()-30m, series=\"Net Banking\", val=730),\n     record(timestamp=now()-30m, series=\"UPI\", val=1500),\n     record(timestamp=now()-15m, series=\"Mobile Banking\", val=1120),\n     record(timestamp=now()-15m, series=\"Net Banking\", val=755),\n     record(timestamp=now()-15m, series=\"UPI\", val=1460)\n| fieldsAdd val = toDouble(val)\n| makeTimeseries active_sessions = avg(val), by: {series}, interval: 15m",
+        "title": "Digital Banking Sessions Trend (Thousands)",
+        "type": "data",
+        "visualization": "lineChart",
+        "visualizationSettings": {
+          "thresholds": [{"color":"#14a8f5","value":0}]
+        }
+      },
+      "15": {
+        "query": "data record(category=\"Metro Cities\", share=38.2),\n     record(category=\"Tier-1 Cities\", share=24.5),\n     record(category=\"Tier-2 Cities\", share=18.7),\n     record(category=\"Tier-3 & Below\", share=12.4),\n     record(category=\"Rural / Semi-Urban\", share=6.2)\n| sort share desc\n| fieldsKeep category, share",
+        "title": "Branch Distribution by City Tier (%)",
+        "type": "data",
+        "visualization": "pieChart",
+        "visualizationSettings": {
+          "thresholds": [{"color":"#14a8f5","value":0}]
+        }
+      },
+      "16": {
+        "content": "## ⚡ Risk, Compliance & Operational Health",
+        "type": "markdown"
+      },
+      "17": {
+        "query": "data record(metric=\"NPA Gross %\", value=1.24, status=\"Healthy\"),\n     record(metric=\"NPA Net %\", value=0.29, status=\"Healthy\"),\n     record(metric=\"Capital Adequacy (CRAR)\", value=19.24, status=\"Strong\"),\n     record(metric=\"Provision Coverage\", value=76.8, status=\"Adequate\"),\n     record(metric=\"Cost-to-Income %\", value=39.2, status=\"Efficient\"),\n     record(metric=\"ROA %\", value=1.94, status=\"Strong\"),\n     record(metric=\"ROE %\", value=16.8, status=\"Strong\"),\n     record(metric=\"Net Interest Margin %\", value=3.46, status=\"Healthy\"),\n     record(metric=\"LCR %\", value=123.5, status=\"Compliant\")\n| fieldsKeep metric, value, status",
+        "title": "Key Risk & Health Indicators",
+        "type": "data",
+        "visualization": "table",
+        "visualizationSettings": {
+          "thresholds": [{"color":"#14a8f5","value":0}]
+        }
+      },
+      "18": {
+        "query": "data record(type=\"Card Fraud\", count=124),\n     record(type=\"Cyber Threat\", count=87),\n     record(type=\"AML Alert\", count=342),\n     record(type=\"KYC Exception\", count=215),\n     record(type=\"Phishing Attempt\", count=478),\n     record(type=\"Insider Threat\", count=18)\n| sort count desc\n| fieldsKeep type, count",
+        "title": "Security & Fraud Alerts (Last 24h)",
+        "type": "data",
+        "visualization": "categoricalBarChart",
+        "visualizationSettings": {
+          "categoricalBarChart": {"truncationMode":"middle"},
+          "thresholds": [{"color":"#dc172a","value":0}]
+        }
+      },
+      "19": {
+        "query": "data record(system=\"Core Banking (Finacle)\", uptime=99.98),\n     record(system=\"Mobile App\", uptime=99.94),\n     record(system=\"Net Banking\", uptime=99.91),\n     record(system=\"UPI Gateway\", uptime=99.96),\n     record(system=\"ATM Network\", uptime=99.88),\n     record(system=\"Card Payment\", uptime=99.93)\n| sort uptime asc\n| fieldsKeep system, uptime",
+        "title": "System Uptime % (Last 30 Days)",
+        "type": "data",
+        "visualization": "pieChart",
+        "visualizationSettings": {
+          "thresholds": [{"color":"#6bcb77","value":0}]
+        }
+      },
+      "20": {
+        "query": "data record(time=\"now()-3m\", event=\"UPI transaction volume crossed 48M daily milestone\", impact=\"High\", source=\"Digital Banking\"),\n     record(time=\"now()-8m\", event=\"HDFC Life Q1 premium collection up 14% YoY\", impact=\"Medium\", source=\"HDFC Life\"),\n     record(time=\"now()-14m\", event=\"New branch opened in Kavaratti, Lakshadweep — sole private bank\", impact=\"Medium\", source=\"Branch Banking\"),\n     record(time=\"now()-22m\", event=\"RBI compliance audit completed — no material findings\", impact=\"High\", source=\"Compliance\"),\n     record(time=\"now()-31m\", event=\"Mobile app DAU crossed 32M — new all-time high\", impact=\"High\", source=\"Digital Banking\"),\n     record(time=\"now()-38m\", event=\"HDFC Securities onboarded 180K new demat accounts this month\", impact=\"Medium\", source=\"HDFC Securities\"),\n     record(time=\"now()-47m\", event=\"Home loan disbursement ₹12,400 Cr this quarter — on track\", impact=\"High\", source=\"Retail Lending\"),\n     record(time=\"now()-55m\", event=\"Core Banking (Finacle) patching completed — zero downtime\", impact=\"Low\", source=\"IT Operations\"),\n     record(time=\"now()-63m\", event=\"NPA recovery ₹840 Cr from NCLT cases in Q1\", impact=\"High\", source=\"Recovery\"),\n     record(time=\"now()-72m\", event=\"WhatsApp Banking crossed 8M active users\", impact=\"Medium\", source=\"Digital Banking\"),\n     record(time=\"now()-80m\", event=\"HDFC AMC AUM crossed ₹7.2L Cr — market share 11.4%\", impact=\"High\", source=\"HDFC AMC\"),\n     record(time=\"now()-88m\", event=\"ATM recycler deployment: 1,200 new CDMs this quarter\", impact=\"Medium\", source=\"Operations\"),\n     record(time=\"now()-95m\", event=\"Credit card spends crossed ₹1.8L Cr annualized run rate\", impact=\"High\", source=\"Cards\"),\n     record(time=\"now()-105m\", event=\"Wealth management AUM up 21% YoY — HNI segment driving growth\", impact=\"High\", source=\"Wealth Mgmt\"),\n     record(time=\"now()-115m\", event=\"ESG rating upgraded to AA by MSCI\", impact=\"Medium\", source=\"Governance\")\n| fieldsKeep time, event, impact, source",
+        "title": "CEO Intelligence Feed — Key Business Events",
+        "type": "data",
+        "visualization": "table",
+        "visualizationSettings": {
+          "thresholds": [{"color":"#14a8f5","value":0}]
+        }
+      }
+    },
+    "variables": [],
+    "version": 21
+  }
+}

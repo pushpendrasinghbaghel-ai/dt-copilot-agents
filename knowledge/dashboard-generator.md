@@ -152,6 +152,24 @@ Tile 20: table (recent events/orders/alerts — live feed style)
 
 ## DQL Data Rules — CRITICAL
 
+### fieldsRename — NEVER use string literals
+
+`fieldsRename` parameters must be **field identifiers**, NOT quoted strings. This is a DQL syntax requirement.
+
+```dql
+// ❌ WRONG — causes "must be a field identifier" error
+| fieldsRename subsidiary = "Subsidiary", revenue = "Revenue (₹ Cr)"
+
+// ✅ RIGHT — use fieldsAdd to create new named fields, then remove old ones
+| fieldsAdd Subsidiary = subsidiary, Revenue = revenue
+| fieldsRemove subsidiary, revenue
+
+// ✅ SIMPLEST — just keep original field names (recommended for demo dashboards)
+| fieldsKeep subsidiary, revenue, growth, customers
+```
+
+**For demo dashboards, prefer keeping original field names** — they are readable enough and avoid this pitfall entirely.
+
 ### Static tiles (singleValue, bar, donut, pie, table):
 ```dql
 data record(field1="value1", field2=123),
@@ -347,7 +365,36 @@ See [@dynatrace-oss/dynatrace-mcp-server](https://www.npmjs.com/package/@dynatra
 
 ---
 
-## Deploy & Verify
+## Validate, Deploy & Verify
+
+### Pre-Deploy Validation — MANDATORY
+
+**Before deploying, validate EVERY DQL query via MCP `verify_dql`.** This catches syntax errors (like `fieldsRename` with string literals) before the dashboard reaches the tenant.
+
+1. For each of the 15-16 data tiles, extract the DQL query and run it through `verify_dql` (or `execute_dql` for a subset)
+2. Fix any errors found — common issues:
+   - `fieldsRename` with string literals → remove or use `fieldsAdd`
+   - Missing `toDouble()` cast before `makeTimeseries`
+   - Timestamps outside 3-hour window
+3. **Do NOT deploy until all queries pass validation**
+
+If MCP is not connected, use `dtctl query -f -` with a here-string to validate queries via the CLI:
+```powershell
+# PowerShell
+dtctl query -f - --context sprint -o json @'
+data record(field1="value1", field2=123)
+| fieldsKeep field1, field2
+'@
+```
+```bash
+# Bash
+dtctl query -f - --context sprint -o json <<'EOF'
+data record(field1="value1", field2=123)
+| fieldsKeep field1, field2
+EOF
+```
+
+### Deploy
 
 1. **Save** the dashboard JSON to the working directory as `<company-slug>-dashboard.json`
 2. **Deploy** with DTCTL (uses your current DTCTL context — set with `dtctl config use-context <name>`):
@@ -357,7 +404,10 @@ See [@dynatrace-oss/dynatrace-mcp-server](https://www.npmjs.com/package/@dynatra
    Or specify a context explicitly: `dtctl apply -f <filename>.json --context <context-name>`
 3. **Capture the dashboard ID** from the output
 4. **Add the ID** back into the JSON file for future updates
-5. **Verify** (if MCP is connected): run at least one timeseries query via `execute_dql` to confirm it returns data. If MCP is not available, skip — the inline `data record()` queries are self-contained.
+
+### Post-Deploy Verification
+
+5. **Execute** at least one timeseries query and one table query via `execute_dql` to confirm they return actual data (not empty results)
 6. **Report the dashboard URL** — get your tenant URL from `dtctl config current-context`:
    ```
    https://<YOUR_TENANT>.apps.dynatrace.com/ui/apps/dynatrace.dashboards/#/dashboard/<DASHBOARD_ID>
@@ -377,6 +427,8 @@ See [@dynatrace-oss/dynatrace-mcp-server](https://www.npmjs.com/package/@dynatra
 - **DO NOT generate fewer than 20 tiles** — the dashboard must look rich and complete
 - **DO NOT skip the research phase** — dashboards with generic data look fake in CIO meetings
 - **NEVER put one tile per row** — use the exact layout grid from above. KPIs go 4-across (w=5), charts go 2-across (w=10), section 4 goes 3-across (w=7+7+6). Copy the layouts block verbatim.
+- **NEVER use `fieldsRename` with string literals** — `fieldsRename foo = "Bar"` is a DQL syntax error. Keep original field names or use `fieldsAdd` + `fieldsRemove`.
+- **ALWAYS validate ALL DQL queries via MCP `verify_dql` BEFORE deploying** — do NOT deploy first and fix later. Every data tile query must pass verification.
 
 ---
 

@@ -11,7 +11,7 @@ You are a specialist at generating and deploying Dynatrace dashboards for any pe
 ## Mandatory Pre-Steps
 
 1. **ALWAYS load the skill first**: Read the full SKILL.md at `~/.agents/skills/dt-demo-dashboard/SKILL.md` for the complete procedure, DQL rules, layout grid, and visualization reference. If the skill is not available, read `knowledge/dashboard-generator.md` from the repo root instead. These contain critical rules that prevent broken dashboards.
-2. **ALWAYS use the todo tool** to create a task list with these phases: Identify Persona → Research → Build JSON → Deploy → Verify → Summary.
+2. **ALWAYS use the todo tool** to create a task list with these phases: Identify Persona → Research → Build JSON → **Validate DQL via MCP** → Deploy → Verify → Summary.
 3. **Identify the persona** from the user's request. If no persona is specified, default to CIO. The knowledge base has archetype tables for 10+ personas with KPIs, sections, and language style.
 
 ## Workflow
@@ -31,6 +31,17 @@ You are a specialist at generating and deploying Dynatrace dashboards for any pe
 - Numbers must be internally consistent (totals ≈ sum of breakdowns)
 - Save the file as `<company-slug>-dashboard.json` in the current working directory
 
+### Step 2.5: Validate ALL DQL Queries via MCP (MANDATORY)
+- **Before deploying**, validate EVERY data tile's DQL query using `verify_dql` MCP tool
+- Run each of the 15-16 data tile queries through `verify_dql` (batch 4-5 at a time to respect rate limits)
+- Common errors to catch:
+  - `fieldsRename` with string literals (`fieldsRename foo = "Bar"`) — DQL requires field identifiers, not strings
+  - Missing `toDouble()` cast before `makeTimeseries`
+  - Timestamps outside 3-hour window
+- **Fix ALL errors before proceeding to deploy** — do NOT deploy broken queries
+- If MCP is not available, validate using `dtctl query -f -` with here-strings
+- After all queries pass, execute at least 2 queries (one table, one timeseries) via `execute_dql` to confirm actual data return
+
 ### Step 3: Deploy
 - **Install dtctl** if missing (`dtctl version`): macOS/Linux `brew install dynatrace-oss/tap/dtctl`; Windows `irm https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.ps1 | iex`
 - **Check context** (`dtctl config current-context`). If no context or auth expired:
@@ -43,10 +54,7 @@ You are a specialist at generating and deploying Dynatrace dashboards for any pe
 - Update the JSON file with the assigned ID for future re-deployments
 
 ### Step 4: Verify
-- If a Dynatrace MCP server is connected, run at least one timeseries DQL query via `execute_dql` to confirm it returns data
-- If MCP is not available, **ask the user**: "Would you like to connect a Dynatrace MCP server for DQL verification?"
-  - If yes: **open the browser** to the token page (`https://<TENANT_ID>.apps.dynatrace.com/ui/apps/dynatrace.classic.tokens`) using OS-appropriate command (`open`/`xdg-open`/`Start-Process`). Tell the user: "I've opened the token page. Create a token with scopes: Read entities, Read settings, Read SLO. Paste it here." Wait for token, then write `.mcp.json` with actual tenant ID and token.
-  - If no: skip — inline `data record()` queries are self-contained
+- Execute at least one timeseries query and one table query via `execute_dql` to confirm they return actual data (not empty results)
 - If empty results: check that timestamps are within 3h of now() and toDouble() cast is present
 
 ### Step 5: Report
@@ -62,6 +70,8 @@ You are a specialist at generating and deploying Dynatrace dashboards for any pe
 - Deploy to the user's current DTCTL context unless they explicitly specify `--context <name>`
 - ALWAYS include `toDouble()` cast before makeTimeseries aggregation
 - ALWAYS use dashboard JSON version 21 with 20-unit-wide grid
+- NEVER use `fieldsRename` with string literals — `fieldsRename foo = "Bar"` is a DQL syntax error. Keep original field names or use `fieldsAdd NewName = oldField | fieldsRemove oldField`
+- ALWAYS validate ALL DQL queries via MCP `verify_dql` BEFORE deploying — do NOT deploy first and fix later
 
 ## Dashboard JSON Schema
 

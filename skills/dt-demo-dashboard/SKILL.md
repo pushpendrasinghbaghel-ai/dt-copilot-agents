@@ -98,6 +98,18 @@ Tile 20: table (recent events/orders/alerts — live feed style)
 
 ### DQL Data Rules — CRITICAL
 
+#### fieldsRename — NEVER use string literals
+
+`fieldsRename` parameters must be **field identifiers**, NOT quoted strings.
+
+```dql
+// ❌ WRONG — causes DQL syntax error
+| fieldsRename subsidiary = "Subsidiary", revenue = "Revenue"
+
+// ✅ RIGHT — keep original field names (recommended for demo dashboards)
+| fieldsKeep subsidiary, revenue, growth, customers
+```
+
 #### Static tiles (singleValue, bar, donut, pie, table):
 ```dql
 data record(field1="value1", field2=123),
@@ -165,6 +177,15 @@ data record(timestamp=now()-165m, series="A", val=120),
 [{"color":"#6bcb77","value":0},{"color":"#f5d565","value":50},{"color":"#dc172a","value":80}]
 ```
 
+### Phase 2.5: Validate ALL DQL Queries (MANDATORY — before deploy)
+
+6b. **Validate EVERY data tile's DQL query** using MCP `verify_dql` before deploying:
+   - Run each of the 15-16 data tile queries through `verify_dql` (batch 4-5 at a time)
+   - Common errors to catch: `fieldsRename` with string literals, missing `toDouble()`, timestamps > 3h
+   - **Fix ALL errors before proceeding to deploy**
+   - Execute at least 2 queries (one table, one timeseries) via `execute_dql` to confirm data return
+   - If MCP unavailable, validate via `dtctl query -f -` with here-strings
+
 ### Phase 3: Deploy (< 1 minute)
 
 7. **Check dtctl is installed** (`dtctl version`). If not, install it:
@@ -201,6 +222,8 @@ data record(timestamp=now()-165m, series="A", val=120),
 - **NEVER use `fetch logs` or `fetch events`** — demo dashboards use inline `data record()` only
 - **NEVER use timestamps older than 3 hours** in timeseries queries
 - **ALWAYS use `toDouble()` cast** before `makeTimeseries` aggregation
+- **NEVER use `fieldsRename` with string literals** — `fieldsRename foo = "Bar"` is invalid DQL. Keep original field names.
+- **ALWAYS validate ALL DQL queries via MCP `verify_dql` BEFORE deploying** — do NOT deploy broken queries
 - **Dashboard grid is 20 units wide**, version must be `21`
 - **DTCTL deploys to your current context** — override with `--context <name>` if needed
 - **Target: complete dashboard in under 5 minutes** from user request to deployed URL
