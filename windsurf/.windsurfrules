@@ -38,6 +38,7 @@ MCP is optional — deployment works via `dtctl` without it.
 - Timeseries: timestamps `now()-165m` to `now()-15m`, `toDouble()` cast, `interval: 15m`
 - **NEVER use `fieldsRename` with string literals** — `fieldsRename foo = "Bar"` is a DQL syntax error. Keep original field names.
 - **ALWAYS validate ALL DQL queries via MCP `verify_dql` BEFORE deploying** — run every data tile query through verification. Do NOT deploy broken queries.
+- **NEVER put one tile per row** — use asymmetric widths: bar charts/tables w=12, donuts/pies w=8. Pair tiles to sum to 20 per row.
 - Dashboard JSON: version `21`, grid width `20`, exactly 20 tiles
 - Deploy: `dtctl apply -f <file>.json` (uses current DTCTL context)
 - Verify: if MCP connected, run a DQL query via `execute_dql` to confirm data

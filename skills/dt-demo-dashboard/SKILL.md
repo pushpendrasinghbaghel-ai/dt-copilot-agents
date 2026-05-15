@@ -62,7 +62,7 @@ Tile 19: categoricalBarChart or table (additional breakdown)
 Tile 20: table (recent events/orders/alerts — live feed style)
 ```
 
-5. **Layout — CRITICAL: Copy this exact layout block into the JSON.** Do NOT put each tile on its own row.
+5. **Layout — CRITICAL: Use content-aware asymmetric widths.** Do NOT put each tile on its own row.
 
 ```json
 "layouts": {
@@ -74,15 +74,15 @@ Tile 20: table (recent events/orders/alerts — live feed style)
       "4":  {"h":4,"w":5,"x":10,"y":2},
       "5":  {"h":4,"w":5,"x":15,"y":2},
       "6":  {"h":1,"w":20,"x":0,"y":6},
-      "7":  {"h":7,"w":10,"x":0,"y":7},
-      "8":  {"h":7,"w":10,"x":10,"y":7},
-      "9":  {"h":7,"w":10,"x":0,"y":14},
-      "10": {"h":7,"w":10,"x":10,"y":14},
+      "7":  {"h":7,"w":12,"x":0,"y":7},
+      "8":  {"h":7,"w":8,"x":12,"y":7},
+      "9":  {"h":7,"w":8,"x":0,"y":14},
+      "10": {"h":7,"w":12,"x":8,"y":14},
       "11": {"h":1,"w":20,"x":0,"y":21},
-      "12": {"h":7,"w":10,"x":0,"y":22},
-      "13": {"h":7,"w":10,"x":10,"y":22},
-      "14": {"h":7,"w":10,"x":0,"y":29},
-      "15": {"h":7,"w":10,"x":10,"y":29},
+      "12": {"h":7,"w":12,"x":0,"y":22},
+      "13": {"h":7,"w":8,"x":12,"y":22},
+      "14": {"h":7,"w":8,"x":0,"y":29},
+      "15": {"h":7,"w":12,"x":8,"y":29},
       "16": {"h":1,"w":20,"x":0,"y":36},
       "17": {"h":7,"w":7,"x":0,"y":37},
       "18": {"h":7,"w":7,"x":7,"y":37},
@@ -93,6 +93,15 @@ Tile 20: table (recent events/orders/alerts — live feed style)
   }
 }
 ```
+
+**Content-aware width rules (grid = 20 units):**
+- `categoricalBarChart` / `table` → **w=12** (needs label/column space)
+- `donutChart` / `pieChart` → **w=8** (compact circular charts)
+- `lineChart` / `areaChart` → **w=8–12** (flexible)
+- Pair widths to sum to 20: bar(12)+donut(8), chart(8)+table(12)
+- Alternate wide-left/wide-right across rows for visual variety
+- **NEVER set all tiles to w=20** — that wastes space and looks terrible
+- **Post-check: verify every row has 2+ tiles and widths sum to 20**
 
 6. **ALL queries use `data record(...)` inline DQL** — NEVER use `fetch logs`, `fetch events`, or any data source that requires ingestion.
 
@@ -224,6 +233,7 @@ data record(timestamp=now()-165m, series="A", val=120),
 - **ALWAYS use `toDouble()` cast** before `makeTimeseries` aggregation
 - **NEVER use `fieldsRename` with string literals** — `fieldsRename foo = "Bar"` is invalid DQL. Keep original field names.
 - **ALWAYS validate ALL DQL queries via MCP `verify_dql` BEFORE deploying** — do NOT deploy broken queries
+- **NEVER put one tile per row** — use asymmetric widths: bar charts/tables w=12, donuts/pies w=8. Every row must have 2+ tiles summing to w=20.
 - **Dashboard grid is 20 units wide**, version must be `21`
 - **DTCTL deploys to your current context** — override with `--context <name>` if needed
 - **Target: complete dashboard in under 5 minutes** from user request to deployed URL

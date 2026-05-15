@@ -106,7 +106,7 @@ Tile 19: categoricalBarChart or table (additional breakdown)
 Tile 20: table (recent events/orders/alerts — live feed style)
 ```
 
-5. **Layout — CRITICAL: Copy this layout block EXACTLY as-is.** This places tiles side-by-side (2 per row). Do NOT put each tile on its own row. The grid is 20 units wide.
+5. **Layout — CRITICAL: Use this layout grid.** The grid is 20 units wide. Tiles MUST be placed side-by-side to use screen real estate well. Use **content-aware widths** — bar charts and tables get more space, donuts and pies get less.
 
 ```json
 "layouts": {
@@ -118,15 +118,15 @@ Tile 20: table (recent events/orders/alerts — live feed style)
       "4":  {"h":4,"w":5,"x":10,"y":2},
       "5":  {"h":4,"w":5,"x":15,"y":2},
       "6":  {"h":1,"w":20,"x":0,"y":6},
-      "7":  {"h":7,"w":10,"x":0,"y":7},
-      "8":  {"h":7,"w":10,"x":10,"y":7},
-      "9":  {"h":7,"w":10,"x":0,"y":14},
-      "10": {"h":7,"w":10,"x":10,"y":14},
+      "7":  {"h":7,"w":12,"x":0,"y":7},
+      "8":  {"h":7,"w":8,"x":12,"y":7},
+      "9":  {"h":7,"w":8,"x":0,"y":14},
+      "10": {"h":7,"w":12,"x":8,"y":14},
       "11": {"h":1,"w":20,"x":0,"y":21},
-      "12": {"h":7,"w":10,"x":0,"y":22},
-      "13": {"h":7,"w":10,"x":10,"y":22},
-      "14": {"h":7,"w":10,"x":0,"y":29},
-      "15": {"h":7,"w":10,"x":10,"y":29},
+      "12": {"h":7,"w":12,"x":0,"y":22},
+      "13": {"h":7,"w":8,"x":12,"y":22},
+      "14": {"h":7,"w":8,"x":0,"y":29},
+      "15": {"h":7,"w":12,"x":8,"y":29},
       "16": {"h":1,"w":20,"x":0,"y":36},
       "17": {"h":7,"w":7,"x":0,"y":37},
       "18": {"h":7,"w":7,"x":7,"y":37},
@@ -141,10 +141,46 @@ Tile 20: table (recent events/orders/alerts — live feed style)
 **Layout rules:**
 - Row 1 (y=0): Full-width header (w=20)
 - Row 2 (y=2): 4 KPI cards side-by-side (w=5 each, x=0/5/10/15)
-- Sections 2-3: Charts in 2-column layout (w=10 each, x=0 and x=10)
+- Sections 2-3: **Asymmetric 2-column layout** — alternate wider/narrower to match content:
+  - Row with bar chart (w=12) + donut/pie (w=8)
+  - Row with line/area chart (w=8) + table (w=12)
+  - Alternates wide-left/wide-right for visual variety
 - Section 4: 3-column layout (w=7, w=7, w=6)
-- Bottom: Full-width table (w=20)
-- **NEVER set all tiles to w=20 (full width) — that wastes space and looks terrible**
+- Bottom: Full-width events table (w=20)
+
+**Content-aware width guide (grid = 20 units):**
+
+| Tile Content | Recommended Width | Why |
+|---|---|---|
+| `categoricalBarChart` | **w=12** (wide) | Long category labels need horizontal space |
+| `table` (multi-column) | **w=12** (wide) | Columns need room; avoids horizontal scroll |
+| `donutChart` / `pieChart` | **w=8** (narrow) | Circular charts are compact; labels fit in legend |
+| `lineChart` / `areaChart` | **w=8–12** | Time axis is readable at w=8; use w=12 if many series |
+| `singleValue` (KPI) | **w=5** | 4-across in KPI strip |
+| `markdown` (section header) | **w=20** | Full-width divider |
+
+**Pair tiles so widths sum to 20 in each row:**
+- Bar chart (w=12) + Donut (w=8) ✅
+- Table (w=12) + Pie (w=8) ✅
+- Line chart (w=8) + Table (w=12) ✅
+- Bar chart (w=12) + Line chart (w=8) ✅
+- Two tables (w=10 + w=10) ✅
+- Three tiles (w=7 + w=7 + w=6) ✅
+
+**❌ BAD LAYOUT — NEVER DO THIS:**
+```json
+// WRONG: Every tile on its own row = wasted space, ugly, unprofessional
+"7":  {"h":7,"w":20,"x":0,"y":7},
+"8":  {"h":7,"w":20,"x":0,"y":14},
+"9":  {"h":7,"w":20,"x":0,"y":21},
+"10": {"h":7,"w":20,"x":0,"y":28}
+```
+
+**Post-generation layout check — verify before saving:**
+1. ✅ KPI tiles: 4 tiles at w=5 (x=0/5/10/15)
+2. ✅ Section tiles: every row has 2+ tiles, widths sum to 20
+3. ✅ NO data tile has w=20 (only markdown headers and the bottom events table)
+4. ✅ Adjacent tiles don't overlap (x + w of left tile = x of right tile)
 
 6. **ALL queries use `data record(...)` inline DQL** — NEVER use `fetch logs`, `fetch events`, or any data source that requires ingestion.
 
@@ -426,7 +462,7 @@ EOF
 - **NEVER use `@dynatrace-sdk/client-classic-environment-v2`** patterns
 - **DO NOT generate fewer than 20 tiles** — the dashboard must look rich and complete
 - **DO NOT skip the research phase** — dashboards with generic data look fake in CIO meetings
-- **NEVER put one tile per row** — use the exact layout grid from above. KPIs go 4-across (w=5), charts go 2-across (w=10), section 4 goes 3-across (w=7+7+6). Copy the layouts block verbatim.
+- **NEVER put one tile per row** — use the layout grid from above. KPIs go 4-across (w=5), charts go 2-across with asymmetric widths (w=12+8 or w=8+12), section 4 goes 3-across (w=7+7+6). Bar charts and tables get w=12, donuts and pies get w=8. Verify every row has 2+ tiles and widths sum to 20.
 - **NEVER use `fieldsRename` with string literals** — `fieldsRename foo = "Bar"` is a DQL syntax error. Keep original field names or use `fieldsAdd` + `fieldsRemove`.
 - **ALWAYS validate ALL DQL queries via MCP `verify_dql` BEFORE deploying** — do NOT deploy first and fix later. Every data tile query must pass verification.
 

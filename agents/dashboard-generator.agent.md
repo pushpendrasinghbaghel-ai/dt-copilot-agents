@@ -72,6 +72,7 @@ You are a specialist at generating and deploying Dynatrace dashboards for any pe
 - ALWAYS use dashboard JSON version 21 with 20-unit-wide grid
 - NEVER use `fieldsRename` with string literals — `fieldsRename foo = "Bar"` is a DQL syntax error. Keep original field names or use `fieldsAdd NewName = oldField | fieldsRemove oldField`
 - ALWAYS validate ALL DQL queries via MCP `verify_dql` BEFORE deploying — do NOT deploy first and fix later
+- NEVER put one tile per row — use asymmetric widths: bar charts/tables get w=12, donuts/pies get w=8. Every row must have 2+ tiles. Verify widths sum to 20 per row.
 
 ## Dashboard JSON Schema
 
@@ -88,15 +89,15 @@ You are a specialist at generating and deploying Dynatrace dashboards for any pe
           "4":  {"h":4,"w":5,"x":10,"y":2},
           "5":  {"h":4,"w":5,"x":15,"y":2},
           "6":  {"h":1,"w":20,"x":0,"y":6},
-          "7":  {"h":7,"w":10,"x":0,"y":7},
-          "8":  {"h":7,"w":10,"x":10,"y":7},
-          "9":  {"h":7,"w":10,"x":0,"y":14},
-          "10": {"h":7,"w":10,"x":10,"y":14},
+          "7":  {"h":7,"w":12,"x":0,"y":7},
+          "8":  {"h":7,"w":8,"x":12,"y":7},
+          "9":  {"h":7,"w":8,"x":0,"y":14},
+          "10": {"h":7,"w":12,"x":8,"y":14},
           "11": {"h":1,"w":20,"x":0,"y":21},
-          "12": {"h":7,"w":10,"x":0,"y":22},
-          "13": {"h":7,"w":10,"x":10,"y":22},
-          "14": {"h":7,"w":10,"x":0,"y":29},
-          "15": {"h":7,"w":10,"x":10,"y":29},
+          "12": {"h":7,"w":12,"x":0,"y":22},
+          "13": {"h":7,"w":8,"x":12,"y":22},
+          "14": {"h":7,"w":8,"x":0,"y":29},
+          "15": {"h":7,"w":12,"x":8,"y":29},
           "16": {"h":1,"w":20,"x":0,"y":36},
           "17": {"h":7,"w":7,"x":0,"y":37},
           "18": {"h":7,"w":7,"x":7,"y":37},

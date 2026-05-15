@@ -78,7 +78,7 @@ MCP is optional — deployment works via `dtctl` without it.
 - Timeseries timestamps must be within 3 hours of `now()`
 - Always `toDouble()` before `makeTimeseries`
 - Dashboard version is `21`, grid is 20 units wide
-- **CRITICAL: Use the exact layout grid from knowledge/dashboard-generator.md — tiles must be placed side-by-side (2 per row), NOT one tile per row. Copy the layouts block verbatim.**
+- **CRITICAL: Use the layout grid from knowledge/dashboard-generator.md — tiles must be placed side-by-side (2+ per row), NOT one tile per row. Use asymmetric widths: bar charts/tables get w=12, donuts/pies get w=8. Pair tiles so widths sum to 20. Alternate wide-left/wide-right for visual variety.**
 - **NEVER use `fieldsRename` with string literals** — `fieldsRename foo = "Bar"` is a DQL syntax error. Keep original field names or use `fieldsAdd NewName = oldField | fieldsRemove oldField`.
 - **ALWAYS validate ALL DQL queries via MCP `verify_dql` BEFORE deploying** — run every data tile query through verification. Do NOT deploy first and fix later.
 - Deploy with: `dtctl apply -f <file>.json` (uses current DTCTL context)
