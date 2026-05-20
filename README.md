@@ -77,9 +77,29 @@ cd dt-copilot-agents
 ### VS Code Copilot
 ```powershell
 .\install.ps1 -Platform vscode
-# Restart VS Code → select "Dashboard Generator" from @ agent picker
-# Then: "SRE dashboard for Tata Steel" or "CISO dashboard for HDFC Bank"
+# Restart VS Code → select "Dashboard Generator" from chat mode picker
 ```
+
+#### How to Use in VS Code
+
+1. **Open the Chat panel** — press `Ctrl+Alt+I` (Windows/Linux) or `Cmd+Alt+I` (macOS)
+2. **Click the mode selector** at the bottom-left of the chat panel (it shows "Agent" by default)
+3. **Select "Dashboard Generator"** from the dropdown list
+
+   ![VS Code Chat mode picker showing Dashboard Generator](docs/images/vscode-agent-picker.png)
+
+4. **Type your prompt** — describe the persona and company:
+   ```
+   SRE dashboard for Tata Steel
+   ```
+   ```
+   CISO dashboard for HDFC Bank
+   ```
+   ```
+   CEO dashboard for Reliance Industries
+   ```
+
+The agent will research the company, generate a 20-tile dashboard with realistic synthetic data, and deploy it to your Dynatrace tenant via DTCTL.
 
 ### Claude Code
 ```bash
@@ -87,8 +107,22 @@ cd dt-copilot-agents
 cp claude-code/CLAUDE.md <project>/CLAUDE.md
 cp -r claude-code/.claude <project>/.claude
 cp -r knowledge <project>/knowledge
-# Then: /dashboard SRE dashboard for Tata Steel
 ```
+
+#### How to Use in Claude Code
+
+1. **Open Claude Code** (desktop app or CLI)
+2. **Type `/das`** in the chat input — the `/dashboard` slash command will appear as an autocomplete suggestion
+
+   ![Claude Code slash command autocomplete showing /dashboard](docs/images/claude-code-slash-command.png)
+
+3. **Select the command** and provide the persona + company as arguments:
+   ```
+   /dashboard SRE dashboard for Tata Steel
+   ```
+   ```
+   /dashboard CISO dashboard for HDFC Bank
+   ```
 
 ### Cursor
 ```bash
