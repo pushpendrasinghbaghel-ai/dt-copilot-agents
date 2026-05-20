@@ -2,6 +2,43 @@
 
 Cross-platform AI agents for Dynatrace demo workflows. Works on **VS Code Copilot**, **Claude Code**, **Cursor**, **Windsurf**, and **OpenAI GPTs**.
 
+## Get Started
+
+### 1. Install
+
+```bash
+npx dt-copilot-agents install vscode        # VS Code Copilot
+npx dt-copilot-agents install claude-code .  # Claude Code
+npx dt-copilot-agents install cursor .       # Cursor
+npx dt-copilot-agents install                # All platforms at once
+```
+
+### 2. Use
+
+**VS Code Copilot** — Open Chat (`Ctrl+Alt+I`) → click the mode selector → pick **Dashboard Generator** → type your prompt
+
+![VS Code Chat mode picker showing Dashboard Generator](docs/images/vscode-agent-picker.png)
+
+**Claude Code** — Type `/dashboard` in the chat input → select the slash command → provide your prompt
+
+![Claude Code slash command autocomplete showing /dashboard](docs/images/claude-code-slash-command.png)
+
+**Cursor / Windsurf** — Just ask in chat:
+
+### 3. Prompt
+
+```
+SRE dashboard for Tata Steel
+CISO dashboard for HDFC Bank
+CEO dashboard for Reliance Industries
+```
+
+The agent researches the company, generates a 20-tile dashboard with synthetic data, and deploys it to your Dynatrace tenant — all automatically. No data ingestion needed.
+
+> **Zero prerequisites.** The agent auto-installs `dtctl` CLI and authenticates via browser SSO if not already set up.
+
+---
+
 ## What's Included
 
 ### Dashboard Generator
@@ -42,115 +79,33 @@ Generates and deploys realistic persona-specific dashboards with synthetic data 
 
 ## Installation
 
-### Quick Install via npm (Any Platform)
+### npm (recommended)
 ```bash
-# Install to all platforms at once
-npx dt-copilot-agents install
-
-# Or target a specific platform
-npx dt-copilot-agents install vscode
-npx dt-copilot-agents install claude-code ./my-project
-npx dt-copilot-agents install cursor .
-
-# See supported personas and archetypes
-npx dt-copilot-agents info
+npx dt-copilot-agents install vscode        # VS Code Copilot
+npx dt-copilot-agents install claude-code .  # Claude Code (current directory)
+npx dt-copilot-agents install cursor .       # Cursor
+npx dt-copilot-agents install                # All platforms at once
+npx dt-copilot-agents info                   # Show supported personas & archetypes
 ```
 
-### Updating to Latest Version
+### Update to latest
 ```bash
-# Update agent files in-place (re-run with @latest)
-npx dt-copilot-agents@latest install claude-code .
 npx dt-copilot-agents@latest install vscode
-npx dt-copilot-agents@latest install cursor .
 ```
-After updating, tell your agent to re-read the instructions and continue where it left off.
 
-### All Platforms (Windows PowerShell)
+### Alternative: PowerShell installer
 ```powershell
 git clone https://github.com/pushpendrasinghbaghel-ai/dt-copilot-agents.git
 cd dt-copilot-agents
 .\install.ps1                        # All platforms
 .\install.ps1 -Platform vscode       # VS Code only
-.\install.ps1 -Platform claude-code  # Claude Code only
 ```
 
-### VS Code Copilot
-```powershell
-.\install.ps1 -Platform vscode
-# Restart VS Code → select "Dashboard Generator" from chat mode picker
-```
+### Manual setup (OpenAI / M365 Copilot)
 
-#### How to Use in VS Code
+**OpenAI Custom GPT** — see [`openai/README.md`](openai/README.md)
 
-1. **Open the Chat panel** — press `Ctrl+Alt+I` (Windows/Linux) or `Cmd+Alt+I` (macOS)
-2. **Click the mode selector** at the bottom-left of the chat panel (it shows "Agent" by default)
-3. **Select "Dashboard Generator"** from the dropdown list
-
-   ![VS Code Chat mode picker showing Dashboard Generator](docs/images/vscode-agent-picker.png)
-
-4. **Type your prompt** — describe the persona and company:
-   ```
-   SRE dashboard for Tata Steel
-   ```
-   ```
-   CISO dashboard for HDFC Bank
-   ```
-   ```
-   CEO dashboard for Reliance Industries
-   ```
-
-The agent will research the company, generate a 20-tile dashboard with realistic synthetic data, and deploy it to your Dynatrace tenant via DTCTL.
-
-### Claude Code
-```bash
-# Copy to your project directory:
-cp claude-code/CLAUDE.md <project>/CLAUDE.md
-cp -r claude-code/.claude <project>/.claude
-cp -r knowledge <project>/knowledge
-```
-
-#### How to Use in Claude Code
-
-1. **Open Claude Code** (desktop app or CLI)
-2. **Type `/das`** in the chat input — the `/dashboard` slash command will appear as an autocomplete suggestion
-
-   ![Claude Code slash command autocomplete showing /dashboard](docs/images/claude-code-slash-command.png)
-
-3. **Select the command** and provide the persona + company as arguments:
-   ```
-   /dashboard SRE dashboard for Tata Steel
-   ```
-   ```
-   /dashboard CISO dashboard for HDFC Bank
-   ```
-
-### Cursor
-```bash
-cp -r cursor/.cursor <project>/.cursor
-cp -r knowledge <project>/knowledge
-# Then ask: "Create a dashboard for Tata Steel manufacturing"
-```
-
-### Windsurf
-```bash
-cp windsurf/.windsurfrules <project>/.windsurfrules
-cp -r knowledge <project>/knowledge
-```
-
-### OpenAI Custom GPT
-1. Go to ChatGPT → Explore GPTs → Create
-2. Paste `openai/system-prompt.txt` into Instructions
-3. Upload `knowledge/dashboard-generator.md` as Knowledge
-4. Enable Web Browsing + Code Interpreter
-5. See `openai/README.md` for detailed setup
-
-### Microsoft 365 Copilot
-See `m365-copilot/README.md` for three integration options:
-- **Declarative Agent** (recommended) — deploy via Teams Toolkit, use `@Dashboard Generator` in Teams
-- **Copilot Studio** — no-code, upload knowledge + instructions
-- **SharePoint + Copilot Chat** — simplest, just upload the knowledge file
-
-Note: M365 Copilot cannot run `dtctl` directly. Use Power Automate for auto-deployment, or deploy manually.
+**M365 Copilot** — see [`m365-copilot/README.md`](m365-copilot/README.md)
 
 ## Architecture
 
