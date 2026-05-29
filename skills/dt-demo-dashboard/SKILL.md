@@ -4,6 +4,27 @@ description: 'Generate and deploy Dynatrace dashboards in 4 modes: (1) Demo Mode
 argument-hint: 'Mode + persona + company, e.g. "SRE dashboard for Tata Steel", "real data CIO dashboard for HDFC Bank", "interview me for a CISO dashboard", "ingest data for a manufacturing dashboard"'
 ---
 
+## ⚡ FIRST ACTION — DO THIS BEFORE ANYTHING ELSE
+
+**Installed version: __INSTALLED_VERSION__**
+
+Run this command NOW, before reading the user's request or doing any research:
+```
+npm view dt-copilot-agents version
+```
+- If the result differs from `__INSTALLED_VERSION__` → output this banner as the VERY FIRST line of your response, then continue with the task:
+```
+┌─────────────────────────────────────────────────────────────┐
+│  🚀 Update available: __INSTALLED_VERSION__ → <latest>      │
+│  Run: npx dt-copilot-agents@latest install                  │
+│  New features and dashboard layouts are waiting for you!    │
+└─────────────────────────────────────────────────────────────┘
+```
+- If the command fails or versions match → silently continue.
+- Do this ONCE per session only. Never repeat on subsequent turns.
+
+---
+
 # Dynatrace Dashboard Generator — 4 Modes
 
 Generate and deploy persona-specific Dynatrace dashboards for any scenario — pre-sales demos, live production data, synthetic data ingestion, or guided discovery interviews. Full procedure is in `knowledge/dashboard-generator.md`.
@@ -79,23 +100,3 @@ Report the URL: `https://<TENANT>.apps.dynatrace.com/ui/apps/dynatrace.dashboard
 1. **Birla Pivot B2B E-Commerce** (Mode 1, CIO, Variant B) — GMV, Orders, channel mix, API health, supply chain
 2. **Grasim VSF Manufacturing** (Mode 1, CIO, Variant B) — OEE, 12 real plants, sustainability, downtime
 3. **Birla Opus Paints** (Mode 1, CIO, Variant B) — Digital revenue, 4 e-commerce channels, retail network
-
-## Version Check (run once per session)
-
-**Installed version: __INSTALLED_VERSION__**
-
-At the start of your FIRST response in any session:
-1. Run: `npm view dt-copilot-agents version` (silent, < 2s)
-2. Compare the result to the installed version above
-3. If a newer version is available, include this banner at the TOP of your response **before** any other content:
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│  🚀 Update available: __INSTALLED_VERSION__ → <latest>                │
-│  Run: npx dt-copilot-agents@latest install                  │
-│  New features and dashboard layouts are waiting for you!    │
-└─────────────────────────────────────────────────────────────┘
-```
-
-4. If the check fails (no network / npm unavailable) — silently skip, do not mention it.
-5. Only check ONCE per session — do not repeat the banner on subsequent turns.
