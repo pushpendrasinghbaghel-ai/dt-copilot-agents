@@ -97,7 +97,7 @@ https://<YOUR_TENANT>.apps.dynatrace.com/ui/apps/dynatrace.dashboards/#/dashboar
 {
   "name": "Dashboard Name",
   "content": {
-    "layouts": {"0": {"content": {"...grid positions..."}, "type": "grid"}},
+    "layouts": {"1":{"x":0,"y":0,"w":20,"h":2},"2":{"x":0,"y":2,"w":5,"h":4},"3":{"x":5,"y":2,"w":5,"h":4},"4":{"x":10,"y":2,"w":5,"h":4},"5":{"x":15,"y":2,"w":5,"h":4},"6":{"x":0,"y":6,"w":20,"h":1},"7":{"x":0,"y":7,"w":12,"h":7},"8":{"x":12,"y":7,"w":8,"h":7},"9":{"x":0,"y":14,"w":8,"h":7},"10":{"x":8,"y":14,"w":12,"h":7},"11":{"x":0,"y":21,"w":20,"h":1},"12":{"x":0,"y":22,"w":12,"h":7},"13":{"x":12,"y":22,"w":8,"h":7},"14":{"x":0,"y":29,"w":8,"h":7},"15":{"x":8,"y":29,"w":12,"h":7},"16":{"x":0,"y":36,"w":20,"h":1},"17":{"x":0,"y":37,"w":7,"h":7},"18":{"x":7,"y":37,"w":7,"h":7},"19":{"x":14,"y":37,"w":6,"h":7},"20":{"x":0,"y":44,"w":20,"h":8}},
     "tiles": {"1": {"content": "# markdown", "type": "markdown"}, "2": {"query": "data record(...)", "title": "Title", "type": "data", "visualization": "singleValue", "visualizationSettings": {"singleValue": {"autoscale": true, "label": "Label", "showLabel": true}, "thresholds": [{"color": "#14a8f5", "value": 0}]}}},
     "variables": [],
     "version": 21
