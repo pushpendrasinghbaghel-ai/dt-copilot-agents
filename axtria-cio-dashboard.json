@@ -1,0 +1,178 @@
+{
+  "id": "e16aa8fa-2443-4b5d-b744-47532078d13e",
+  "name": "Axtria — Life Sciences AI Analytics Platform | CIO Command Center",
+  "content": {
+    "layouts": {
+      "1":  {"x":0,  "y":0,  "w":20, "h":2},
+      "2":  {"x":0,  "y":2,  "w":5,  "h":4},
+      "3":  {"x":5,  "y":2,  "w":5,  "h":4},
+      "4":  {"x":10, "y":2,  "w":5,  "h":4},
+      "5":  {"x":15, "y":2,  "w":5,  "h":4},
+      "6":  {"x":0,  "y":6,  "w":20, "h":1},
+      "7":  {"x":0,  "y":7,  "w":12, "h":7},
+      "8":  {"x":12, "y":7,  "w":8,  "h":7},
+      "9":  {"x":0,  "y":14, "w":8,  "h":7},
+      "10": {"x":8,  "y":14, "w":12, "h":7},
+      "11": {"x":0,  "y":21, "w":20, "h":1},
+      "12": {"x":0,  "y":22, "w":12, "h":7},
+      "13": {"x":12, "y":22, "w":8,  "h":7},
+      "14": {"x":0,  "y":29, "w":8,  "h":7},
+      "15": {"x":8,  "y":29, "w":12, "h":7},
+      "16": {"x":0,  "y":36, "w":20, "h":1},
+      "17": {"x":0,  "y":37, "w":7,  "h":7},
+      "18": {"x":7,  "y":37, "w":7,  "h":7},
+      "19": {"x":14, "y":37, "w":6,  "h":7},
+      "20": {"x":0,  "y":44, "w":20, "h":8}
+    },
+    "tiles": {
+      "1": {
+        "content": "# 🏛️ Axtria — Life Sciences AI Analytics Platform\n## CIO Command Center | Full-Stack Observability\n\n**APM · Distributed Tracing · K8s/EKS · MSSQL/PostgreSQL · IIS · Salesforce — single pane of glass**",
+        "type": "markdown"
+      },
+      "2": {
+        "query": "data record(value=99.73)\n| fieldsKeep value",
+        "title": "API Success Rate",
+        "type": "data",
+        "visualization": "singleValue",
+        "visualizationSettings": {
+          "singleValue": {"autoscale": true, "label": "%", "showLabel": true},
+          "thresholds": [{"color":"#dc172a","value":0},{"color":"#f5d565","value":95},{"color":"#6bcb77","value":99}]
+        }
+      },
+      "3": {
+        "query": "data record(value=187)\n| fieldsKeep value",
+        "title": "P99 API Latency",
+        "type": "data",
+        "visualization": "singleValue",
+        "visualizationSettings": {
+          "singleValue": {"autoscale": true, "label": "ms", "showLabel": true},
+          "thresholds": [{"color":"#6bcb77","value":0},{"color":"#f5d565","value":500},{"color":"#dc172a","value":1000}]
+        }
+      },
+      "4": {
+        "query": "data record(value=99.91)\n| fieldsKeep value",
+        "title": "Platform Uptime",
+        "type": "data",
+        "visualization": "singleValue",
+        "visualizationSettings": {
+          "singleValue": {"autoscale": true, "label": "%", "showLabel": true},
+          "thresholds": [{"color":"#dc172a","value":0},{"color":"#f5d565","value":99},{"color":"#6bcb77","value":99.9}]
+        }
+      },
+      "5": {
+        "query": "data record(value=47)\n| fieldsKeep value",
+        "title": "Services Monitored",
+        "type": "data",
+        "visualization": "singleValue",
+        "visualizationSettings": {
+          "singleValue": {"autoscale": true, "label": "services", "showLabel": true},
+          "thresholds": [{"color":"#14a8f5","value":0}]
+        }
+      },
+      "6": {
+        "content": "## 📡 Application & Service Health — APM · HTTP Errors · Request Tracing",
+        "type": "markdown"
+      },
+      "7": {
+        "query": "data record(service=\"Axtria InsightsMAx.ai\", error_rate=0.18, requests=28420),\n     record(service=\"Axtria DataMAx\", error_rate=0.42, requests=19840),\n     record(service=\"Axtria SalesIQ\", error_rate=0.09, requests=24100),\n     record(service=\"Axtria MarketingIQ\", error_rate=0.31, requests=11200),\n     record(service=\"Axtria CustomerIQ\", error_rate=0.27, requests=9870),\n     record(service=\"IIS App Gateway\", error_rate=0.55, requests=34800),\n     record(service=\"Salesforce Integration\", error_rate=0.73, requests=6420),\n     record(service=\"MSSQL Data Service\", error_rate=0.12, requests=42300),\n     record(service=\"PostgreSQL Analytics DB\", error_rate=0.08, requests=31700),\n     record(service=\"EKS Inference Engine\", error_rate=0.19, requests=17600)\n| sort error_rate desc\n| fieldsKeep service, error_rate, requests",
+        "title": "Error Rate % by Service",
+        "type": "data",
+        "visualization": "categoricalBarChart",
+        "visualizationSettings": {
+          "categoricalBarChart": {"categoryAxis": "service", "valueAxis": "error_rate"}
+        }
+      },
+      "8": {
+        "query": "data record(error_code=\"HTTP 502 Bad Gateway\", count=312),\n     record(error_code=\"HTTP 404 Not Found\", count=847),\n     record(error_code=\"HTTP 402 Payment Required\", count=43),\n     record(error_code=\"HTTP 500 Internal Server\", count=189),\n     record(error_code=\"HTTP 503 Unavailable\", count=67),\n     record(error_code=\"Connection Timeout\", count=156)\n| sort count desc\n| fieldsKeep error_code, count",
+        "title": "HTTP Error Distribution",
+        "type": "data",
+        "visualization": "donutChart",
+        "visualizationSettings": {
+          "donutChart": {"categoryAxis": "error_code", "valueAxis": "count"}
+        }
+      },
+      "9": {
+        "query": "data record(timestamp=now()-165m, service=\"InsightsMAx\", rps=312.0),\n     record(timestamp=now()-150m, service=\"InsightsMAx\", rps=328.0),\n     record(timestamp=now()-135m, service=\"InsightsMAx\", rps=341.0),\n     record(timestamp=now()-120m, service=\"InsightsMAx\", rps=356.0),\n     record(timestamp=now()-105m, service=\"InsightsMAx\", rps=348.0),\n     record(timestamp=now()-90m, service=\"InsightsMAx\", rps=371.0),\n     record(timestamp=now()-75m, service=\"InsightsMAx\", rps=363.0),\n     record(timestamp=now()-60m, service=\"InsightsMAx\", rps=382.0),\n     record(timestamp=now()-45m, service=\"InsightsMAx\", rps=374.0),\n     record(timestamp=now()-30m, service=\"InsightsMAx\", rps=389.0),\n     record(timestamp=now()-15m, service=\"InsightsMAx\", rps=401.0),\n     record(timestamp=now()-165m, service=\"SalesIQ\", rps=218.0),\n     record(timestamp=now()-150m, service=\"SalesIQ\", rps=231.0),\n     record(timestamp=now()-135m, service=\"SalesIQ\", rps=244.0),\n     record(timestamp=now()-120m, service=\"SalesIQ\", rps=237.0),\n     record(timestamp=now()-105m, service=\"SalesIQ\", rps=259.0),\n     record(timestamp=now()-90m, service=\"SalesIQ\", rps=268.0),\n     record(timestamp=now()-75m, service=\"SalesIQ\", rps=261.0),\n     record(timestamp=now()-60m, service=\"SalesIQ\", rps=274.0),\n     record(timestamp=now()-45m, service=\"SalesIQ\", rps=282.0),\n     record(timestamp=now()-30m, service=\"SalesIQ\", rps=279.0),\n     record(timestamp=now()-15m, service=\"SalesIQ\", rps=291.0)\n| fieldsAdd rps = toDouble(rps)\n| makeTimeseries requests_per_sec = avg(rps), by: {service}, interval: 15m",
+        "title": "Request Volume Trend",
+        "type": "data",
+        "visualization": "lineChart"
+      },
+      "10": {
+        "query": "data record(service=\"Salesforce Integration\", avg_ms=412, p99_ms=2310, error_pct=0.73, health=\"Degraded\"),\n     record(service=\"IIS App Gateway\", avg_ms=234, p99_ms=1842, error_pct=0.55, health=\"Warning\"),\n     record(service=\"Axtria DataMAx\", avg_ms=187, p99_ms=943, error_pct=0.42, health=\"Warning\"),\n     record(service=\"Axtria MarketingIQ\", avg_ms=198, p99_ms=874, error_pct=0.31, health=\"Warning\"),\n     record(service=\"Axtria CustomerIQ\", avg_ms=167, p99_ms=723, error_pct=0.27, health=\"Healthy\"),\n     record(service=\"EKS Inference Engine\", avg_ms=89, p99_ms=412, error_pct=0.19, health=\"Healthy\"),\n     record(service=\"Axtria InsightsMAx.ai\", avg_ms=143, p99_ms=612, error_pct=0.18, health=\"Healthy\"),\n     record(service=\"MSSQL Data Service\", avg_ms=78, p99_ms=389, error_pct=0.12, health=\"Healthy\"),\n     record(service=\"Axtria SalesIQ\", avg_ms=112, p99_ms=487, error_pct=0.09, health=\"Healthy\"),\n     record(service=\"PostgreSQL Analytics DB\", avg_ms=64, p99_ms=312, error_pct=0.08, health=\"Healthy\")\n| fieldsKeep service, avg_ms, p99_ms, error_pct, health",
+        "title": "Service Latency & Health Overview",
+        "type": "data",
+        "visualization": "table"
+      },
+      "11": {
+        "content": "## 🔧 Infrastructure — K8s/EKS · MSSQL · PostgreSQL · IIS · Latency by Layer",
+        "type": "markdown"
+      },
+      "12": {
+        "query": "data record(layer=\"Salesforce API\", avg_ms=412),\n     record(layer=\"IIS App Layer\", avg_ms=234),\n     record(layer=\"External Data Partners\", avg_ms=187),\n     record(layer=\"MSSQL Database\", avg_ms=78),\n     record(layer=\"K8s/EKS Pods\", avg_ms=89),\n     record(layer=\"Message Queue\", avg_ms=34),\n     record(layer=\"Network (Internal)\", avg_ms=12),\n     record(layer=\"PostgreSQL Analytics\", avg_ms=64)\n| sort avg_ms desc\n| fieldsKeep layer, avg_ms",
+        "title": "Latency by Layer — App · DB · Network · Downstream",
+        "type": "data",
+        "visualization": "categoricalBarChart",
+        "visualizationSettings": {
+          "categoricalBarChart": {"categoryAxis": "layer", "valueAxis": "avg_ms"}
+        }
+      },
+      "13": {
+        "query": "data record(db=\"MSSQL: incentive_comp\", query=\"usp_CalcBonus\", avg_ms=143, calls_hr=4200, slow_queries=12),\n     record(db=\"PostgreSQL: forecasting\", query=\"forecast_model_run\", avg_ms=234, calls_hr=2100, slow_queries=21),\n     record(db=\"PostgreSQL: patient_data\", query=\"patient_journey_agg\", avg_ms=112, calls_hr=9800, slow_queries=8),\n     record(db=\"MSSQL: datamax_core\", query=\"usp_DataIngestion\", avg_ms=167, calls_hr=6300, slow_queries=9),\n     record(db=\"MSSQL: territory_mgmt\", query=\"usp_GetTerritoryMap\", avg_ms=92, calls_hr=8700, slow_queries=5),\n     record(db=\"MSSQL: pharma_commercial\", query=\"usp_GetSalesData\", avg_ms=78, calls_hr=12400, slow_queries=3),\n     record(db=\"PostgreSQL: analytics\", query=\"analytics_rollup\", avg_ms=64, calls_hr=31700, slow_queries=1)\n| fieldsKeep db, query, avg_ms, calls_hr, slow_queries",
+        "title": "DB Query Performance — MSSQL & PostgreSQL",
+        "type": "data",
+        "visualization": "table"
+      },
+      "14": {
+        "query": "data record(timestamp=now()-165m, status=\"Running\", pods=142.0),\n     record(timestamp=now()-150m, status=\"Running\", pods=144.0),\n     record(timestamp=now()-135m, status=\"Running\", pods=141.0),\n     record(timestamp=now()-120m, status=\"Running\", pods=138.0),\n     record(timestamp=now()-105m, status=\"Running\", pods=143.0),\n     record(timestamp=now()-90m, status=\"Running\", pods=147.0),\n     record(timestamp=now()-75m, status=\"Running\", pods=146.0),\n     record(timestamp=now()-60m, status=\"Running\", pods=149.0),\n     record(timestamp=now()-45m, status=\"Running\", pods=151.0),\n     record(timestamp=now()-30m, status=\"Running\", pods=148.0),\n     record(timestamp=now()-15m, status=\"Running\", pods=152.0),\n     record(timestamp=now()-165m, status=\"Failed\", pods=3.0),\n     record(timestamp=now()-150m, status=\"Failed\", pods=2.0),\n     record(timestamp=now()-135m, status=\"Failed\", pods=4.0),\n     record(timestamp=now()-120m, status=\"Failed\", pods=6.0),\n     record(timestamp=now()-105m, status=\"Failed\", pods=3.0),\n     record(timestamp=now()-90m, status=\"Failed\", pods=2.0),\n     record(timestamp=now()-75m, status=\"Failed\", pods=1.0),\n     record(timestamp=now()-60m, status=\"Failed\", pods=2.0),\n     record(timestamp=now()-45m, status=\"Failed\", pods=1.0),\n     record(timestamp=now()-30m, status=\"Failed\", pods=1.0),\n     record(timestamp=now()-15m, status=\"Failed\", pods=0.0)\n| fieldsAdd pods = toDouble(pods)\n| makeTimeseries pod_count = avg(pods), by: {status}, interval: 15m",
+        "title": "K8s/EKS Pod Health Trend",
+        "type": "data",
+        "visualization": "lineChart"
+      },
+      "15": {
+        "query": "data record(status=\"Running\", pods=152),\n     record(status=\"Pending\", pods=4),\n     record(status=\"Terminating\", pods=3),\n     record(status=\"CrashLoopBackOff\", pods=2),\n     record(status=\"OOMKilled\", pods=1)\n| sort pods desc\n| fieldsKeep status, pods",
+        "title": "K8s Pod Status Distribution",
+        "type": "data",
+        "visualization": "donutChart",
+        "visualizationSettings": {
+          "donutChart": {"categoryAxis": "status", "valueAxis": "pods"}
+        }
+      },
+      "16": {
+        "content": "## 🔍 Distributed Tracing · Dependency Health · Alerts · Salesforce",
+        "type": "markdown"
+      },
+      "17": {
+        "query": "data record(trace_id=\"TRC-1F6A\", flow=\"IIS → Salesforce API\", duration_ms=2310, spans=5, status=\"Error 502\"),\n     record(trace_id=\"TRC-7C4B\", flow=\"IIS → DataMAx → PostgreSQL\", duration_ms=1842, spans=12, status=\"Slow\"),\n     record(trace_id=\"TRC-8E2D\", flow=\"MarketingIQ → DataMAx → External\", duration_ms=943, spans=14, status=\"Slow\"),\n     record(trace_id=\"TRC-5B9C\", flow=\"CustomerIQ → PostgreSQL → EKS\", duration_ms=723, spans=11, status=\"Success\"),\n     record(trace_id=\"TRC-3D8E\", flow=\"SalesIQ → EKS → MSSQL\", duration_ms=487, spans=9, status=\"Success\"),\n     record(trace_id=\"TRC-9A2F\", flow=\"IIS → InsightsMAx → MSSQL\", duration_ms=312, spans=8, status=\"Success\"),\n     record(trace_id=\"TRC-2G7H\", flow=\"IIS → IncentiveComp → MSSQL\", duration_ms=234, spans=6, status=\"Success\")\n| fieldsKeep trace_id, flow, duration_ms, spans, status",
+        "title": "Distributed Trace Summary — IIS · App · DB · K8s · Salesforce",
+        "type": "data",
+        "visualization": "table"
+      },
+      "18": {
+        "query": "data record(severity=\"Critical\", count=4),\n     record(severity=\"Warning\", count=17),\n     record(severity=\"Info\", count=32),\n     record(severity=\"Resolved (24h)\", count=28)\n| sort count desc\n| fieldsKeep severity, count",
+        "title": "Active Alert Status",
+        "type": "data",
+        "visualization": "pieChart",
+        "visualizationSettings": {
+          "pieChart": {"categoryAxis": "severity", "valueAxis": "count"}
+        }
+      },
+      "19": {
+        "query": "data record(dependency=\"Salesforce CRM\", health_pct=94.2, latency_ms=412, errors=47),\n     record(dependency=\"IIS App Pool\", health_pct=97.4, latency_ms=234, errors=28),\n     record(dependency=\"External Data Partners\", health_pct=96.1, latency_ms=187, errors=19),\n     record(dependency=\"AWS EKS\", health_pct=98.7, latency_ms=89, errors=12),\n     record(dependency=\"MSSQL Cluster\", health_pct=99.8, latency_ms=78, errors=3),\n     record(dependency=\"PostgreSQL RDS\", health_pct=99.9, latency_ms=64, errors=1)\n| sort health_pct asc\n| fieldsKeep dependency, health_pct, latency_ms, errors",
+        "title": "Dependency Health Scorecard",
+        "type": "data",
+        "visualization": "categoricalBarChart",
+        "visualizationSettings": {
+          "categoricalBarChart": {"categoryAxis": "dependency", "valueAxis": "health_pct"}
+        }
+      },
+      "20": {
+        "query": "data record(timestamp=now()-3m, event=\"HTTP 502 — Salesforce API timeout on CustomerIQ integration\", severity=\"Critical\", service=\"Salesforce Integration\"),\n     record(timestamp=now()-8m, event=\"K8s Pod CrashLoopBackOff — datamax-worker-7d9b (OOMKilled)\", severity=\"Warning\", service=\"EKS/DataMAx\"),\n     record(timestamp=now()-14m, event=\"Slow DB query usp_CalcBonus > 2s on MSSQL incentive_comp\", severity=\"Warning\", service=\"MSSQL\"),\n     record(timestamp=now()-19m, event=\"HTTP 404 spike — 312 errors on /api/v2/insights endpoint (InsightsMAx)\", severity=\"Warning\", service=\"InsightsMAx API\"),\n     record(timestamp=now()-27m, event=\"Intermittent disconnect — IIS App Pool recycled (3 occurrences in 30m)\", severity=\"Warning\", service=\"IIS Gateway\"),\n     record(timestamp=now()-34m, event=\"Trace TRC-7C4B — DataMAx → PostgreSQL latency 1842ms (SLA breach)\", severity=\"Critical\", service=\"DataMAx\"),\n     record(timestamp=now()-41m, event=\"PostgreSQL forecast_model_run 234ms avg — 21 slow queries/hr detected\", severity=\"Info\", service=\"PostgreSQL\"),\n     record(timestamp=now()-48m, event=\"K8s Pod datamax-worker-7d9b OOMKilled — 512MB memory limit exceeded\", severity=\"Warning\", service=\"EKS\"),\n     record(timestamp=now()-56m, event=\"HTTP 502 — Salesforce webhook callback failed (retry 3/3 exhausted)\", severity=\"Critical\", service=\"Salesforce Integration\"),\n     record(timestamp=now()-63m, event=\"Auto-remediation: IIS App Pool recycled — service restored in 4.2s\", severity=\"Info\", service=\"IIS Gateway\"),\n     record(timestamp=now()-71m, event=\"Alert resolved: InsightsMAx API error rate back to 0.18% (was 1.2%)\", severity=\"Info\", service=\"InsightsMAx\"),\n     record(timestamp=now()-84m, event=\"Deployment: axtria-salesiq v3.12.1 rolled out to EKS (canary 10%)\", severity=\"Info\", service=\"SalesIQ\"),\n     record(timestamp=now()-97m, event=\"Alert fired: Salesforce API P99 latency > 2000ms threshold breached\", severity=\"Warning\", service=\"Salesforce\")\n| fieldsKeep timestamp, event, severity, service",
+        "title": "Recent Events — Errors · Traces · K8s · DB · Deployments",
+        "type": "data",
+        "visualization": "table"
+      }
+    },
+    "variables": [],
+    "version": 21
+  }
+}

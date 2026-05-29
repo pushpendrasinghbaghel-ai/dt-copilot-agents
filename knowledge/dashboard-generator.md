@@ -1,14 +1,38 @@
 # Dynatrace Demo Dashboard Generator — Knowledge Base
 
 ## Purpose
-Generate and deploy realistic persona-specific dashboards with synthetic inline data for customer demos. Supports any executive or technical persona — CIO, CTO, CEO, CISO, SRE, IT Head, Application Ops, MLOps, Platform Engineering, VP Engineering, and more. Dashboards render instantly with zero ingestion dependencies.
+Generate and deploy persona-specific dashboards for any scenario: pre-sales demos, live production insights, synthetic data ingestion, or discovery-driven creation. Supports CIO, CTO, CEO, CISO, SRE, IT Head, Application Ops, MLOps, Platform Engineering, VP Engineering, and more.
 
 ## When to Use
 - Preparing for a customer meeting with any persona (CIO, CTO, CISO, SRE, IT Head, etc.)
 - Need a quick demo dashboard with realistic business + technical data
+- Connecting to a customer's live Dynatrace tenant to show real data
+- Ingesting synthetic data and building dashboards that query it live
 - Building a proof-of-concept for a Dynatrace pitch
 - Creating industry-specific or role-specific dashboards
 - Demonstrating Dynatrace value to different stakeholders in the same organization
+
+---
+
+## Mode Selection — Start Here
+
+**Identify the mode before proceeding.** This determines data source, DQL strategy, and workflow.
+
+| Mode | Trigger Phrases | Data Source | Time |
+|---|---|---|---|
+| **1. Demo Mode** *(default)* | "meeting", "prospect", "pitch", "pre-sales", "quick demo" | Inline synthetic `data record()` | < 5 min |
+| **2. Live Tenant Mode** | "real data", "production", "actual tenant", "their Dynatrace", "live metrics" | Real metrics/logs from tenant via DQL | < 10 min |
+| **3. Synthetic Ingest Mode** | "ingest", "inject data", "persistent demo", "synthetic but live queries" | Generated data ingested via API → queried live | < 20 min |
+| **4. Interview-First Mode** | "interview me", "ask me questions", "help me figure out", "discovery mode" | User-driven discovery → any data source | < 15 min |
+
+**Default: Mode 1** — if no mode is specified and no tenant context exists, use Mode 1.
+
+**Auto-detection heuristics:**
+- MCP is connected + user mentions "dashboard" → suggest Mode 2 (can use real data)
+- User says "meeting tomorrow" / "prospect" → Mode 1
+- User says "show me their actual latency" → Mode 2
+- User says "ingest some data first" → Mode 3
+- User asks "what should be on the dashboard?" or is unsure → Mode 4
 
 ---
 
@@ -79,6 +103,137 @@ Examples:
 - `# 🛡️ HDFC Bank — Digital Banking\n## CISO Security Command Center | Threat & Compliance\n\n**Real-time security posture across 6,300+ branches and digital channels**`
 - `# 🤖 Infosys — Enterprise AI Services\n## MLOps AI Operations Center | Model Fleet Health\n\n**Monitoring inference performance, token economics, and model drift across client deployments**`
 
+### Phase 1.5: Guided Interview (OPTIONAL — < 1 minute)
+
+#### Gate Logic — Read This First
+
+**Simple prompt (e.g. "CIO dashboard for HDFC Bank") → SKIP the gate entirely. Build immediately with smart defaults.** Do not ask any questions. Just say: "Building your [Persona] dashboard for [Company]..." and proceed to Phase 2.
+
+**Only show the gate when** the prompt contains explicit signals of needing customization:
+- Words like "meeting", "tomorrow", "prospect", "pitch", "present" → show Meeting Brief option
+- Words like "customize", "specific", "focus on", "I need" → show Customize option
+- Words like "real data", "their tenant", "production" → switch to Mode 2 entirely (no gate)
+- Words like "interview", "help me figure out" → switch to Mode 4 entirely (no gate)
+
+**When to show the gate:**
+> I've researched **{Company}** and identified it as a **{Industry}** business. I'll build a **{Persona}** dashboard.
+>
+> **Quick generate, or tailor it?**
+> 1. ⚡ **Build now** — smart defaults from my research
+> 2. 🎯 **Customize** — 5 quick questions (~60 seconds)
+> 3. 🗣️ **Meeting brief** — tell me about the meeting and I'll design the story arc
+
+**If the user picks Build now (or says "skip", "go ahead", "just do it", "yes", etc.)** → jump to Phase 2 immediately.
+
+**If the user picks Meeting brief** → ask the Meeting Intelligence questions below.
+
+**If the user picks Customize** → ask all 5 questions **in a single message** so the user can reply once:
+
+---
+
+#### Meeting Intelligence Questions (for Meeting Brief mode or Mode 4)
+
+Ask these as a single block — the user can answer any or skip:
+
+**🎯 Tell me about the meeting — answer what you know:**
+
+**1. Meeting goal** — What outcome do you need from this meeting?
+   - First contact / discovery
+   - Business case / ROI discussion
+   - Proof of Value review
+   - Renewal / expansion discussion
+   - Executive Business Review (EBR)
+   - Competitive displacement
+   _(Pick one or describe freely)_
+
+**2. Attendees** — Who will be in the room?
+   _e.g. "CIO + VP Engineering + Head of Infrastructure" or "CISO and her team"_
+
+**3. Known pain points** — What keeps them up at night?
+   _e.g. "They had 3 major outages last quarter", "They're worried about cloud spend", "Security audit findings"_
+
+**4. What should they feel/decide after?**
+   _e.g. "Urgency to deploy", "Confidence in our platform", "Approve the budget", "Choose us over Datadog"_
+
+**5. Story arc** — Is there a before/after narrative?
+   _e.g. "Show chaos before Dynatrace → calm after", "Show risk they're exposed to right now"_
+
+**6. Competitive context** — Are they evaluating alternatives?
+   _e.g. "Currently on Splunk", "Evaluating Datadog and New Relic too"_
+
+#### How Meeting Intelligence Shapes the Dashboard
+
+| Answer | What Changes |
+|---|---|
+| **Meeting goal: Renewal** | Section 4 shows value delivered (uptime improvements, incidents resolved, cost saved) |
+| **Meeting goal: PoV** | Section 3 shows a "before vs after" with dramatic numbers |
+| **Meeting goal: Competitive** | KPIs benchmark against industry peers, tile 1 tagline highlights differentiation |
+| **Pain point: Outages** | Section 3 = SLO/incident tiles, recent events show resolved incidents |
+| **Pain point: Cost** | Section 3 = cost optimization tiles, budget vs actual |
+| **Pain point: Security** | Section 3 = vulnerability/compliance tiles |
+| **Feel: Urgency** | Use red/yellow threshold colors more aggressively, "active issues" language |
+| **Feel: Confidence** | Use green thresholds, uptime trends going up, "resolved" events |
+| **Competitive: Datadog** | Add deployment frequency and DORA metrics (Dynatrace strength) |
+
+---
+
+**📋 Quick customization — answer as many as you like (or skip any with "default"):**
+
+**1. Top KPIs** — Which 4 metrics matter most for your KPI strip?
+   _Suggested based on research:_ `{list 6-8 KPI options from persona archetype + research}`
+   _(Pick 4, or say "default" to use my suggestions)_
+
+**2. Key Regions / Business Units** — Which locations or divisions should be featured?
+   _Found in research:_ `{list discovered regions/plants/BUs}`
+   _(Pick 4-8, reorder by priority, or say "default")_
+
+**3. Primary Concern** — What's the #1 thing this dashboard should highlight?
+   - Cost Optimization
+   - Reliability & Uptime
+   - Security & Compliance
+   - Growth & Revenue
+   - Customer Experience
+   - Operational Efficiency
+   _(Pick one, or say "default" for balanced view)_
+
+**4. Audience & Tone** — Who will see this dashboard?
+   - Board / C-Suite presentation (high-level, business language, no jargon)
+   - Leadership review (balanced business + tech)
+   - Engineering / Ops daily use (technical detail, SLOs, latencies)
+   - Customer demo (visually impressive, storytelling)
+   _(Pick one, or say "default")_
+
+**5. Anything specific?** — Any pain points, scenarios, or context to highlight?
+   _Example: "we had a major outage last month", "cost optimization is the board's #1 priority", "focus on AI/ML workloads"_
+   _(Free text, or say "skip")_
+
+---
+
+#### How Interview Answers Shape the Dashboard
+
+| Answer | What Changes |
+|---|---|
+| **Top KPIs** | Tiles 2-5 use the user's chosen metrics instead of archetype defaults |
+| **Key Regions/BUs** | Bar charts (tiles 7, 12, 19) and tables (10, 13, 17) prioritize selected regions |
+| **Primary Concern** | Section 3-4 themes tilt toward the concern (e.g., "Cost" → add cost/energy tiles; "Reliability" → add SLO/incident tiles; "Security" → add vulnerability/compliance tiles) |
+| **Audience & Tone** | Adjusts jargon level, data density, markdown header language, and whether to use ₹/$ or abstract scores |
+| **Specific context** | Feeds into section themes, "recent events" table narratives, and markdown tagline |
+
+**For any question answered with "default" or skipped** → use the persona archetype defaults from the tables above.
+
+#### Concern → Section Theme Mapping
+
+| Primary Concern | Section 3 Theme | Section 4 Theme |
+|---|---|---|
+| **Cost Optimization** | Cost breakdown by unit/service, budget vs actual, cost trend, spend distribution | Waste/idle resources, optimization opportunities, forecasted spend, recent cost alerts |
+| **Reliability & Uptime** | SLO status by service, error budget burn, latency percentiles, SLO compliance table | Incidents by severity, MTTR trend, change failure rate, recent incidents |
+| **Security & Compliance** | Vulnerabilities by severity, compliance coverage, security trend, risk assets | Active threats, incident response, MITRE coverage, recent security events |
+| **Growth & Revenue** | Revenue by segment, customer acquisition, growth trend, top accounts | Conversion funnel, churn analysis, expansion revenue, recent transactions |
+| **Customer Experience** | User satisfaction by channel, NPS/CSAT scores, session quality trend, top issues | User journey completion, error impact on users, performance by region, recent user complaints |
+| **Operational Efficiency** | Process throughput by unit, automation rate, cycle time trend, capacity table | Backlog status, SLA compliance, resource utilization, recent operational events |
+
+**Platform compatibility:** This interview is pure conversational text — works identically in VS Code Copilot, Claude Code, Cursor, Windsurf, ChatGPT, and any chat-based AI interface. No IDE-specific APIs or tools required.
+
 ### Phase 2: Build Dashboard JSON (< 3 minutes)
 
 4. **Create the dashboard JSON** file with exactly **20 tiles** following this structure:
@@ -106,108 +261,202 @@ Tile 19: categoricalBarChart or table (additional breakdown)
 Tile 20: table (recent events/orders/alerts — live feed style)
 ```
 
-5. **MANDATORY LAYOUT — COPY THIS GRID VERBATIM.** Do NOT generate your own layout. Do NOT use w=10+10 or w=20 on data tiles. Use these EXACT positions:
+5. **SMART LAYOUT SELECTION — choose the right variant based on context:**
+
+#### Layout Variant Selector
+
+| Scenario | Use Variant | Key Characteristics |
+|---|---|---|
+| Executive / C-suite presentation | **A: Panorama** | Big KPIs (h=5), wide bar charts (w=14), spacious feel |
+| Standard demo or balanced view | **B: Standard** *(default)* | 12+8 asymmetric columns, h=7 data tiles |
+| Technical deep-dive (SRE, Ops, Eng) | **C: Dense** | Compact KPIs (h=3), shorter tiles (h=6), more information density |
+| Meeting with ONE critical message | **D: Hero** | Tile 2 = w=10 h=6 hero KPI, others arranged around it |
+| Trend-heavy story (growth, degradation) | **E: Trend-First** | Time-series tiles get w=14, reference charts get w=6 |
+
+**Selection rules:**
+- Persona is CEO/CIO/CISO + meeting is board/C-suite → **Variant A**
+- Persona is SRE/Platform Eng/VP Eng → **Variant C**
+- Meeting goal is renewal/PoV with one key win → **Variant D** (hero tile = the key metric)
+- Dashboard is trend-driven (growth story, degradation, SLO trend) → **Variant E**
+- Everything else → **Variant B** (Standard)
+
+---
+
+#### Variant A: Panorama (Executive / C-suite)
 
 ```json
 "layouts": {
-  "0": {
-    "content": {
-      "1":  {"h":2,"w":20,"x":0,"y":0},
-      "2":  {"h":4,"w":5,"x":0,"y":2},
-      "3":  {"h":4,"w":5,"x":5,"y":2},
-      "4":  {"h":4,"w":5,"x":10,"y":2},
-      "5":  {"h":4,"w":5,"x":15,"y":2},
-      "6":  {"h":1,"w":20,"x":0,"y":6},
-      "7":  {"h":7,"w":12,"x":0,"y":7},
-      "8":  {"h":7,"w":8,"x":12,"y":7},
-      "9":  {"h":7,"w":8,"x":0,"y":14},
-      "10": {"h":7,"w":12,"x":8,"y":14},
-      "11": {"h":1,"w":20,"x":0,"y":21},
-      "12": {"h":7,"w":12,"x":0,"y":22},
-      "13": {"h":7,"w":8,"x":12,"y":22},
-      "14": {"h":7,"w":8,"x":0,"y":29},
-      "15": {"h":7,"w":12,"x":8,"y":29},
-      "16": {"h":1,"w":20,"x":0,"y":36},
-      "17": {"h":7,"w":7,"x":0,"y":37},
-      "18": {"h":7,"w":7,"x":7,"y":37},
-      "19": {"h":7,"w":6,"x":14,"y":37},
-      "20": {"h":8,"w":20,"x":0,"y":44}
-    },
-    "type": "grid"
-  }
+  "1":  {"x":0,  "y":0,  "w":20, "h":3},
+  "2":  {"x":0,  "y":3,  "w":5,  "h":5},
+  "3":  {"x":5,  "y":3,  "w":5,  "h":5},
+  "4":  {"x":10, "y":3,  "w":5,  "h":5},
+  "5":  {"x":15, "y":3,  "w":5,  "h":5},
+  "6":  {"x":0,  "y":8,  "w":20, "h":1},
+  "7":  {"x":0,  "y":9,  "w":14, "h":8},
+  "8":  {"x":14, "y":9,  "w":6,  "h":8},
+  "9":  {"x":0,  "y":17, "w":6,  "h":8},
+  "10": {"x":6,  "y":17, "w":14, "h":8},
+  "11": {"x":0,  "y":25, "w":20, "h":1},
+  "12": {"x":0,  "y":26, "w":14, "h":8},
+  "13": {"x":14, "y":26, "w":6,  "h":8},
+  "14": {"x":0,  "y":34, "w":6,  "h":8},
+  "15": {"x":6,  "y":34, "w":14, "h":8},
+  "16": {"x":0,  "y":42, "w":20, "h":1},
+  "17": {"x":0,  "y":43, "w":7,  "h":7},
+  "18": {"x":7,  "y":43, "w":7,  "h":7},
+  "19": {"x":14, "y":43, "w":6,  "h":7},
+  "20": {"x":0,  "y":50, "w":20, "h":8}
 }
 ```
 
-**Layout rules — ENFORCED, NOT OPTIONAL:**
-- Row 1 (y=0): Full-width header (w=20)
-- Row 2 (y=2): 4 KPI cards side-by-side (w=5 each, x=0/5/10/15)
-- Sections 2-3: **Asymmetric 2-column layout** — ALWAYS alternate wider/narrower:
-  - Row with bar chart (w=12) + donut/pie (w=8)
-  - Row with line/area chart (w=8) + table (w=12)
-- Section 4: 3-column layout (w=7, w=7, w=6)
-- Bottom: Full-width events table (w=20)
+---
+
+#### Variant B: Standard (Default — balanced)
+
+```json
+"layouts": {
+  "1":  {"x":0,  "y":0,  "w":20, "h":2},
+  "2":  {"x":0,  "y":2,  "w":5,  "h":4},
+  "3":  {"x":5,  "y":2,  "w":5,  "h":4},
+  "4":  {"x":10, "y":2,  "w":5,  "h":4},
+  "5":  {"x":15, "y":2,  "w":5,  "h":4},
+  "6":  {"x":0,  "y":6,  "w":20, "h":1},
+  "7":  {"x":0,  "y":7,  "w":12, "h":7},
+  "8":  {"x":12, "y":7,  "w":8,  "h":7},
+  "9":  {"x":0,  "y":14, "w":8,  "h":7},
+  "10": {"x":8,  "y":14, "w":12, "h":7},
+  "11": {"x":0,  "y":21, "w":20, "h":1},
+  "12": {"x":0,  "y":22, "w":12, "h":7},
+  "13": {"x":12, "y":22, "w":8,  "h":7},
+  "14": {"x":0,  "y":29, "w":8,  "h":7},
+  "15": {"x":8,  "y":29, "w":12, "h":7},
+  "16": {"x":0,  "y":36, "w":20, "h":1},
+  "17": {"x":0,  "y":37, "w":7,  "h":7},
+  "18": {"x":7,  "y":37, "w":7,  "h":7},
+  "19": {"x":14, "y":37, "w":6,  "h":7},
+  "20": {"x":0,  "y":44, "w":20, "h":8}
+}
+```
+
+---
+
+#### Variant C: Dense (Technical — SRE, Ops, VP Eng)
+
+```json
+"layouts": {
+  "1":  {"x":0,  "y":0,  "w":20, "h":2},
+  "2":  {"x":0,  "y":2,  "w":4,  "h":3},
+  "3":  {"x":4,  "y":2,  "w":4,  "h":3},
+  "4":  {"x":8,  "y":2,  "w":4,  "h":3},
+  "5":  {"x":12, "y":2,  "w":8,  "h":3},
+  "6":  {"x":0,  "y":5,  "w":20, "h":1},
+  "7":  {"x":0,  "y":6,  "w":12, "h":6},
+  "8":  {"x":12, "y":6,  "w":8,  "h":6},
+  "9":  {"x":0,  "y":12, "w":8,  "h":6},
+  "10": {"x":8,  "y":12, "w":12, "h":6},
+  "11": {"x":0,  "y":18, "w":20, "h":1},
+  "12": {"x":0,  "y":19, "w":12, "h":6},
+  "13": {"x":12, "y":19, "w":8,  "h":6},
+  "14": {"x":0,  "y":25, "w":8,  "h":6},
+  "15": {"x":8,  "y":25, "w":12, "h":6},
+  "16": {"x":0,  "y":31, "w":20, "h":1},
+  "17": {"x":0,  "y":32, "w":7,  "h":6},
+  "18": {"x":7,  "y":32, "w":7,  "h":6},
+  "19": {"x":14, "y":32, "w":6,  "h":6},
+  "20": {"x":0,  "y":38, "w":20, "h":7}
+}
+```
+
+---
+
+#### Variant D: Hero (Single critical message — meeting-specific)
+
+Use when the meeting revolves around ONE key number (uptime achievement, MTTR improvement, cost saved, vulnerabilities found). Tile 2 is the hero — double width, double height.
+
+```json
+"layouts": {
+  "1":  {"x":0,  "y":0,  "w":20, "h":2},
+  "2":  {"x":0,  "y":2,  "w":10, "h":6},
+  "3":  {"x":10, "y":2,  "w":5,  "h":3},
+  "4":  {"x":15, "y":2,  "w":5,  "h":3},
+  "5":  {"x":10, "y":5,  "w":10, "h":3},
+  "6":  {"x":0,  "y":8,  "w":20, "h":1},
+  "7":  {"x":0,  "y":9,  "w":12, "h":7},
+  "8":  {"x":12, "y":9,  "w":8,  "h":7},
+  "9":  {"x":0,  "y":16, "w":8,  "h":7},
+  "10": {"x":8,  "y":16, "w":12, "h":7},
+  "11": {"x":0,  "y":23, "w":20, "h":1},
+  "12": {"x":0,  "y":24, "w":12, "h":7},
+  "13": {"x":12, "y":24, "w":8,  "h":7},
+  "14": {"x":0,  "y":31, "w":8,  "h":7},
+  "15": {"x":8,  "y":31, "w":12, "h":7},
+  "16": {"x":0,  "y":38, "w":20, "h":1},
+  "17": {"x":0,  "y":39, "w":7,  "h":7},
+  "18": {"x":7,  "y":39, "w":7,  "h":7},
+  "19": {"x":14, "y":39, "w":6,  "h":7},
+  "20": {"x":0,  "y":46, "w":20, "h":8}
+}
+```
+_Hero examples: "99.97% uptime this quarter" (renewal), "67% MTTR reduction" (PoV), "142 critical vulnerabilities unpatched" (risk presentation)._
+
+---
+
+#### Variant E: Trend-First (Growth or degradation story)
+
+```json
+"layouts": {
+  "1":  {"x":0,  "y":0,  "w":20, "h":2},
+  "2":  {"x":0,  "y":2,  "w":5,  "h":4},
+  "3":  {"x":5,  "y":2,  "w":5,  "h":4},
+  "4":  {"x":10, "y":2,  "w":5,  "h":4},
+  "5":  {"x":15, "y":2,  "w":5,  "h":4},
+  "6":  {"x":0,  "y":6,  "w":20, "h":1},
+  "7":  {"x":0,  "y":7,  "w":8,  "h":7},
+  "8":  {"x":8,  "y":7,  "w":12, "h":7},
+  "9":  {"x":0,  "y":14, "w":14, "h":7},
+  "10": {"x":14, "y":14, "w":6,  "h":7},
+  "11": {"x":0,  "y":21, "w":20, "h":1},
+  "12": {"x":0,  "y":22, "w":6,  "h":7},
+  "13": {"x":6,  "y":22, "w":14, "h":7},
+  "14": {"x":0,  "y":29, "w":14, "h":7},
+  "15": {"x":14, "y":29, "w":6,  "h":7},
+  "16": {"x":0,  "y":36, "w":20, "h":1},
+  "17": {"x":0,  "y":37, "w":7,  "h":7},
+  "18": {"x":7,  "y":37, "w":7,  "h":7},
+  "19": {"x":14, "y":37, "w":6,  "h":7},
+  "20": {"x":0,  "y":44, "w":20, "h":8}
+}
+```
+_Time-series tiles (9, 14) get w=14. The trend is always the widest element on its row._
+
+---
+
+**Content-aware width rules (grid = 20 units):**
+- `categoricalBarChart` / `table` → **w=12–14** (needs label/column space)
+- `donutChart` / `pieChart` → **w=6–8** (compact circular charts)
+- `lineChart` / `areaChart` → **w=8–14** (wider for trend-heavy dashboards)
+- Pair widths to sum to 20: bar(12)+donut(8), chart(14)+donut(6), line(8)+table(12)
+- Alternate wide-left/wide-right across rows for visual variety
 
 **FORBIDDEN widths (if you see these, the layout is WRONG):**
 - w=20 on any data tile (tiles 2-5, 7-10, 12-15, 17-19) = WRONG
 - w=10+10 on any row = WRONG (too symmetric, looks boring)
 - Any tile alone on a row (except headers and tile 20) = WRONG
-
-**Content-aware width guide (grid = 20 units):**
-
-| Tile Content | Recommended Width | Why |
-|---|---|---|
-| `categoricalBarChart` | **w=12** (wide) | Long category labels need horizontal space |
-| `table` (multi-column) | **w=12** (wide) | Columns need room; avoids horizontal scroll |
-| `donutChart` / `pieChart` | **w=8** (narrow) | Circular charts are compact; labels fit in legend |
-| `lineChart` / `areaChart` | **w=8–12** | Time axis is readable at w=8; use w=12 if many series |
-| `singleValue` (KPI) | **w=5** | 4-across in KPI strip |
-| `markdown` (section header) | **w=20** | Full-width divider |
-
-**Pair tiles so widths sum to 20 in each row:**
-- Bar chart (w=12) + Donut (w=8) ✅
-- Table (w=12) + Pie (w=8) ✅
-- Line chart (w=8) + Table (w=12) ✅
-- Bar chart (w=12) + Line chart (w=8) ✅
-- Two tables (w=10 + w=10) ✅
-- Three tiles (w=7 + w=7 + w=6) ✅
-
-**❌ BAD LAYOUT — IF YOUR OUTPUT LOOKS LIKE THIS, START OVER:**
-```json
-// WRONG: Every tile on its own row = wasted space, ugly, unprofessional
-"7":  {"h":7,"w":20,"x":0,"y":7},
-"8":  {"h":7,"w":20,"x":0,"y":14},
-"9":  {"h":7,"w":20,"x":0,"y":21},
-"10": {"h":7,"w":20,"x":0,"y":28}
-
-// ALSO WRONG: Symmetric w=10+10 is lazy and boring
-"7":  {"h":7,"w":10,"x":0,"y":7},
-"8":  {"h":7,"w":10,"x":10,"y":7},
-"9":  {"h":7,"w":10,"x":0,"y":14},
-"10": {"h":7,"w":10,"x":10,"y":14}
-```
-
-**✅ CORRECT LAYOUT — asymmetric widths (12+8 / 8+12):**
-```json
-"7":  {"h":7,"w":12,"x":0,"y":7},
-"8":  {"h":7,"w":8,"x":12,"y":7},
-"9":  {"h":7,"w":8,"x":0,"y":14},
-"10": {"h":7,"w":12,"x":8,"y":14}
-```
+- **Post-check: verify every pair of adjacent tiles on a row sums to w=20**
 
 **POST-GENERATION LAYOUT VALIDATION — MANDATORY before saving the file:**
-1. ✅ KPI tiles: 4 tiles at w=5 (x=0/5/10/15)
-2. ✅ Tiles 7+8: w=12+8 (widths sum to 20)
-3. ✅ Tiles 9+10: w=8+12 (widths sum to 20)
-4. ✅ Tiles 12+13: w=12+8 (widths sum to 20)
-5. ✅ Tiles 14+15: w=8+12 (widths sum to 20)
-6. ✅ Tiles 17+18+19: w=7+7+6 (widths sum to 20)
-7. ✅ NO data tile has w=20 (only markdown headers tile 1/6/11/16 and the bottom feed tile 20)
-8. ✅ NO row uses w=10+10
-9. ✅ Adjacent tiles don't overlap (x + w of left tile = x of right tile)
+1. ✅ KPI tiles: tiles per row × widths = 20 (e.g. 4×5, or 5×4, or 2+5+5+5+3)
+2. ✅ Every data-tile row has exactly 2 or 3 tiles summing to w=20
+3. ✅ NO data tile has w=20 (only markdown headers and tile 20 bottom feed)
+4. ✅ NO row uses w=10+10
+5. ✅ Adjacent tiles don't overlap (x + w of left tile = x of right tile)
 
 **If ANY check fails, fix the layout before proceeding.**
 
-6. **ALL queries use `data record(...)` inline DQL** — NEVER use `fetch logs`, `fetch events`, or any data source that requires ingestion.
+6. **Data source depends on mode:**
+   - **Mode 1 (Demo)**: ALL queries use `data record(...)` inline DQL — NEVER use `fetch logs` or `fetch events`
+   - **Mode 2 (Live Tenant)**: Use real DQL — `fetch metrics`, `timeseries`, `fetch logs`, `smartscapeNodes`
+   - **Mode 3 (Ingest)**: Use `fetch logs`, `fetch bizevents`, `timeseries` pointing to ingested metric keys
 
 ---
 
@@ -317,10 +566,9 @@ data record(timestamp=now()-165m, series="A", val=120),
   "name": "Dashboard Name",
   "content": {
     "layouts": {
-      "0": {
-        "content": { "... tile positions (see grid above) ..." },
-        "type": "grid"
-      }
+      "1":  {"x":0, "y":0, "w":20, "h":2},
+      "2":  {"x":0, "y":2, "w":5,  "h":4},
+      "... etc — flat object, tile ID → {x,y,w,h} ...": {}
     },
     "tiles": {
       "1": {
@@ -478,18 +726,18 @@ EOF
 
 ## Hard Constraints
 
-- **NEVER use `fetch logs` or `fetch events`** — demo dashboards use inline `data record()` only
-- **NEVER use timestamps older than 3 hours** in timeseries queries
+- **Mode 1 only: NEVER use `fetch logs` or `fetch events`** — demo mode uses inline `data record()` only. Mode 2 and 3 use real DQL.
+- **NEVER use timestamps older than 3 hours** in timeseries queries (Mode 1 only — Mode 2/3 can use any timeframe)
 - **ALWAYS use `toDouble()` cast** before `makeTimeseries` aggregation
 - **Dashboard grid is 20 units wide**, version must be `21`
 - **DTCTL deploys to your current context** — override with `--context <name>` if needed
-- **Target: complete dashboard in under 5 minutes** from request to deployed URL
+- **Target: Mode 1 in < 5 min, Mode 2 in < 10 min, Mode 3 in < 20 min, Mode 4 in < 15 min**
 - **NEVER use `@dynatrace-sdk/client-classic-environment-v2`** patterns
 - **DO NOT generate fewer than 20 tiles** — the dashboard must look rich and complete
 - **DO NOT skip the research phase** — dashboards with generic data look fake in CIO meetings
-- **NEVER put one tile per row** — use the layout grid from above. KPIs go 4-across (w=5), charts go 2-across with asymmetric widths (w=12+8 or w=8+12), section 4 goes 3-across (w=7+7+6). Bar charts and tables get w=12, donuts and pies get w=8. Verify every row has 2+ tiles and widths sum to 20.
+- **NEVER put one tile per row** — use the smart layout variants above. Every row must have 2+ tiles summing to w=20.
 - **NEVER use `fieldsRename` with string literals** — `fieldsRename foo = "Bar"` is a DQL syntax error. Keep original field names or use `fieldsAdd` + `fieldsRemove`.
-- **ALWAYS validate ALL DQL queries via MCP `verify_dql` BEFORE deploying** — do NOT deploy first and fix later. Every data tile query must pass verification.
+- **ALWAYS validate ALL DQL queries via MCP `verify_dql` BEFORE deploying** — do NOT deploy first and fix later.
 
 ---
 
@@ -498,3 +746,280 @@ EOF
 1. **Birla Pivot B2B E-Commerce** — Marketplace KPIs (GMV ₹127.43 Cr, 2,847 Orders), channel/region/category mix, platform health (API latency, error rates), supply chain (fulfillment, SLA, payment methods)
 2. **Grasim VSF & Chemicals Manufacturing** — Production KPIs (186,420 MT, 87.4% OEE), 12 real plants (Nagda, Vilayat, Kharach, Harihar...), product mix, quality (FPY), sustainability (energy/water/CO2), downtime analysis
 3. **Birla Opus Paints E-Commerce + Retail** — Digital revenue (₹48.72 Cr), e-commerce channels (Website, App, Amazon, Flipkart), Imagine Machine tool, 6 paint plants (Panipat 230 MLPA, Cheyyar 206 MLPA...), retail network (8,740 dealers)
+
+---
+
+## Mode 2: Live Tenant Mode — Real Production Data
+
+Use when the customer has Dynatrace and you want their real data in the dashboard.
+
+### Prerequisites
+
+- MCP server connected (check with `get_environment_info`) **OR** dtctl context configured
+- If MCP is connected, prefer MCP tools for discovery — they're faster
+- If only dtctl: use `dtctl query -f - <<'EOF' ... EOF` for all discovery queries
+
+### Phase 2.1: Data Discovery (< 3 minutes)
+
+Before building tiles, discover what data exists on the tenant. Run these discovery queries:
+
+```dql
+// 1. What services exist?
+fetch dt.entity.service
+| summarize count = count(), by: {name, dt.entity.service}
+| sort count desc
+| limit 20
+
+// 2. What hosts exist?
+fetch dt.entity.host
+| summarize count = count(), by: {name, dt.entity.host}
+| sort count desc
+| limit 20
+
+// 3. What Kubernetes namespaces / workloads?
+fetch dt.entity.cloud_application
+| summarize count = count(), by: {name, dt.entity.cloud_application}
+| sort count desc
+| limit 20
+
+// 4. What metrics are available? (sample key metric families)
+timeseries avg(dt.host.cpu.usage), by: {dt.entity.host}, from: now()-1h, to: now()
+| limit 5
+
+// 5. Are there logs?
+fetch logs, from: now()-1h, to: now()
+| summarize count(), by: {dt.entity.service}
+| sort `count()` desc
+| limit 10
+```
+
+Run 2-3 of these to understand the tenant's data landscape. Use the results to populate tile queries.
+
+### Phase 2.2: Tile Query Mapping
+
+Replace synthetic `data record()` with real DQL queries:
+
+| Tile Type | Mode 1 (Synthetic) | Mode 2 (Real Data) |
+|---|---|---|
+| KPI — error rate | `data record(value=2.3)` | `fetch logs, from: now()-1h \| filter status == "ERROR" \| summarize error_count = count() \| fieldsAdd total = 10000.0 \| fieldsAdd error_rate = round(error_count / total * 100, decimals: 2)` |
+| KPI — service count | `data record(value=47)` | `fetch dt.entity.service \| summarize count()` |
+| Bar chart — by service | `data record(service="X", latency=120)` | `fetch spans, from: now()-1h \| filter dt.entity.service != "" \| summarize avg_duration = avg(duration), by: {dt.entity.service} \| sort avg_duration desc \| limit 10` |
+| Time-series — latency | `data record(timestamp=now()-15m, val=120)` | `timeseries avg(dt.service.response_time), by: {dt.entity.service}, from: now()-3h, to: now(), interval: 15m` |
+| Table — top services | `data record(name="X", requests=1200)` | `fetch spans, from: now()-1h \| summarize requests = count(), errors = countIf(status.code >= 400), by: {dt.entity.service} \| sort requests desc \| limit 15` |
+
+### Phase 2.3: Persona-to-Metric Mapping
+
+| Persona | Primary Metrics to Query |
+|---|---|
+| **CIO / CEO** | Service availability (`dt.service.availability`), user sessions, business events if available |
+| **SRE** | `dt.service.response_time`, `dt.service.request.failure_rate`, error budgets via SLO API |
+| **IT Head** | `dt.host.cpu.usage`, `dt.host.memory.available`, `dt.host.disk.used_pct` |
+| **App Ops** | `dt.service.response_time`, `dt.service.request.count`, deployment events |
+| **CISO** | Vulnerability events (`fetch events` where `event.type == "VULNERABILITY_STATE_REPORT_EVENT"`) |
+| **Platform Eng** | Kubernetes: `dt.kubernetes.container.cpu_usage`, pod counts, deployment events |
+
+### Phase 2.4: Build & Deploy
+
+Same as Mode 1 Phases 2-4, but:
+- **All tile queries use real DQL** (no `data record()`)
+- **Validate every query with `execute_dql`** — confirm non-empty results before deploying
+- **If a query returns empty**: fall back to `data record()` with a note in the tile title like "(sample)"
+- **Use `from: now()-3h, to: now()`** as default timeframe for all queries
+
+---
+
+## Mode 3: Synthetic Ingest Mode — Persistent Demo Data
+
+Use when you want to ingest realistic synthetic data into a Dynatrace tenant, then build dashboards that query it live (not inline). Creates a "persistent demo environment."
+
+### When to Use
+
+- Customer-facing demo environment that needs to look live
+- PoV environment where you want to pre-populate data
+- Demo that will be shown multiple times (data persists across sessions)
+- Showing trends over hours/days (inline `data record()` can only show the last 3h)
+
+### Phase 3.1: Design the Data Model
+
+First, decide what to ingest based on persona + industry:
+
+| Industry | Ingestion Strategy | Key Metric Names |
+|---|---|---|
+| **Manufacturing** | Custom metrics via MINT + log events for plant status | `custom.plant.oee`, `custom.plant.production_mt`, `custom.energy.kwh_per_ton` |
+| **E-Commerce / SaaS** | BizEvents for orders/GMV + custom metrics for platform | `custom.orders.count`, `custom.revenue.inr`, `custom.api.latency_p99` |
+| **Financial Services** | BizEvents for transactions + custom metrics for uptime | `custom.transactions.count`, `custom.fraud.detected`, `custom.stp.rate_pct` |
+| **SRE / Platform** | Log events for incidents + custom metrics for SLOs | `custom.slo.budget_remaining`, `custom.deployment.frequency`, `custom.mttr.minutes` |
+
+### Phase 3.2: Generate Synthetic Data
+
+Generate data for the past 24-72 hours with realistic patterns:
+- Business hours (9am-6pm) should have higher values than off-hours
+- Add slight degradation or "incidents" to make the story interesting
+- Include realistic noise (±5-10% variance)
+
+**MINT Metric Ingestion Format** (one line per data point):
+```
+custom.plant.oee,plant=Nagda,product=VSF value=87.4 1748500000000
+custom.plant.oee,plant=Vilayat,product=Caustic value=91.2 1748500000000
+custom.plant.production_mt,plant=Nagda value=8420.0 1748500000000
+```
+
+**BizEvent Format** (one JSON object per event):
+```json
+{"event.type": "com.company.order.completed", "event.provider": "demo-data", "orderId": "ORD-12345", "amount": 45230.50, "channel": "App", "region": "Maharashtra", "timestamp": "<ISO8601>"}
+```
+
+**Log Event Format**:
+```json
+{"timestamp": "<ISO8601>", "severity": "INFO", "service": "payment-service", "content": "Payment processed successfully", "amount": 45230.50, "status": "SUCCESS"}
+```
+
+### Phase 3.3: Ingest the Data
+
+**Option A: Metrics via curl (MINT v2 API)**
+```bash
+curl -X POST "https://<TENANT_ID>.apps.dynatrace.com/api/v2/metrics/ingest" \
+  -H "Authorization: Api-Token <TOKEN>" \
+  -H "Content-Type: text/plain; charset=utf-8" \
+  --data-raw "custom.plant.oee,plant=Nagda value=87.4 $(date +%s)000"
+```
+Token scopes needed: `metrics.ingest`
+
+**Option C: BizEvents via curl**
+```bash
+curl -X POST "https://<TENANT_ID>.apps.dynatrace.com/platform/classic/environment-v2/bizevents/ingest" \
+  -H "Authorization: Api-Token <TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '[{"event.type": "com.demo.order", "event.provider": "demo-data", "orderId": "ORD-001", "amount": 45000}]'
+```
+Token scopes needed: `bizevents.ingest`
+
+**Option D: Logs via curl**
+```bash
+curl -X POST "https://<TENANT_ID>.apps.dynatrace.com/api/v2/logs/ingest" \
+  -H "Authorization: Api-Token <TOKEN>" \
+  -H "Content-Type: application/json; charset=utf-8" \
+  -d '{"logEntries": [{"timestamp": "<ISO8601>", "content": "Payment processed", "severity": "INFO"}]}'
+```
+Token scopes needed: `logs.ingest`
+
+### Phase 3.4: Wait for Data to Appear (< 2 minutes)
+
+After ingestion, verify data is queryable:
+```dql
+// Verify metrics ingested
+timeseries avg(custom.plant.oee), by: {plant}, from: now()-1h, to: now()
+
+// Verify BizEvents ingested
+fetch bizevents, from: now()-1h, to: now()
+| filter event.type == "com.demo.order"
+| summarize count()
+
+// Verify logs ingested
+fetch logs, from: now()-1h, to: now()
+| filter service == "payment-service"
+| summarize count()
+```
+
+If queries return data → proceed to Phase 3.5.
+If empty after 2 minutes → check token scopes and retry ingestion.
+
+### Phase 3.5: Build Dashboard with Live Queries
+
+Now build the 20-tile dashboard using `timeseries`, `fetch bizevents`, `fetch logs` — pointing to the ingested data keys. Follow the same persona archetype structure but with real DQL.
+
+**Example tile queries for ingested data:**
+```dql
+// KPI: Average OEE
+timeseries oee = avg(custom.plant.oee), from: now()-24h, to: now()
+| summarize avg(oee[])
+
+// Bar chart: OEE by plant
+timeseries oee = avg(custom.plant.oee), by: {plant}, from: now()-1h, to: now()
+| summarize avg(oee[]), by: {plant}
+| sort `avg(oee[])` desc
+
+// Line chart: Production trend over 24h
+timeseries production = sum(custom.plant.production_mt), by: {plant}, from: now()-24h, to: now(), interval: 1h
+
+// Table: Order summary
+fetch bizevents, from: now()-24h, to: now()
+| filter event.type == "com.demo.order"
+| summarize orders = count(), revenue = sum(amount), by: {channel, region}
+| sort revenue desc
+```
+
+---
+
+## Mode 4: Interview-First Mode — Discovery-Driven Dashboard
+
+Use when the user doesn't know exactly what they want, or when you're meeting a prospect for the first time. The agent leads the discovery conversation, then builds the right dashboard.
+
+### Interview Flow
+
+**Step 1: Context Capture (ask as a single message)**
+
+```
+Let's build the perfect dashboard together. I'll ask a few quick questions:
+
+1. **Who is this for?** (company name + person's role, e.g. "HDFC Bank CIO")
+2. **What's the occasion?** (first meeting, renewal, PoV review, board presentation, internal use)
+3. **What problem are they trying to solve?** (free text — be as specific as possible)
+4. **What should someone feel after seeing this dashboard?** (urgency, confidence, clarity, ROI)
+5. **Any constraint on data?** (no Dynatrace yet = Mode 1, has Dynatrace = Mode 2, want live queries = Mode 3)
+6. **Anything else I should know?** (competitor they're switching from, recent incident, budget cycle, etc.)
+```
+
+**Step 2: Persona + Industry Inference**
+
+From the answers, infer:
+- **Persona**: from job title (CIO → CIO, VP Eng → VP Engineering, CISO → CISO)
+- **Industry**: from company name (research if needed)
+- **Primary Concern**: from problem description (map to concern list)
+- **Story Arc**: from "what should they feel" → pick arc below
+- **Layout Variant**: from occasion + persona → pick A-E above
+- **Data Mode**: from constraint answer → pick Mode 1-3
+
+**Step 3: Story Arc Selection**
+
+| "Should feel..." | Story Arc | Dashboard Emphasis |
+|---|---|---|
+| Urgency | **The Risk Arc** | Show threats, gaps, vulnerabilities, things going wrong NOW |
+| Confidence | **The ROI Arc** | Show achievements, uptime, cost saved, problems resolved |
+| Clarity | **The Visibility Arc** | Show full picture — everything in one place, organized |
+| ROI / Business Value | **The Business Impact Arc** | Tie every metric to ₹/$ impact, not just technical stats |
+| Momentum | **The Growth Arc** | Trending charts going up, milestones achieved, next milestones |
+| Control | **The Observability Arc** | Full coverage, no blind spots, every service monitored |
+
+**Step 4: Confirm Before Building**
+
+After inferring, summarize for the user:
+
+```
+Here's what I'm building:
+
+📊 **Dashboard**: {Persona} dashboard for {Company}
+🏭 **Industry**: {Industry type}
+📖 **Story**: {Story Arc name} — "{one-sentence story}"
+🎨 **Layout**: {Variant name} ({why this variant})
+💾 **Data**: {Mode 1/2/3}
+🎯 **Hero metric** (tile 2): {the one number that matters most}
+
+**Sections planned:**
+- KPI strip: {list 4 KPIs}
+- Section 2: {theme + chart types}
+- Section 3: {theme + chart types}
+- Section 4: {theme + chart types}
+
+**Shall I build this? Or adjust anything?**
+```
+
+**Step 5: Build, validate, and deploy** — same as the applicable Mode workflow above.
+
+### Interview Pro Tips
+
+- If the user mentions a **competitor**: add a subtle benchmark in the KPI strip (e.g. "Industry Avg: 99.5%" alongside their "Uptime: 99.97%")
+- If the user mentions a **recent incident**: make the recent-events table show it as "resolved" with timestamps — demonstrates Dynatrace caught and resolved it
+- If the user says **"they're skeptical"**: use Mode 1 with very realistic numbers and a Hero layout — the specificity of real company data + strong visual hierarchy overcomes skepticism
+- If the user says **"they want to see their own data"**: pivot immediately to Mode 2
+- If the user says **"we have a demo environment"**: Mode 3 is perfect — ingest once, show live queries multiple times

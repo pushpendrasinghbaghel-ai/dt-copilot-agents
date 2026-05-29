@@ -31,9 +31,11 @@ npx dt-copilot-agents install                # All platforms at once
 SRE dashboard for Tata Steel
 CISO dashboard for HDFC Bank
 CEO dashboard for Reliance Industries
+CIO dashboard for meeting today — prospect at Axtria Life Sciences
+interview me for a VP Engineering dashboard
 ```
 
-The agent researches the company, generates a 20-tile dashboard with synthetic data, and deploys it to your Dynatrace tenant — all automatically. No data ingestion needed.
+The agent researches the company, generates a 20-tile dashboard, and deploys it to your Dynatrace tenant — all automatically.
 
 > **Zero prerequisites.** The agent auto-installs `dtctl` CLI and authenticates via browser SSO if not already set up.
 
@@ -41,8 +43,27 @@ The agent researches the company, generates a 20-tile dashboard with synthetic d
 
 ## What's Included
 
-### Dashboard Generator
-Generates and deploys realistic persona-specific dashboards with synthetic data for customer meetings — in under 5 minutes.
+### Dashboard Generator — 4 Modes
+
+Generates and deploys realistic persona-specific Dynatrace dashboards — in under 5 minutes.
+
+| Mode | Trigger | How it works |
+|---|---|---|
+| **Mode 1 — Demo** (default) | Any simple prompt | Generates 20-tile dashboard with inline `data record()` DQL. Zero data ingestion needed. Instant. |
+| **Mode 2 — Live Tenant** | "real data", "their Dynatrace", or MCP connected | Discovers real entities via MCP → builds dashboard with live `timeseries`, `fetch logs`, `fetch spans` queries |
+| **Mode 3 — Synthetic Ingest** | "ingest", "persistent demo" | Generates realistic data → ingests via MINT/BizEvents API → dashboard queries live data |
+| **Mode 4 — Interview-First** | "interview me", "help me figure out" | Agent asks 6 discovery questions → infers persona, story arc, and layout → builds the perfect dashboard |
+
+**Meeting intelligence:** Say `"meeting today with [company]"` to unlock story-arc selection, audience targeting, and CTA-focused layouts for your specific meeting goal.
+
+**Smart layout variants** auto-select based on persona and meeting context:
+| Variant | Persona / Occasion | Character |
+|---|---|---|
+| **A — Panorama** | CEO, CIO, Board presentations | Tall KPIs, wide charts — executive sweep |
+| **B — Standard** | General / default | Balanced asymmetric grid |
+| **C — Dense** | SRE, Ops, VP Engineering | Compact tiles, maximum data density |
+| **D — Hero** | Renewal, PoV, first meeting | One tile dominates — the number that matters most |
+| **E — Trend-First** | Growth story, degradation story | Wider time-series tiles, trend is the narrative |
 
 **Supported Personas:**
 | Executive | Technical / Operations |
@@ -54,15 +75,19 @@ Generates and deploys realistic persona-specific dashboards with synthetic data 
 | | Platform Engineering — Developer Experience |
 | | VP Engineering — Delivery & Quality |
 
+**Supported Industries:** E-Commerce · Manufacturing · SaaS/Platform · Financial Services · Retail · Life Sciences · Telco
+
 **Features:**
-- Researches the company/business automatically via web
-- Generates 20-tile dashboards with inline DQL `data record()` queries (zero ingestion needed)
-- Supports 5 industry archetypes: E-Commerce, Manufacturing, SaaS, Financial Services, Retail
-- Auto-installs `dtctl` CLI if missing (Homebrew, curl, or PowerShell one-liner)
-- Authenticates via browser SSO (`dtctl auth login`) — no tokens to copy-paste
-- Deploys directly to Dynatrace tenant via DTCTL CLI
-- Optionally verifies DQL queries via Dynatrace MCP server
-- Uses real company data (plant names, brands, products, regions)
+- Researches the company automatically via web (real plant names, product names, regions)
+- Generates 20-tile dashboards with inline `data record()` DQL (Mode 1 — zero ingestion)
+- Connects to live Dynatrace tenant for real metrics (Mode 2 — via MCP)
+- Ingests synthetic data via MINT/BizEvents API for persistent demos (Mode 3)
+- Guided discovery interview → builds the right dashboard (Mode 4)
+- 5 smart layout variants that auto-select by persona and meeting context
+- 6 story arcs: Risk, ROI, Visibility, Business Impact, Growth, Observability
+- Deploys directly to Dynatrace tenant via `dtctl` CLI
+- Validates all DQL queries before deploying (via MCP `verify_dql`)
+- Layout is a flat `"layouts": { "1": {x,y,w,h} }` structure — correctly enforced
 
 ## Platform Support
 
