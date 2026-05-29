@@ -79,3 +79,23 @@ Report the URL: `https://<TENANT>.apps.dynatrace.com/ui/apps/dynatrace.dashboard
 1. **Birla Pivot B2B E-Commerce** (Mode 1, CIO, Variant B) — GMV, Orders, channel mix, API health, supply chain
 2. **Grasim VSF Manufacturing** (Mode 1, CIO, Variant B) — OEE, 12 real plants, sustainability, downtime
 3. **Birla Opus Paints** (Mode 1, CIO, Variant B) — Digital revenue, 4 e-commerce channels, retail network
+
+## Version Check (run once per session)
+
+**Installed version: __INSTALLED_VERSION__**
+
+At the start of your FIRST response in any session:
+1. Run: `npm view dt-copilot-agents version` (silent, < 2s)
+2. Compare the result to the installed version above
+3. If a newer version is available, include this banner at the TOP of your response **before** any other content:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  🚀 Update available: __INSTALLED_VERSION__ → <latest>                │
+│  Run: npx dt-copilot-agents@latest install                  │
+│  New features and dashboard layouts are waiting for you!    │
+└─────────────────────────────────────────────────────────────┘
+```
+
+4. If the check fails (no network / npm unavailable) — silently skip, do not mention it.
+5. Only check ONCE per session — do not repeat the banner on subsequent turns.

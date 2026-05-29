@@ -50,6 +50,18 @@ function copyRecursive(src, dest) {
   }
 }
 
+function stampVersion(filePath) {
+  try {
+    if (!fs.existsSync(filePath)) return;
+    const content = fs.readFileSync(filePath, 'utf8');
+    if (content.includes('__INSTALLED_VERSION__')) {
+      fs.writeFileSync(filePath, content.replaceAll('__INSTALLED_VERSION__', currentVersion), 'utf8');
+    }
+  } catch (e) {
+    // Silently ignore — version stamp is best-effort
+  }
+}
+
 function installVSCode() {
   const home = process.env.HOME || process.env.USERPROFILE;
   const isWindows = process.platform === 'win32';
@@ -66,12 +78,16 @@ function installVSCode() {
     console.log(`  ✓ Agent → ${promptsDir}`);
   }
 
+  // Stamp installed version into agent file
+  stampVersion(path.join(promptsDir, 'dashboard-generator.agent.md'));
+
   // Skill → ~/.agents/skills/
   const skillsDir = path.join(home, '.agents', 'skills');
   const skillSrc = path.join(packageRoot, 'skills', 'dt-demo-dashboard');
   const skillDest = path.join(skillsDir, 'dt-demo-dashboard');
   if (fs.existsSync(skillSrc)) {
     copyRecursive(skillSrc, skillDest);
+    stampVersion(path.join(skillDest, 'SKILL.md'));
     console.log(`  ✓ Skill → ${skillDest}`);
   }
 
@@ -82,12 +98,15 @@ function installClaudeCode(dir) {
   copyRecursive(path.join(packageRoot, 'claude-code', 'CLAUDE.md'), path.join(dir, 'CLAUDE.md'));
   copyRecursive(path.join(packageRoot, 'claude-code', '.claude'), path.join(dir, '.claude'));
   copyRecursive(path.join(packageRoot, 'knowledge'), path.join(dir, 'knowledge'));
+  stampVersion(path.join(dir, 'CLAUDE.md'));
+  stampVersion(path.join(dir, 'knowledge', 'dashboard-generator.md'));
   console.log(`  ✓ CLAUDE.md + .claude/commands/ + knowledge/ → ${dir}`);
 }
 
 function installCursor(dir) {
   copyRecursive(path.join(packageRoot, 'cursor', '.cursor'), path.join(dir, '.cursor'));
   copyRecursive(path.join(packageRoot, 'knowledge'), path.join(dir, 'knowledge'));
+  stampVersion(path.join(dir, 'knowledge', 'dashboard-generator.md'));
   console.log(`  ✓ .cursor/rules/ + knowledge/ → ${dir}`);
 }
 
@@ -97,6 +116,8 @@ function installWindsurf(dir) {
     path.join(dir, '.windsurfrules')
   );
   copyRecursive(path.join(packageRoot, 'knowledge'), path.join(dir, 'knowledge'));
+  stampVersion(path.join(dir, '.windsurfrules'));
+  stampVersion(path.join(dir, 'knowledge', 'dashboard-generator.md'));
   console.log(`  ✓ .windsurfrules + knowledge/ → ${dir}`);
 }
 

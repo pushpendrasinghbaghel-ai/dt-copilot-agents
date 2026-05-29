@@ -1,5 +1,9 @@
 # Dynatrace Demo Dashboard Generator — Knowledge Base
 
+**Installed version: __INSTALLED_VERSION__** | [Check for updates](https://www.npmjs.com/package/dt-copilot-agents)
+
+> **Version check (run once per session):** Run `npm view dt-copilot-agents version`. If newer than above, show: `🚀 Update available: __INSTALLED_VERSION__ → <latest> — run: npx dt-copilot-agents@latest install`
+
 ## Purpose
 Generate and deploy persona-specific dashboards for any scenario: pre-sales demos, live production insights, synthetic data ingestion, or discovery-driven creation. Supports CIO, CTO, CEO, CISO, SRE, IT Head, Application Ops, MLOps, Platform Engineering, VP Engineering, and more.
 

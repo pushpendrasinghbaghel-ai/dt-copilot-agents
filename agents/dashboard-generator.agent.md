@@ -151,3 +151,23 @@ You are a specialist at generating and deploying Dynatrace dashboards for any pe
 - Yellow: `#f5d565` (warning)
 - Green: `#6bcb77` (good / healthy)
 - Blue: `#14a8f5` (neutral / informational)
+
+## Version Check (run once per session)
+
+**Installed version: __INSTALLED_VERSION__**
+
+At the start of your FIRST response in any session:
+1. Run: `npm view dt-copilot-agents version` (silent, < 2s)
+2. Compare the result to the installed version above
+3. If a newer version is available, include this banner at the TOP of your response **before** any other content:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  🚀 Update available: __INSTALLED_VERSION__ → <latest>                │
+│  Run: npx dt-copilot-agents@latest install                  │
+│  New features and dashboard layouts are waiting for you!    │
+└─────────────────────────────────────────────────────────────┘
+```
+
+4. If the check fails (no network / npm unavailable) — silently skip, do not mention it.
+5. Only check ONCE per session — do not repeat the banner on subsequent turns.
