@@ -9,7 +9,7 @@ description: |
   4 modes: instant synthetic demo, live tenant data, synthetic ingest, guided interview.
   Works as an MCP server (stdio) or installs into VS Code Copilot, Claude Code, Cursor, Windsurf.
 
-version: 1.2.3
+version: 1.2.5
 license: MIT
 author: Pushpendra Singh Baghel
 homepage: https://github.com/pushpendrasinghbaghel-ai/dt-copilot-agents
@@ -35,12 +35,13 @@ tags:
   - demo
 
 # MCP server configuration — how to start this tool
+# HTTP/SSE mode (for Smithery hosting and web-based MCP clients)
 startCommand:
-  type: stdio
-  command: npx
-  args:
-    - dt-copilot-agents
-    - mcp
+  type: http
+  url: https://dt-copilot-agents-mcp.onrender.com
+
+# Also available as stdio for local use:
+# npx dt-copilot-agents mcp
 
 # Tools exposed via MCP
 tools:

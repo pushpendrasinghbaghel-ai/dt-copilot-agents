@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: dt-copilot-agents-mcp
+    runtime: node
+    plan: free
+    buildCommand: ""
+    startCommand: node bin/server.js
+    envVars:
+      - key: PORT
+        value: 10000
+    healthCheckPath: /health
