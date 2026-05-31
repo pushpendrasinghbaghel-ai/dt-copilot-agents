@@ -28,6 +28,7 @@ Generate and deploy persona-specific dashboards for any scenario: pre-sales demo
 | **2. Live Tenant Mode** | "real data", "production", "actual tenant", "their Dynatrace", "live metrics" | Real metrics/logs from tenant via DQL | < 10 min |
 | **3. Synthetic Ingest Mode** | "ingest", "inject data", "persistent demo", "synthetic but live queries" | Generated data ingested via API → queried live | < 20 min |
 | **4. Interview-First Mode** | "interview me", "ask me questions", "help me figure out", "discovery mode" | User-driven discovery → any data source | < 15 min |
+| **5. POC Value Story** | "MTTR", "correlation", "business observability", "proactive", "POC value", "prove value", "root cause story" | Real tenant data via MCP (Mode 2 extension) | < 15 min |
 
 **Default: Mode 1** — if no mode is specified and no tenant context exists, use Mode 1.
 
@@ -968,9 +969,337 @@ Same as Mode 1 Phase 3 (deploy with dtctl), with these differences:
 
 ---
 
-## Mode 3: Synthetic Ingest Mode — Persistent Demo Data
+## POC Value Story Dashboards (Mode 2 Extension)
 
-Use when you want to ingest realistic synthetic data into a Dynatrace tenant, then build dashboards that query it live (not inline). Creates a "persistent demo environment."
+Use during a Dynatrace POC when the customer already has the platform installed. These dashboards don't just show data — they **prove a specific business outcome**. Each value story has a different tile structure, different discovery queries, and different narrative.
+
+**Trigger phrases:**
+- "MTTR dashboard", "show incident response improvement"
+- "correlation dashboard", "root cause story", "show how DT connects problems"
+- "business observability", "tie IT to business", "business impact dashboard"
+- "proactive monitoring", "shift left", "catch problems before users"
+- "POC value dashboard", "prove value", "value story"
+
+**When triggered:** Use Mode 2 (MCP connected, real data). Run value-story-specific discovery queries first.
+
+---
+
+### Value Story 1: MTTR Improvement
+
+**The story:** "Dynatrace cuts your mean time to resolve incidents by finding root cause automatically — not hours of log searching."
+
+**Discovery queries (run first):**
+```dql
+// How many problems in last 7 days?
+fetch dt.davis.problems, from: now()-7d
+| summarize total = count(), open = countIf(status == "OPEN"), by: {severity}
+| sort total, desc
+```
+```dql
+// What is the average resolution time?
+fetch dt.davis.problems, from: now()-7d
+| filter isNotNull(end_time)
+| fieldsAdd duration_min = toLong((end_time - start_time) / 1000 / 60)
+| summarize avg_mttr = avg(duration_min), max_mttr = max(duration_min), count = count()
+```
+```dql
+// Which services cause the most problems?
+fetch dt.davis.problems, from: now()-7d
+| filter isNotNull(affected_entities)
+| summarize problem_count = count(), by: {affected_entities}
+| sort problem_count, desc
+| limit 10
+```
+
+**Dashboard tile structure (20 tiles):**
+```
+Tile 1:  Header — "🔧 <Company> — MTTR & Incident Response | Dynatrace POC Value Story"
+Tile 2:  KPI — Total problems (7d)
+Tile 3:  KPI — Avg MTTR (minutes)
+Tile 4:  KPI — % problems auto-resolved by Davis
+Tile 5:  KPI — Open problems right now
+
+Tile 6:  Section — "📊 Incident Landscape"
+Tile 7:  categoricalBarChart — Problems by severity (CRITICAL/HIGH/MEDIUM) — w=12
+Tile 8:  donutChart — Problem root cause category (infra/service/deployment/resource) — w=8
+Tile 9:  lineChart — Problem count trend (last 7 days, daily) — w=8
+Tile 10: table — Top problem-causing services (service, count, avg MTTR, last seen) — w=12
+
+Tile 11: Section — "⏱️ Resolution Time Analysis"
+Tile 12: categoricalBarChart — MTTR by service (which services take longest to resolve) — w=12
+Tile 13: table — Longest incidents (title, severity, duration, root cause) — w=8
+Tile 14: lineChart — MTTR trend over last 7 days (improving or worsening?) — w=8
+Tile 15: donutChart — Problems caught by monitoring vs reported by users — w=12
+
+Tile 16: Section — "🔗 Root Cause Intelligence"
+Tile 17: table — Recent problems with Davis root cause evidence — w=7
+Tile 18: pieChart — Problem status breakdown (OPEN/CLOSED/RESOLVED) — w=7
+Tile 19: categoricalBarChart — Deployments that triggered problems — w=6
+Tile 20: table — Full incident feed (last 20 problems, title, severity, start, status, MTTR) — w=20
+```
+
+**Narrative to put in Tile 1 markdown:**
+```
+## 🔧 <Company> — Incident Response | Dynatrace POC
+### Mean Time to Resolve — Before vs After Dynatrace
+
+**This dashboard answers: "How fast do we detect, diagnose, and resolve incidents?"**
+*Davis AI identifies root cause automatically — no manual log correlation required.*
+```
+
+**DQL for key tiles:**
+
+Avg MTTR KPI:
+```dql
+fetch dt.davis.problems, from: now()-7d
+| filter isNotNull(end_time)
+| fieldsAdd duration_min = toLong((end_time - start_time) / 1000 / 60)
+| summarize avg_mttr = round(avg(duration_min), decimals: 0)
+```
+
+MTTR trend (timeseries — use data record for demo fallback since problems don't have uniform timestamps):
+```dql
+fetch dt.davis.problems, from: now()-7d
+| filter isNotNull(end_time)
+| fieldsAdd duration_min = toLong((end_time - start_time) / 1000 / 60)
+| fieldsAdd day = formatTimestamp(start_time, format: "yyyy-MM-dd")
+| summarize avg_mttr = round(avg(duration_min), decimals: 0), by: {day}
+| sort day, asc
+```
+
+Recent incidents feed:
+```dql
+fetch dt.davis.problems, from: now()-7d
+| sort start_time, desc
+| fieldsAdd duration_min = toLong((end_time - start_time) / 1000 / 60)
+| fieldsKeep title, severity, status, start_time, duration_min, affected_entities
+| limit 20
+```
+
+---
+
+### Value Story 2: Correlation & Root Cause
+
+**The story:** "When something breaks, Dynatrace instantly shows you the chain — from the symptom (user sees error) all the way to the root cause (a deployment changed a config on service X which caused a cascade)."
+
+**Discovery queries (run first):**
+```dql
+// What are the most error-prone services?
+timeseries failures = avg(dt.service.request.failure_rate), by: {dt.entity.service, service.name}, from: now()-24h
+| summarize avg_failure = round(avg(arrayAvg(failures)), decimals: 2), by: {service.name}
+| sort avg_failure, desc
+| limit 10
+```
+```dql
+// Any deployment events in last 24h?
+fetch events, from: now()-24h
+| filter event.type == "CUSTOM_DEPLOYMENT" or event.category == "DEPLOYMENT"
+| summarize count = count(), by: {event.name, dt.entity.service}
+| sort count, desc
+| limit 10
+```
+```dql
+// Correlated log errors at same time as problems
+fetch logs, from: now()-3h
+| filter log.level == "ERROR" or log.level == "CRITICAL"
+| summarize count = count(), by: {service.name, log.source}
+| sort count, desc
+| limit 15
+```
+
+**Dashboard tile structure (20 tiles):**
+```
+Tile 1:  Header — "🔗 <Company> — Correlation & Root Cause | Dynatrace POC Value Story"
+Tile 2:  KPI — Services with errors (24h)
+Tile 3:  KPI — Overall error rate %
+Tile 4:  KPI — Deployments in last 24h
+Tile 5:  KPI — Open problems (potential root causes)
+
+Tile 6:  Section — "🚨 Error Landscape — Where Are Problems?"
+Tile 7:  categoricalBarChart — Error rate by service (top offenders) — w=12
+Tile 8:  donutChart — Error distribution by type (5xx, timeout, dependency) — w=8
+Tile 9:  lineChart — Error rate trend (last 24h, 30min intervals) — w=8
+Tile 10: table — Top error services with request count, error count, error % — w=12
+
+Tile 11: Section — "🔄 Deployment → Impact Correlation"
+Tile 12: categoricalBarChart — Services with recent deployments (count) — w=12
+Tile 13: table — Deployment events (service, version, time, who deployed) — w=8
+Tile 14: lineChart — Response time before/after latest deployment (trend) — w=8
+Tile 15: donutChart — Problem root cause category (deployment/infra/resource/external) — w=12
+
+Tile 16: Section — "📋 Evidence Chain — Logs, Traces, Problems"
+Tile 17: table — Error log summary (service, error message pattern, count) — w=7
+Tile 18: pieChart — Log levels distribution (ERROR/WARN/INFO) — w=7
+Tile 19: categoricalBarChart — P99 latency by service (where is it slow?) — w=6
+Tile 20: table — Recent problems with affected services and root cause evidence — w=20
+```
+
+**DQL for key tiles:**
+
+Response time trend (correlation — show spike at deployment time):
+```dql
+timeseries rt = avg(dt.service.request.response_time.geometric_mean), by: {dt.entity.service, service.name}, from: now()-24h, interval: 30m
+| sort max(rt), desc
+| limit 5
+```
+
+Error rate trend:
+```dql
+timeseries err = avg(dt.service.request.failure_rate), by: {dt.entity.service, service.name}, from: now()-24h, interval: 30m
+| sort max(err), desc
+| limit 5
+```
+
+Log error patterns:
+```dql
+fetch logs, from: now()-3h
+| filter log.level == "ERROR"
+| summarize count = count(), by: {service.name, log.source}
+| sort count, desc
+| limit 15
+| fieldsKeep service.name, log.source, count
+```
+
+---
+
+### Value Story 3: Business Observability
+
+**The story:** "IT metrics are meaningless to the business. This dashboard connects your system health directly to business outcomes — when checkout latency spikes, revenue drops. Davis tells you both."
+
+**Discovery queries (run first):**
+```dql
+// Are there business events / custom metrics?
+fetch bizevents, from: now()-24h
+| summarize count = count(), by: {event.type}
+| sort count, desc
+| limit 10
+```
+```dql
+// User session / RUM data?
+fetch dt.entity.application
+| summarize count = count(), by: {entity.detected_name, dt.entity.application}
+| limit 10
+```
+```dql
+// Service request volume (proxy for business activity)
+timeseries requests = sum(dt.service.request.count), by: {dt.entity.service, service.name}, from: now()-24h, interval: 1h
+| sort max(requests), desc
+| limit 5
+```
+
+**Dashboard tile structure (20 tiles):**
+```
+Tile 1:  Header — "💼 <Company> — Business Observability | Dynatrace POC Value Story"
+Tile 2:  KPI — Total transactions / requests (24h) — business volume proxy
+Tile 3:  KPI — Error rate % — directly impacts business outcomes
+Tile 4:  KPI — Avg response time (ms) — user experience proxy
+Tile 5:  KPI — Open problems — current business risk
+
+Tile 6:  Section — "📈 Business Activity vs IT Health"
+Tile 7:  categoricalBarChart — Request volume by service (business activity by capability) — w=12
+Tile 8:  donutChart — Traffic distribution (which services drive most business) — w=8
+Tile 9:  lineChart — Request volume + error rate overlay (business activity vs errors) — w=8
+Tile 10: table — Top services: requests, errors, response time, business impact — w=12
+
+Tile 11: Section — "🎯 User Experience Impact"
+Tile 12: categoricalBarChart — Response time by service (what users feel) — w=12
+Tile 13: table — Slowest user-facing endpoints (endpoint, P50, P95, P99) — w=8
+Tile 14: lineChart — Response time trend (are users getting faster or slower service?) — w=8
+Tile 15: donutChart — Request outcome (success vs errors vs slow) — w=12
+
+Tile 16: Section — "⚡ IT Events → Business Impact"
+Tile 17: table — Problems with business-impact language (title, severity, affected users) — w=7
+Tile 18: pieChart — Problem severity distribution (CRITICAL/HIGH = revenue risk) — w=7
+Tile 19: categoricalBarChart — Error rate by service (revenue-risk ranking) — w=6
+Tile 20: table — Event feed: deployments, problems, anomalies with business context — w=20
+```
+
+**Key differentiator for this dashboard:**
+- Tile titles use business language: "Checkout Service" not "checkout-svc-prod-k8s"
+- KPI subtitles explain business impact: "↑ 1ms latency = ↓ 0.5% conversion"
+- Section 2 framing: "Business Activity" not "Service Metrics"
+- If BizEvents exist → use them for real business KPIs (orders, revenue, sessions)
+- If no BizEvents → use service request counts as business activity proxy, label clearly
+
+**BizEvents KPI (if available):**
+```dql
+fetch bizevents, from: now()-24h
+| filter event.type == "com.ecommerce.order" or event.type contains "order" or event.type contains "transaction"
+| summarize total = count(), by: {event.type}
+| sort total, desc
+| limit 1
+```
+
+---
+
+### Value Story 4: Proactive Monitoring (Shift Left)
+
+**The story:** "Dynatrace catches 73% of problems before users report them. Here's the evidence from your own environment."
+
+**Discovery queries (run first):**
+```dql
+// Anomaly events (Davis detected, not user-reported)
+fetch events, from: now()-7d
+| filter event.category == "RESOURCE_CONTENTION" or event.category == "PERFORMANCE" or event.type == "RESOURCE_CONTENTION_EVENT"
+| summarize count = count(), by: {event.type, event.category}
+| sort count, desc
+```
+```dql
+// Problems auto-closed vs user-reported
+fetch dt.davis.problems, from: now()-7d
+| summarize auto_resolved = countIf(root_cause_entity != ""), user_reported = countIf(root_cause_entity == ""), total = count()
+```
+
+**Dashboard tile structure (20 tiles):**
+```
+Tile 1:  Header — "🔮 <Company> — Proactive Monitoring | Dynatrace POC Value Story"
+Tile 2:  KPI — Problems detected by Davis AI (7d)
+Tile 3:  KPI — % detected before user impact
+Tile 4:  KPI — Anomalies detected (7d)
+Tile 5:  KPI — Avg detection time (minutes before impact)
+
+Tile 6:  Section — "🤖 Davis AI Detection vs Reactive"
+Tile 7:  categoricalBarChart — Problem detection source (Davis AI vs manual/alert vs user report) — w=12
+Tile 8:  donutChart — Proactive vs reactive problem resolution — w=8
+Tile 9:  lineChart — Anomaly detection trend (7d) — w=8
+Tile 10: table — Top auto-detected problems (title, detected time, root cause, severity) — w=12
+
+Tile 11: Section — "📉 Impact Prevention"
+Tile 12: categoricalBarChart — Problem categories caught proactively by service — w=12
+Tile 13: table — Problems with estimated user impact prevented — w=8
+Tile 14: lineChart — Alert noise vs Davis signal (7d trend) — w=8
+Tile 15: donutChart — Problem type distribution (performance/availability/error) — w=12
+
+Tile 16: Section — "📋 Evidence of Value"
+Tile 17: table — MTTD (mean time to detect) by service — w=7
+Tile 18: pieChart — Problem severity distribution — w=7
+Tile 19: categoricalBarChart — Services with most proactive detections — w=6
+Tile 20: table — Full problem feed with Davis root cause evidence — w=20
+```
+
+---
+
+### POC Value Story — Mode Selection Logic
+
+Add these triggers to Mode Selection:
+
+| Trigger | Value Story | Primary Audience |
+|---|---|---|
+| "MTTR", "incident response", "resolution time", "how fast we fix" | Value Story 1 — MTTR | SRE, IT Head, CIO |
+| "correlation", "root cause", "blast radius", "what caused", "deployment impact" | Value Story 2 — Correlation | CTO, App Ops, SRE |
+| "business observability", "business impact", "tie IT to business", "revenue impact" | Value Story 3 — Business Obs | CEO, CIO, CTO |
+| "proactive", "shift left", "before users", "AI detection", "Davis value" | Value Story 4 — Proactive | CIO, SRE, IT Head |
+
+**Example prompts:**
+```
+MTTR improvement POC dashboard — bank customer, MCP connected
+Show the correlation value story for a manufacturing customer
+Business observability dashboard — e-commerce, real data
+Prove proactive monitoring value for a telco CIO
+POC value dashboard — HDFC Bank, focus on MTTR and correlation
+```
+
+---
 
 ### When to Use
 
