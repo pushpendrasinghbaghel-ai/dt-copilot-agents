@@ -1,6 +1,6 @@
 # Dynatrace Copilot Agents
 
-Cross-platform AI agents for Dynatrace demo workflows. Works on **VS Code Copilot**, **Claude Code**, **Cursor**, **Windsurf**, **Claude.ai** (browser, no install!), and **OpenAI GPTs**.
+Cross-platform AI agents for Dynatrace demo workflows. Works on **VS Code Copilot**, **Claude Code**, **Cursor**, **Windsurf**, and **OpenAI GPTs**.
 
 [![npm version](https://img.shields.io/npm/v/dt-copilot-agents)](https://www.npmjs.com/package/dt-copilot-agents)
 [![npm downloads](https://img.shields.io/npm/dm/dt-copilot-agents)](https://www.npmjs.com/package/dt-copilot-agents)
@@ -8,23 +8,7 @@ Cross-platform AI agents for Dynatrace demo workflows. Works on **VS Code Copilo
 
 ## Get Started
 
-### Option A — Claude.ai (browser, zero install) ⭐
-
-1. Go to **[claude.ai/projects](https://claude.ai/projects)** → **New Project**
-2. Click **Set project instructions** → paste contents of [`claude-ai/project-instructions.md`](claude-ai/project-instructions.md)
-3. Start chatting:
-
-```
-CIO dashboard for HDFC Bank
-SRE dashboard for Tata Steel
-CISO dashboard for meeting today with a fintech prospect
-```
-
-> ✅ No CLI. No IDE. No install. Works in any browser. Share the project with your whole team.
-
----
-
-### Option B — IDE Agent (VS Code / Claude Code / Cursor / Windsurf)
+### 1. Install
 
 #### Install
 
@@ -115,7 +99,6 @@ Generates and deploys realistic persona-specific Dynatrace dashboards — in und
 
 | Platform | Format | Install | Auto-deploy via DTCTL |
 |---|---|---|---|
-| **Claude.ai** ⭐ | Project instructions | Paste into Claude.ai Project | No (manual `dtctl apply`) |
 | **VS Code Copilot** | `.agent.md` + skill | `npx dt-copilot-agents install vscode` | Yes |
 | **Claude Code** | `CLAUDE.md` + `.claude/commands/` | `npx dt-copilot-agents install claude-code` | Yes |
 | **Cursor** | `.cursor/rules/*.mdc` | `npx dt-copilot-agents install cursor` | Yes |
@@ -161,10 +144,6 @@ cd dt-copilot-agents
 dt-copilot-agents/
 ├── knowledge/                          # Shared knowledge (platform-agnostic)
 │   └── dashboard-generator.md          # Complete procedure, DQL rules, layout grid
-│
-├── claude-ai/                          # Claude.ai Projects (browser, no install)
-│   ├── project-instructions.md         # Paste into Claude.ai Project Instructions
-│   └── README.md
 │
 ├── agents/                             # VS Code Copilot
 │   └── dashboard-generator.agent.md
