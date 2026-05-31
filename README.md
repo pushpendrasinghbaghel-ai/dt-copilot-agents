@@ -1,10 +1,32 @@
 # Dynatrace Copilot Agents
 
-Cross-platform AI agents for Dynatrace demo workflows. Works on **VS Code Copilot**, **Claude Code**, **Cursor**, **Windsurf**, and **OpenAI GPTs**.
+Cross-platform AI agents for Dynatrace demo workflows. Works on **VS Code Copilot**, **Claude Code**, **Cursor**, **Windsurf**, **Claude.ai** (browser, no install!), and **OpenAI GPTs**.
+
+[![npm version](https://img.shields.io/npm/v/dt-copilot-agents)](https://www.npmjs.com/package/dt-copilot-agents)
+[![npm downloads](https://img.shields.io/npm/dm/dt-copilot-agents)](https://www.npmjs.com/package/dt-copilot-agents)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ## Get Started
 
-### 1. Install
+### Option A — Claude.ai (browser, zero install) ⭐
+
+1. Go to **[claude.ai/projects](https://claude.ai/projects)** → **New Project**
+2. Click **Set project instructions** → paste contents of [`claude-ai/project-instructions.md`](claude-ai/project-instructions.md)
+3. Start chatting:
+
+```
+CIO dashboard for HDFC Bank
+SRE dashboard for Tata Steel
+CISO dashboard for meeting today with a fintech prospect
+```
+
+> ✅ No CLI. No IDE. No install. Works in any browser. Share the project with your whole team.
+
+---
+
+### Option B — IDE Agent (VS Code / Claude Code / Cursor / Windsurf)
+
+#### Install
 
 ```bash
 npx dt-copilot-agents install vscode        # VS Code Copilot
@@ -91,14 +113,15 @@ Generates and deploys realistic persona-specific Dynatrace dashboards — in und
 
 ## Platform Support
 
-| Platform | Format | Deployment | Auto-deploy via DTCTL |
+| Platform | Format | Install | Auto-deploy via DTCTL |
 |---|---|---|---|
-| **VS Code Copilot** | `.agent.md` + skill | `.\install.ps1 -Platform vscode` | Yes |
-| **Claude Code** | `CLAUDE.md` + `.claude/commands/` | Copy to project root | Yes |
-| **Cursor** | `.cursor/rules/*.mdc` | Copy to project root | Yes |
-| **Windsurf** | `.windsurfrules` | Copy to project root | Yes |
-| **M365 Copilot** | Declarative Agent + instruction.md | Teams Toolkit deploy | Via Power Automate |
-| **OpenAI GPT** | System prompt + knowledge file | Create Custom GPT | No (manual deploy) |
+| **Claude.ai** ⭐ | Project instructions | Paste into Claude.ai Project | No (manual `dtctl apply`) |
+| **VS Code Copilot** | `.agent.md` + skill | `npx dt-copilot-agents install vscode` | Yes |
+| **Claude Code** | `CLAUDE.md` + `.claude/commands/` | `npx dt-copilot-agents install claude-code` | Yes |
+| **Cursor** | `.cursor/rules/*.mdc` | `npx dt-copilot-agents install cursor` | Yes |
+| **Windsurf** | `.windsurfrules` | `npx dt-copilot-agents install windsurf` | Yes |
+| **M365 Copilot** | Declarative Agent | Teams Toolkit deploy | Via Power Automate |
+| **OpenAI GPT** | System prompt | Create Custom GPT | No (manual deploy) |
 
 > **Auto-setup:** The agent automatically installs `dtctl` and authenticates via browser SSO if not already set up — no manual prerequisite steps needed.
 
@@ -138,6 +161,10 @@ cd dt-copilot-agents
 dt-copilot-agents/
 ├── knowledge/                          # Shared knowledge (platform-agnostic)
 │   └── dashboard-generator.md          # Complete procedure, DQL rules, layout grid
+│
+├── claude-ai/                          # Claude.ai Projects (browser, no install)
+│   ├── project-instructions.md         # Paste into Claude.ai Project Instructions
+│   └── README.md
 │
 ├── agents/                             # VS Code Copilot
 │   └── dashboard-generator.agent.md

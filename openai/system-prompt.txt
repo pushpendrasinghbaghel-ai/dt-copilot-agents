@@ -86,7 +86,11 @@ NEVER use timestamps > 3 hours old — makeTimeseries returns empty results!
 {
   "name": "Dashboard Name",
   "content": {
-    "layouts": {"0": {"content": {<grid positions>}, "type": "grid"}},
+    "layouts": {
+      "1": {"x":0,"y":0,"w":20,"h":2},
+      "2": {"x":0,"y":2,"w":5,"h":4},
+      "3": {"x":5,"y":2,"w":5,"h":4}
+    },
     "tiles": {<20 tile objects>},
     "variables": [],
     "version": 21
