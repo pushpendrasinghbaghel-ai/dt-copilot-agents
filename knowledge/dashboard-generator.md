@@ -1289,6 +1289,7 @@ Add these triggers to Mode Selection:
 | "correlation", "root cause", "blast radius", "what caused", "deployment impact" | Value Story 2 — Correlation | CTO, App Ops, SRE |
 | "business observability", "business impact", "tie IT to business", "revenue impact" | Value Story 3 — Business Obs | CEO, CIO, CTO |
 | "proactive", "shift left", "before users", "AI detection", "Davis value" | Value Story 4 — Proactive | CIO, SRE, IT Head |
+| "logs", "log management", "log analytics", "log value", "log story", "DQL logs", "grep logs", "log search", "log cost" | Value Story 5 — Log Analytics | App Ops, SRE, CTO, Platform Eng |
 
 **Example prompts:**
 ```
@@ -1296,8 +1297,169 @@ MTTR improvement POC dashboard — bank customer, MCP connected
 Show the correlation value story for a manufacturing customer
 Business observability dashboard — e-commerce, real data
 Prove proactive monitoring value for a telco CIO
+Log analytics value story for a bank — show how DT logs beats ELK
+Logs POC dashboard — HDFC Bank, show DQL power vs grep
 POC value dashboard — HDFC Bank, focus on MTTR and correlation
 ```
+
+---
+
+### Value Story 5: Log Analytics & Intelligence
+
+**The story:** "Your engineers spend hours grepping through millions of log lines across 12 different tools. Dynatrace ingests ALL logs automatically, correlates them with metrics and traces, and lets you query them like a database — in seconds. And Davis flags log anomalies before you even search."
+
+**Why this resonates with customers:**
+- Log sprawl is universal pain — Splunk cost, ELK maintenance, no correlation with APM
+- DT Grail stores logs without pre-indexing (schema on read) — instant query, no pipeline config
+- DQL is SQL-like — developers already know how to use it
+- Log→trace→metric correlation is automatic — no manual join
+- Davis detects log anomaly spikes automatically — no alert rules to write
+
+**Discovery queries (run first):**
+```dql
+// How much log volume is coming in?
+fetch logs, from: now()-1h
+| summarize count = count(), by: {log.level}
+```
+```dql
+// Which services generate the most logs?
+fetch logs, from: now()-1h
+| summarize count = count(), by: {service.name, dt.entity.service}
+| sort count, desc
+| limit 15
+```
+```dql
+// What are the top error patterns?
+fetch logs, from: now()-3h
+| filter log.level == "ERROR" or log.level == "CRITICAL"
+| summarize count = count(), by: {service.name, content}
+| sort count, desc
+| limit 10
+```
+```dql
+// Log volume trend — is it growing?
+fetch logs, from: now()-24h
+| makeTimeseries count = count(), interval: 1h
+```
+```dql
+// Are there log anomalies / unusual patterns?
+fetch logs, from: now()-3h
+| filter log.level == "WARN" or log.level == "ERROR"
+| summarize count = count(), by: {service.name, log.level}
+| sort count, desc
+| limit 20
+```
+
+**Dashboard tile structure (20 tiles):**
+```
+Tile 1:  Header — "📋 <Company> — Log Analytics & Intelligence | Dynatrace POC Value Story"
+Tile 2:  KPI — Total log events (last 24h) — scale of ingestion
+Tile 3:  KPI — Error log count (last 24h)
+Tile 4:  KPI — Services with ERROR logs
+Tile 5:  KPI — Log anomaly events (Davis detected)
+
+Tile 6:  Section — "📊 Log Landscape — Scale & Distribution"
+Tile 7:  categoricalBarChart — Log volume by service (top 12 log producers) — w=12
+Tile 8:  donutChart — Log level distribution (ERROR/WARN/INFO/DEBUG) — w=8
+Tile 9:  lineChart — Log volume trend (last 24h, hourly) — w=8
+Tile 10: table — Top services: log count, error %, warn %, last error time — w=12
+
+Tile 11: Section — "🚨 Error Intelligence — Find Issues Instantly"
+Tile 12: categoricalBarChart — Error log count by service (who is failing?) — w=12
+Tile 13: table — Top error patterns (message, service, count, first/last seen) — w=8
+Tile 14: lineChart — Error log rate trend (last 24h — spikes = incidents) — w=8
+Tile 15: donutChart — Error distribution by service (who owns the problem?) — w=12
+
+Tile 16: Section — "🔗 Log → Metric → Trace Correlation"
+Tile 17: table — Services with correlated errors+problems (log errors that became incidents) — w=7
+Tile 18: pieChart — Log sources (k8s/application/infrastructure/custom) — w=7
+Tile 19: categoricalBarChart — WARN log count by service (leading indicators) — w=6
+Tile 20: table — Recent error log feed (timestamp, service, level, message excerpt) — w=20
+```
+
+**Narrative for Tile 1 markdown:**
+```markdown
+## 📋 <Company> — Log Analytics & Intelligence
+### From Log Chaos to Instant Insight | Dynatrace POC
+
+**Before Dynatrace:** Hours searching across ELK/Splunk/CloudWatch with no connection to traces or metrics.
+**With Dynatrace:** Query ANY log in seconds with DQL. Every log is automatically linked to the service, trace, and infrastructure that generated it. Davis detects log anomalies before your on-call gets paged.
+```
+
+**DQL for key tiles:**
+
+Log volume by service (bar chart):
+```dql
+fetch logs, from: now()-24h
+| summarize count = count(), by: {service.name}
+| sort count, desc
+| limit 12
+| fieldsKeep service.name, count
+```
+
+Log level distribution (donut):
+```dql
+fetch logs, from: now()-24h
+| summarize count = count(), by: {log.level}
+| sort count, desc
+| fieldsKeep log.level, count
+```
+
+Log volume trend (line chart — timeseries):
+```dql
+fetch logs, from: now()-24h
+| makeTimeseries count = count(), interval: 1h
+```
+
+Error count by service (bar chart):
+```dql
+fetch logs, from: now()-24h
+| filter log.level == "ERROR" or log.level == "CRITICAL"
+| summarize error_count = count(), by: {service.name}
+| sort error_count, desc
+| limit 12
+| fieldsKeep service.name, error_count
+```
+
+Error rate trend (line chart):
+```dql
+fetch logs, from: now()-24h
+| filter log.level == "ERROR"
+| makeTimeseries error_count = count(), interval: 1h
+```
+
+Top error patterns table:
+```dql
+fetch logs, from: now()-3h
+| filter log.level == "ERROR" or log.level == "CRITICAL"
+| summarize count = count(), first_seen = min(timestamp), last_seen = max(timestamp), by: {service.name, content}
+| sort count, desc
+| limit 15
+| fieldsKeep service.name, content, count, first_seen, last_seen
+```
+
+Log→problem correlation (services with both log errors AND open problems):
+```dql
+fetch dt.davis.problems, from: now()-24h
+| filter status == "OPEN"
+| fieldsKeep title, affected_entities, severity, start_time
+| limit 15
+```
+
+Recent error log feed (tile 20):
+```dql
+fetch logs, from: now()-3h
+| filter log.level == "ERROR" or log.level == "CRITICAL"
+| sort timestamp, desc
+| fieldsKeep timestamp, service.name, log.level, content
+| limit 20
+```
+
+**Key differentiators to highlight in this dashboard:**
+- **Scale tile (KPI 2)**: Show total log volume — 500M+ logs/day is a flex, not a problem with Grail
+- **Error patterns table**: This is the "aha moment" — customer sees log content grouped and counted without any pipeline config
+- **Trend tile**: Show that DT ingests 24h+ of logs with consistent query performance
+- **Tile 17 (correlation)**: The killer feature — same problem, visible in logs AND in problems feed, automatically linked
 
 ---
 

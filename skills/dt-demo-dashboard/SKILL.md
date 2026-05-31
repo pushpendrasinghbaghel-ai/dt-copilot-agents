@@ -39,6 +39,7 @@ Generate and deploy persona-specific Dynatrace dashboards for any scenario — p
   - "Show correlation/root cause" → Davis AI intelligence story
   - "Show business observability" → IT-to-business impact story
   - "Show proactive monitoring" → shift-left / Davis detection story
+  - "Show log value", "log analytics story", "logs vs ELK", "DQL logs" → Log Analytics & Intelligence value story
 - Any industry: manufacturing, e-commerce, retail, SaaS, fintech, healthcare, telco
 
 ## Procedure
@@ -53,7 +54,7 @@ Read `knowledge/dashboard-generator.md` → **Mode Selection** section. Identify
 | **2. Live Tenant** | MCP connected or "real data", "their Dynatrace" | Discover entities → use real DQL |
 | **3. Ingest** | "ingest", "persistent demo", "synthetic but live" | Generate data → ingest via API → real queries |
 | **4. Interview** | "interview me", "ask questions", "help me figure out" | Run full discovery interview first |
-| **5. POC Value Story** | "MTTR", "correlation", "business observability", "proactive", "POC value", "prove value" | Read POC Value Story section in knowledge base → use Mode 2 data + value-story tile structure |
+| **5. POC Value Story** | "MTTR", "correlation", "business observability", "proactive", "logs value", "log analytics", "logs vs ELK", "POC value", "prove value" | Read POC Value Story section in knowledge base → use Mode 2 data + value-story tile structure |
 
 **If MCP is connected and mode is ambiguous** → suggest Mode 2 ("I can see you're connected to a Dynatrace tenant — want me to use your real data?").
 
