@@ -755,80 +755,216 @@ EOF
 
 ## Mode 2: Live Tenant Mode — Real Production Data
 
-Use when the customer has Dynatrace and you want their real data in the dashboard.
+Use when the customer already has Dynatrace and you want their real metrics, services, hosts, and problems in the dashboard. This is the highest-value mode — the customer sees their own data, their own service names, their own problems.
 
 ### Prerequisites
 
-- MCP server connected (check with `get_environment_info`) **OR** dtctl context configured
-- If MCP is connected, prefer MCP tools for discovery — they're faster
-- If only dtctl: use `dtctl query -f - <<'EOF' ... EOF` for all discovery queries
+- MCP server connected — verify with `get_environment_info`
+- If MCP unavailable: use dtctl context (`dtctl config current-context`)
+- dtctl context must point to the customer's tenant
 
-### Phase 2.1: Data Discovery (< 3 minutes)
+---
 
-Before building tiles, discover what data exists on the tenant. Run these discovery queries:
+### Phase 2.1: Discovery — Understand the Tenant (MANDATORY, < 3 min)
 
+**Never skip discovery.** You must know what's on the tenant before building tiles. Run ALL of these via MCP `execute_dql` (or `dtctl query`):
+
+#### Step 1 — What services exist and are they active?
 ```dql
-// 1. What services exist?
-fetch dt.entity.service
-| summarize count = count(), by: {name, dt.entity.service}
-| sort count desc
-| limit 20
+timeseries requests = sum(dt.service.request.count), by: {dt.entity.service, service.name}, from: now()-1h
+| sort max(requests), desc
+| limit 15
+```
+→ Tells you: top services by traffic, their entity IDs, their names.
 
-// 2. What hosts exist?
-fetch dt.entity.host
-| summarize count = count(), by: {name, dt.entity.host}
-| sort count desc
-| limit 20
+#### Step 2 — What hosts/infrastructure exists?
+```dql
+timeseries cpu = avg(dt.host.cpu.usage), by: {dt.entity.host, host.name}, from: now()-1h
+| sort max(cpu), desc
+| limit 15
+```
+→ Tells you: hosts with activity, CPU patterns.
 
-// 3. What Kubernetes namespaces / workloads?
-fetch dt.entity.cloud_application
-| summarize count = count(), by: {name, dt.entity.cloud_application}
-| sort count desc
-| limit 20
+#### Step 3 — Are there open problems right now?
+Use MCP tool: `list_problems(status="ACTIVE", timeframe="24h")`
+→ Tells you: current incidents to highlight in dashboard.
 
-// 4. What metrics are available? (sample key metric families)
-timeseries avg(dt.host.cpu.usage), by: {dt.entity.host}, from: now()-1h, to: now()
-| limit 5
+#### Step 4 — Are there logs?
+```dql
+fetch logs, from: now()-1h
+| summarize count = count(), by: {log.level}
+```
+→ Tells you: if logs exist and what levels. If count > 0, you can use log-based tiles.
 
-// 5. Are there logs?
-fetch logs, from: now()-1h, to: now()
-| summarize count(), by: {dt.entity.service}
-| sort `count()` desc
+#### Step 5 — What's the error picture?
+```dql
+timeseries failures = avg(dt.service.request.failure_rate), by: {dt.entity.service, service.name}, from: now()-1h
+| sort max(failures), desc
 | limit 10
 ```
+→ Tells you: which services have errors — these become the focus tiles.
 
-Run 2-3 of these to understand the tenant's data landscape. Use the results to populate tile queries.
+**Record the results.** You need: service names, entity IDs (`SERVICE-XXXX`, `HOST-XXXX`), metric ranges, whether logs exist, active problems.
 
-### Phase 2.2: Tile Query Mapping
+---
 
-Replace synthetic `data record()` with real DQL queries:
+### Phase 2.2: Build Tiles with Real DQL
 
-| Tile Type | Mode 1 (Synthetic) | Mode 2 (Real Data) |
-|---|---|---|
-| KPI — error rate | `data record(value=2.3)` | `fetch logs, from: now()-1h \| filter status == "ERROR" \| summarize error_count = count() \| fieldsAdd total = 10000.0 \| fieldsAdd error_rate = round(error_count / total * 100, decimals: 2)` |
-| KPI — service count | `data record(value=47)` | `fetch dt.entity.service \| summarize count()` |
-| Bar chart — by service | `data record(service="X", latency=120)` | `fetch spans, from: now()-1h \| filter dt.entity.service != "" \| summarize avg_duration = avg(duration), by: {dt.entity.service} \| sort avg_duration desc \| limit 10` |
-| Time-series — latency | `data record(timestamp=now()-15m, val=120)` | `timeseries avg(dt.service.response_time), by: {dt.entity.service}, from: now()-3h, to: now(), interval: 15m` |
-| Table — top services | `data record(name="X", requests=1200)` | `fetch spans, from: now()-1h \| summarize requests = count(), errors = countIf(status.code >= 400), by: {dt.entity.service} \| sort requests desc \| limit 15` |
+Use these validated DQL patterns. Replace Mode 1 `data record()` with these.
 
-### Phase 2.3: Persona-to-Metric Mapping
+#### KPI Tiles (singleValue)
 
-| Persona | Primary Metrics to Query |
-|---|---|
-| **CIO / CEO** | Service availability (`dt.service.availability`), user sessions, business events if available |
-| **SRE** | `dt.service.response_time`, `dt.service.request.failure_rate`, error budgets via SLO API |
-| **IT Head** | `dt.host.cpu.usage`, `dt.host.memory.available`, `dt.host.disk.used_pct` |
-| **App Ops** | `dt.service.response_time`, `dt.service.request.count`, deployment events |
-| **CISO** | Vulnerability events (`fetch events` where `event.type == "VULNERABILITY_STATE_REPORT_EVENT"`) |
-| **Platform Eng** | Kubernetes: `dt.kubernetes.container.cpu_usage`, pod counts, deployment events |
+**Total active services:**
+```dql
+fetch dt.entity.service, from: now()-5m
+| filter isNotNull(entity.detected_name)
+| summarize count = count()
+```
 
-### Phase 2.4: Build & Deploy
+**Overall error rate %:**
+```dql
+timeseries val = avg(dt.service.request.failure_rate), from: now()-1h
+| summarize error_rate = round(avg(arrayAvg(val)), decimals: 2)
+```
 
-Same as Mode 1 Phases 2-4, but:
-- **All tile queries use real DQL** (no `data record()`)
-- **Validate every query with `execute_dql`** — confirm non-empty results before deploying
-- **If a query returns empty**: fall back to `data record()` with a note in the tile title like "(sample)"
-- **Use `from: now()-3h, to: now()`** as default timeframe for all queries
+**P50 response time (ms):**
+```dql
+timeseries val = avg(dt.service.request.response_time.geometric_mean), from: now()-1h
+| summarize avg_ms = round(avg(arrayAvg(val)) / 1000, decimals: 0)
+```
+
+**Active problems count:**
+```dql
+fetch dt.davis.problems, from: now()-24h
+| filter status == "OPEN"
+| summarize count = count()
+```
+
+#### Bar Chart — Service Request Volume
+```dql
+timeseries requests = sum(dt.service.request.count), by: {dt.entity.service, service.name}, from: now()-3h
+| summarize total = sum(arraySum(requests)), by: {service.name}
+| sort total, desc
+| limit 12
+| fieldsKeep service.name, total
+```
+
+#### Bar Chart — Host CPU by Host
+```dql
+timeseries cpu = avg(dt.host.cpu.usage), by: {dt.entity.host, host.name}, from: now()-3h
+| summarize avg_cpu = round(avg(arrayAvg(cpu)), decimals: 1), by: {host.name}
+| sort avg_cpu, desc
+| limit 12
+| fieldsKeep host.name, avg_cpu
+```
+
+#### Donut — Error Rate by Service
+```dql
+timeseries failures = avg(dt.service.request.failure_rate), by: {dt.entity.service, service.name}, from: now()-3h
+| summarize error_rate = round(avg(arrayAvg(failures)), decimals: 2), by: {service.name}
+| sort error_rate, desc
+| limit 8
+| fieldsKeep service.name, error_rate
+```
+
+#### Line Chart — Response Time Trend (timeseries)
+```dql
+timeseries p50 = avg(dt.service.request.response_time.geometric_mean), by: {dt.entity.service, service.name}, from: now()-3h, interval: 15m
+| sort max(p50), desc
+| limit 5
+```
+
+#### Line Chart — Request Rate Trend (timeseries)
+```dql
+timeseries requests = sum(dt.service.request.count), by: {dt.entity.service, service.name}, from: now()-3h, interval: 15m
+| sort max(requests), desc
+| limit 5
+```
+
+#### Table — Top Services with RED Metrics
+```dql
+timeseries req = sum(dt.service.request.count), err = avg(dt.service.request.failure_rate), rt = avg(dt.service.request.response_time.geometric_mean), by: {dt.entity.service, service.name}, from: now()-1h
+| summarize requests = round(sum(arraySum(req)), decimals: 0), error_pct = round(avg(arrayAvg(err)), decimals: 2), response_time_ms = round(avg(arrayAvg(rt)) / 1000, decimals: 0), by: {service.name}
+| sort requests, desc
+| limit 15
+| fieldsKeep service.name, requests, error_pct, response_time_ms
+```
+
+#### Table — Host Health
+```dql
+timeseries cpu = avg(dt.host.cpu.usage), mem = avg(dt.host.memory.usage.pct), by: {dt.entity.host, host.name}, from: now()-1h
+| summarize avg_cpu = round(avg(arrayAvg(cpu)), decimals: 1), avg_mem = round(avg(arrayAvg(mem)), decimals: 1), by: {host.name}
+| sort avg_cpu, desc
+| limit 15
+| fieldsKeep host.name, avg_cpu, avg_mem
+```
+
+#### Table — Recent Problems (live feed)
+```dql
+fetch dt.davis.problems, from: now()-24h
+| filter isNotNull(title)
+| sort start_time, desc
+| fieldsKeep title, severity, status, start_time, affected_entities
+| limit 15
+```
+
+#### Table — Error Log Summary
+```dql
+fetch logs, from: now()-3h
+| filter log.level == "ERROR" or log.level == "CRITICAL"
+| summarize count = count(), by: {log.source, service.name}
+| sort count, desc
+| limit 15
+| fieldsKeep service.name, log.source, count
+```
+
+---
+
+### Phase 2.3: Persona → Metric Focus
+
+| Persona | KPI Tiles | Section 2 | Section 3 | Section 4 |
+|---|---|---|---|---|
+| **CIO** | Active services, Overall error rate, Avg response time, Open problems | Service request volume (bar), Error rate by service (donut), Response time trend (line), Top services RED table | Host CPU (bar), Host health table, Request rate trend (line), Problem severity (donut) | Recent problems (table), Log errors (table), Availability summary (bar) |
+| **SRE** | Error rate %, P50 response time, Active incidents, SLO compliance | Error rate by service (bar), Failure rate trend (line), Top errors table, Request volume donut | Host CPU (bar), Memory usage table, Infra trend (line), Resource pressure donut | Recent problems (table), Recent deployments, Error logs |
+| **IT Head** | Host count, Avg CPU %, Avg memory %, Active alerts | CPU by host (bar), Memory by host (bar), CPU trend (line), Host health table | Problem breakdown (donut), Error rate (bar), Response time trend (line), Service health table | Recent problems (table), Log errors, Infrastructure events |
+| **App Ops** | Request rate, Error rate %, Avg response time, Service count | Request volume by service (bar), Error distribution (donut), Response time trend (line), RED metrics table | Top slow services (bar), Error rate trend (line), Throughput table, Error severity donut | Recent deployments (table), Problem feed (table), Error logs |
+| **Platform Eng** | Service count, Host count, Error rate %, Open problems | Service request volume (bar), Host CPU (bar), Request trend (line), Top services table | Error rate by service (bar), Memory usage table, Error trend (line), Problem donut | Recent problems (table), Deployment events, Log errors |
+
+---
+
+### Phase 2.4: Validation Gate (MANDATORY before deploy)
+
+**Validate EVERY query before building the dashboard JSON:**
+
+1. Run each tile's DQL via `execute_dql`
+2. If result has rows → ✅ use it
+3. If result is empty → ⚠️ fall back to `data record()` with tile title suffix `" (estimated)"`
+4. If DQL errors → fix syntax, re-run
+
+**Never deploy a dashboard with unvalidated queries** — empty tiles destroy the demo.
+
+```
+Validation checklist:
+□ KPI 1 → non-null value
+□ KPI 2 → non-null value
+□ KPI 3 → non-null value
+□ KPI 4 → non-null value
+□ Bar chart tile → >= 3 rows
+□ Donut tile → >= 2 rows
+□ Line chart → >= 6 data points
+□ Table tile → >= 5 rows
+□ Problems table → any rows (ok if 0 — means healthy)
+```
+
+---
+
+### Phase 2.5: Build & Deploy
+
+Same as Mode 1 Phase 3 (deploy with dtctl), with these differences:
+- **All validated tiles use real DQL** — no `data record()`
+- **Unvalidated/empty tiles use `data record()` fallback** with `" (estimated)"` in title
+- **Default timeframe**: `from: now()-3h` for all queries
+- **Dashboard title** should include tenant name and timestamp: `"ServiceName — SRE Live Dashboard (31 May 2026)"`
 
 ---
 

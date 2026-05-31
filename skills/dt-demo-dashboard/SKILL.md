@@ -70,8 +70,8 @@ Choose layout variant based on persona + meeting goal (see `knowledge/dashboard-
 ### Step 3: Build Dashboard JSON (20 tiles)
 
 Follow the tile structure from knowledge base. Data source depends on mode:
-- Mode 1: `data record(...)` for all tiles
-- Mode 2: real DQL (`timeseries`, `fetch logs`, `fetch spans`, `smartscapeNodes`)
+- **Mode 1**: `data record(...)` for all tiles — no MCP needed
+- **Mode 2**: Read `knowledge/dashboard-generator.md` → **Mode 2** section for the full discovery → build → validate → fallback workflow. Uses real DQL (`timeseries`, `fetch logs`, problems table). Requires MCP.
 - Mode 3: `timeseries custom.*` or `fetch bizevents` pointing to ingested data
 
 ### Step 4: Validate ALL DQL Queries
