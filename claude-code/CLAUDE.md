@@ -9,10 +9,10 @@ CIO, CTO, CEO, CISO, SRE, IT Head, Application Ops, MLOps, Platform Engineering,
 
 Use `/dashboard` slash command to generate a dashboard. Examples:
 ```
-/dashboard SRE dashboard for Tata Steel
-/dashboard CISO dashboard for HDFC Bank
-/dashboard MLOps dashboard for Infosys
-/dashboard CEO dashboard for Reliance Retail
+/dashboard SRE dashboard for Atlas Steel
+/dashboard CISO dashboard for Apex Bank
+/dashboard MLOps dashboard for Helix AI
+/dashboard CEO dashboard for Summit Retail
 ```
 If no persona is specified, defaults to CIO.
 

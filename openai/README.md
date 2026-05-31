@@ -21,7 +21,7 @@
 1. Create an Assistant with the system prompt from `system-prompt.txt`
 2. Upload `knowledge/dashboard-generator.md` as a file for file_search
 3. Enable tools: `code_interpreter`, `file_search`
-4. Call via API with user message like: "Create a dashboard for Tata Steel manufacturing operations"
+4. Call via API with user message like: "Create a dashboard for Atlas Steel manufacturing operations"
 
 ## Limitations vs VS Code Agent
 - **No DTCTL deployment** — GPT can generate the JSON but can't run shell commands to deploy

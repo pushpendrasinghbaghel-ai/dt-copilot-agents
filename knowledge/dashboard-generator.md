@@ -88,8 +88,8 @@ If the user doesn't specify a persona, **default to CIO**. If they specify both 
 
 #### Persona Selection Logic
 
-1. If user says **"SRE dashboard for Tata Steel"** → use SRE persona + Manufacturing industry
-2. If user says **"dashboard for Grasim CIO"** → use CIO persona + determine industry from research
+1. If user says **"SRE dashboard for Atlas Steel"** → use SRE persona + Manufacturing industry
+2. If user says **"dashboard for Vertex Chemicals CIO"** → use CIO persona + determine industry from research
 3. If user says **"CISO dashboard"** (no company) → use CISO persona + generic enterprise context
 4. If user says **"dashboard for Infosys"** (no persona) → default to CIO persona + SaaS/IT Services industry
 5. If user says **"MLOps dashboard for a bank"** → use MLOps persona + Financial Services industry
@@ -104,15 +104,15 @@ If the user doesn't specify a persona, **default to CIO**. If they specify both 
 ```
 
 Examples:
-- `# 🔧 Tata Steel — Steel Manufacturing\n## SRE Reliability Dashboard | Production Systems\n\n**Tracking SLOs, error budgets, and incident response across 26 plants**`
-- `# 🛡️ HDFC Bank — Digital Banking\n## CISO Security Command Center | Threat & Compliance\n\n**Real-time security posture across 6,300+ branches and digital channels**`
+- `# 🔧 Atlas Steel — Steel Manufacturing\n## SRE Reliability Dashboard | Production Systems\n\n**Tracking SLOs, error budgets, and incident response across 26 plants**`
+- `# 🛡️ Apex Bank — Digital Banking\n## CISO Security Command Center | Threat & Compliance\n\n**Real-time security posture across 6,300+ branches and digital channels**`
 - `# 🤖 Infosys — Enterprise AI Services\n## MLOps AI Operations Center | Model Fleet Health\n\n**Monitoring inference performance, token economics, and model drift across client deployments**`
 
 ### Phase 1.5: Guided Interview (OPTIONAL — < 1 minute)
 
 #### Gate Logic — Read This First
 
-**Simple prompt (e.g. "CIO dashboard for HDFC Bank") → SKIP the gate entirely. Build immediately with smart defaults.** Do not ask any questions. Just say: "Building your [Persona] dashboard for [Company]..." and proceed to Phase 2.
+**Simple prompt (e.g. "CIO dashboard for Apex Bank") → SKIP the gate entirely. Build immediately with smart defaults.** Do not ask any questions. Just say: "Building your [Persona] dashboard for [Company]..." and proceed to Phase 2.
 
 **Only show the gate when** the prompt contains explicit signals of needing customization:
 - Words like "meeting", "tomorrow", "prospect", "pitch", "present" → show Meeting Brief option
@@ -748,9 +748,9 @@ EOF
 
 ## Examples of Past Dashboards
 
-1. **Birla Pivot B2B E-Commerce** — Marketplace KPIs (GMV ₹127.43 Cr, 2,847 Orders), channel/region/category mix, platform health (API latency, error rates), supply chain (fulfillment, SLA, payment methods)
-2. **Grasim VSF & Chemicals Manufacturing** — Production KPIs (186,420 MT, 87.4% OEE), 12 real plants (Nagda, Vilayat, Kharach, Harihar...), product mix, quality (FPY), sustainability (energy/water/CO2), downtime analysis
-3. **Birla Opus Paints E-Commerce + Retail** — Digital revenue (₹48.72 Cr), e-commerce channels (Website, App, Amazon, Flipkart), Imagine Machine tool, 6 paint plants (Panipat 230 MLPA, Cheyyar 206 MLPA...), retail network (8,740 dealers)
+1. **Pinnacle Commerce B2B E-Commerce** — Marketplace KPIs (GMV ₹127.43 Cr, 2,847 Orders), channel/region/category mix, platform health (API latency, error rates), supply chain (fulfillment, SLA, payment methods)
+2. **Vertex Chemicals Manufacturing** — Production KPIs (186,420 MT, 87.4% OEE), 12 plants (Nagda, Vilayat, Kharach, Harihar...), product mix, quality (FPY), sustainability (energy/water/CO2), downtime analysis
+3. **Prism Paints E-Commerce + Retail** — Digital revenue (₹48.72 Cr), e-commerce channels (Website, App, Amazon, Flipkart), Imagine Machine tool, 6 paint plants (Panipat 230 MLPA, Cheyyar 206 MLPA...), retail network (8,740 dealers)
 
 ---
 
@@ -1298,8 +1298,8 @@ Show the correlation value story for a manufacturing customer
 Business observability dashboard — e-commerce, real data
 Prove proactive monitoring value for a telco CIO
 Log analytics value story for a bank — show how DT logs beats ELK
-Logs POC dashboard — HDFC Bank, show DQL power vs grep
-POC value dashboard — HDFC Bank, focus on MTTR and correlation
+Logs POC dashboard — Apex Bank, show DQL power vs grep
+POC value dashboard — Apex Bank, focus on MTTR and correlation
 ```
 
 ---
@@ -1593,7 +1593,7 @@ Use when the user doesn't know exactly what they want, or when you're meeting a 
 ```
 Let's build the perfect dashboard together. I'll ask a few quick questions:
 
-1. **Who is this for?** (company name + person's role, e.g. "HDFC Bank CIO")
+1. **Who is this for?** (company name + person's role, e.g. "Apex Bank CIO")
 2. **What's the occasion?** (first meeting, renewal, PoV review, board presentation, internal use)
 3. **What problem are they trying to solve?** (free text — be as specific as possible)
 4. **What should someone feel after seeing this dashboard?** (urgency, confidence, clarity, ROI)

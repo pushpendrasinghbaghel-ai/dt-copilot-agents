@@ -1,7 +1,7 @@
 ---
 name: dt-demo-dashboard
 description: 'Generate and deploy Dynatrace dashboards in 4 modes: (1) Demo Mode — instant synthetic dashboards for pre-sales meetings with meeting-specific story arcs; (2) Live Tenant Mode — dashboards using real metrics/logs from the customer tenant; (3) Synthetic Ingest Mode — ingest realistic data via API then query it live for persistent demos; (4) Interview-First Mode — agent interviews the user to discover the right dashboard. Smart layouts (Panorama/Hero/Dense/Trend-First) auto-adjust to persona and meeting goal. Supports CIO, CTO, CEO, CISO, SRE, IT Head, App Ops, MLOps, Platform Eng, VP Eng.'
-argument-hint: 'Mode + persona + company, e.g. "SRE dashboard for Tata Steel", "real data CIO dashboard for HDFC Bank", "interview me for a CISO dashboard", "ingest data for a manufacturing dashboard"'
+argument-hint: 'Mode + persona + company, e.g. "SRE dashboard for Atlas Steel", "real data CIO dashboard for Apex Bank", "interview me for a CISO dashboard", "ingest data for a manufacturing dashboard"'
 ---
 
 ## ⚡ FIRST ACTION — DO THIS BEFORE ANYTHING ELSE
@@ -104,6 +104,6 @@ Report the URL: `https://<TENANT>.apps.dynatrace.com/ui/apps/dynatrace.dashboard
 
 ## Examples of Past Dashboards
 
-1. **Birla Pivot B2B E-Commerce** (Mode 1, CIO, Variant B) — GMV, Orders, channel mix, API health, supply chain
-2. **Grasim VSF Manufacturing** (Mode 1, CIO, Variant B) — OEE, 12 real plants, sustainability, downtime
-3. **Birla Opus Paints** (Mode 1, CIO, Variant B) — Digital revenue, 4 e-commerce channels, retail network
+1. **Pinnacle Commerce B2B E-Commerce** (Mode 1, CIO, Variant B) — GMV, Orders, channel mix, API health, supply chain
+2. **Vertex Chemicals Manufacturing** (Mode 1, CIO, Variant B) — OEE, 12 plants, sustainability, downtime
+3. **Prism Paints** (Mode 1, CIO, Variant B) — Digital revenue, 4 e-commerce channels, retail network

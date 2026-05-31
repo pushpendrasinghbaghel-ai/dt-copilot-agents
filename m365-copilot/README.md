@@ -39,8 +39,8 @@ A Declarative Agent runs inside Microsoft Teams and M365 Copilot. Users invoke i
 
 5. **Usage** in Teams chat:
    ```
-   @Dashboard Generator SRE dashboard for Tata Steel manufacturing
-   @Dashboard Generator CISO dashboard for HDFC Bank
+   @Dashboard Generator SRE dashboard for Atlas Steel manufacturing
+   @Dashboard Generator CISO dashboard for Apex Bank
    ```
 
 ### Adding DTCTL Deployment (Optional)
@@ -81,7 +81,7 @@ Without this, the agent generates the JSON and the user downloads and runs `dtct
 1. Upload `knowledge/dashboard-generator.md` to a SharePoint document library
 2. In M365 Copilot chat, reference the file:
    ```
-   Using the dashboard generator guide in SharePoint, create an SRE dashboard for Tata Steel
+   Using the dashboard generator guide in SharePoint, create an SRE dashboard for Atlas Steel
    ```
 3. Copilot will use the knowledge to generate dashboard JSON
 4. Copy the JSON, save as `.json`, run `dtctl apply -f <file>.json`

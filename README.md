@@ -34,14 +34,14 @@ npx dt-copilot-agents install                # All platforms at once
 ### 3. Prompt
 
 ```
-SRE dashboard for Tata Steel
-CISO dashboard for HDFC Bank
-CEO dashboard for Reliance Industries
-CIO dashboard for meeting today — prospect at Axtria Life Sciences
+SRE dashboard for Atlas Steel
+CISO dashboard for Apex Bank
+CEO dashboard for Summit Industries
+CIO dashboard for meeting today — prospect at Helix Life Sciences
 interview me for a VP Engineering dashboard
 
 # POC Value Stories (Mode 5) — real tenant data required
-MTTR improvement POC dashboard — HDFC Bank, MCP connected
+MTTR improvement POC dashboard — Apex Bank, MCP connected
 Log analytics value story — show DT logs vs ELK for a bank
 Prove proactive monitoring value for a telco CIO
 Business observability dashboard — e-commerce customer, real data
@@ -83,7 +83,7 @@ Purpose-built dashboards that frame Dynatrace data as business value — designe
 
 **Example prompts:**
 ```
-MTTR improvement POC dashboard — HDFC Bank, MCP connected
+MTTR improvement POC dashboard — Apex Bank, MCP connected
 Log analytics value story for a bank — show how DT logs beats ELK
 Prove proactive monitoring value for a telco CIO
 Business observability dashboard — e-commerce, real data

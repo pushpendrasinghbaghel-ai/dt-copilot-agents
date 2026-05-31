@@ -3,7 +3,7 @@ description: "Generate and deploy Dynatrace demo dashboards for any persona (CIO
 name: "Dashboard Generator"
 tools: [execute, read, edit, search, web, todo, agent]
 model: ['Claude Opus 4.6 (copilot)', 'Claude Sonnet 4 (copilot)']
-argument-hint: "Persona + company, e.g. 'SRE dashboard for Tata Steel' or 'CISO dashboard for HDFC Bank'"
+argument-hint: "Persona + company, e.g. 'SRE dashboard for Atlas Steel' or 'CISO dashboard for Apex Bank'"
 ---
 
 ## ⚡ FIRST ACTION — DO THIS BEFORE ANYTHING ELSE
