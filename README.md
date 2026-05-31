@@ -39,6 +39,12 @@ CISO dashboard for HDFC Bank
 CEO dashboard for Reliance Industries
 CIO dashboard for meeting today — prospect at Axtria Life Sciences
 interview me for a VP Engineering dashboard
+
+# POC Value Stories (Mode 5) — real tenant data required
+MTTR improvement POC dashboard — HDFC Bank, MCP connected
+Log analytics value story — show DT logs vs ELK for a bank
+Prove proactive monitoring value for a telco CIO
+Business observability dashboard — e-commerce customer, real data
 ```
 
 The agent researches the company, generates a 20-tile dashboard, and deploys it to your Dynatrace tenant — all automatically.
@@ -49,7 +55,7 @@ The agent researches the company, generates a 20-tile dashboard, and deploys it 
 
 ## What's Included
 
-### Dashboard Generator — 4 Modes
+### Dashboard Generator — 5 Modes
 
 Generates and deploys realistic persona-specific Dynatrace dashboards — in under 5 minutes.
 
@@ -59,8 +65,29 @@ Generates and deploys realistic persona-specific Dynatrace dashboards — in und
 | **Mode 2 — Live Tenant** | "real data", "their Dynatrace", or MCP connected | Discovers real entities via MCP → builds dashboard with live `timeseries`, `fetch logs`, `fetch spans` queries |
 | **Mode 3 — Synthetic Ingest** | "ingest", "persistent demo" | Generates realistic data → ingests via MINT/BizEvents API → dashboard queries live data |
 | **Mode 4 — Interview-First** | "interview me", "help me figure out" | Agent asks 6 discovery questions → infers persona, story arc, and layout → builds the perfect dashboard |
+| **Mode 5 — POC Value Stories** | "MTTR", "correlation", "logs value", "business observability", "proactive", "prove value" | Runs discovery DQL against real tenant → builds 20-tile dashboard framed as a value narrative for POC sign-off |
 
 **Meeting intelligence:** Say `"meeting today with [company]"` to unlock story-arc selection, audience targeting, and CTA-focused layouts for your specific meeting goal.
+
+### POC Value Story Dashboards (Mode 5)
+
+Purpose-built dashboards that frame Dynatrace data as business value — designed for POC phases where you need to prove ROI and close.
+
+| Value Story | Trigger phrases | Audience | What it proves |
+|---|---|---|---|
+| **1 — MTTR Improvement** | "MTTR", "incident response", "resolution time" | SRE, IT Head, CIO | How DT cuts mean-time-to-resolve with automatic root cause |
+| **2 — Correlation & Root Cause** | "correlation", "root cause", "blast radius", "deployment impact" | CTO, App Ops, SRE | Davis AI automatically links events across the full stack |
+| **3 — Business Observability** | "business observability", "revenue impact", "tie IT to business" | CEO, CIO, CTO | Real-time bridge between IT health and business KPIs |
+| **4 — Proactive Monitoring** | "proactive", "shift left", "before users", "Davis value" | CIO, SRE, IT Head | Davis detects anomalies before users feel them |
+| **5 — Log Analytics & Intelligence** | "logs value", "log analytics", "logs vs ELK", "DQL logs", "log story" | App Ops, SRE, CTO, Platform Eng | From log chaos to instant DQL search, pattern detection, and log→trace correlation |
+
+**Example prompts:**
+```
+MTTR improvement POC dashboard — HDFC Bank, MCP connected
+Log analytics value story for a bank — show how DT logs beats ELK
+Prove proactive monitoring value for a telco CIO
+Business observability dashboard — e-commerce, real data
+```
 
 **Smart layout variants** auto-select based on persona and meeting context:
 | Variant | Persona / Occasion | Character |
@@ -89,6 +116,7 @@ Generates and deploys realistic persona-specific Dynatrace dashboards — in und
 - Connects to live Dynatrace tenant for real metrics (Mode 2 — via MCP)
 - Ingests synthetic data via MINT/BizEvents API for persistent demos (Mode 3)
 - Guided discovery interview → builds the right dashboard (Mode 4)
+- **5 POC Value Story dashboards** — MTTR, Correlation, Business Observability, Proactive, Log Analytics (Mode 5)
 - 5 smart layout variants that auto-select by persona and meeting context
 - 6 story arcs: Risk, ROI, Visibility, Business Impact, Growth, Observability
 - Deploys directly to Dynatrace tenant via `dtctl` CLI
