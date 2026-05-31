@@ -1,0 +1,60 @@
+# Smithery listing for dt-copilot-agents
+# https://smithery.ai — MCP tool registry
+
+name: dt-copilot-agents
+displayName: Dynatrace Dashboard Generator
+description: |
+  Generate and deploy persona-specific Dynatrace observability dashboards in under 5 minutes.
+  Supports 10+ personas: CIO, CTO, CEO, CISO, SRE, IT Head, App Ops, MLOps, Platform Eng, VP Eng.
+  4 modes: instant synthetic demo, live tenant data, synthetic ingest, guided interview.
+  Works as an MCP server (stdio) or installs into VS Code Copilot, Claude Code, Cursor, Windsurf.
+
+version: 1.2.3
+license: MIT
+author: Pushpendra Singh Baghel
+homepage: https://github.com/pushpendrasinghbaghel-ai/dt-copilot-agents
+repository: https://github.com/pushpendrasinghbaghel-ai/dt-copilot-agents
+
+categories:
+  - observability
+  - monitoring
+  - dashboards
+  - demo-tools
+  - devops
+
+tags:
+  - dynatrace
+  - dashboard
+  - CIO
+  - SRE
+  - CISO
+  - observability
+  - APM
+  - kubernetes
+  - mcp
+  - demo
+
+# MCP server configuration — how to start this tool
+startCommand:
+  type: stdio
+  command: npx
+  args:
+    - dt-copilot-agents
+    - mcp
+
+# Tools exposed via MCP
+tools:
+  - name: generate_dashboard
+    description: Generate a Dynatrace dashboard JSON for a persona + company (CIO, SRE, CISO, etc.)
+  - name: install_agent
+    description: Install the agent into VS Code, Claude Code, Cursor, or Windsurf
+  - name: list_personas
+    description: List all supported personas and industry archetypes
+
+# Example prompts users can try
+examplePrompts:
+  - "Generate a CIO dashboard for HDFC Bank"
+  - "Create an SRE dashboard for Tata Steel"
+  - "CISO dashboard for a financial services company"
+  - "MLOps dashboard for an AI startup"
+  - "Install the dashboard agent for VS Code"

@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0",
+  "name": "Dynatrace Dashboard Generator",
+  "description": "Generate and deploy persona-specific Dynatrace observability dashboards in under 5 minutes. Supports 10+ personas (CIO, CTO, CEO, CISO, SRE, MLOps, Platform Eng) and 4 modes: instant demo, live tenant data, synthetic ingest, and guided interview. Works with VS Code Copilot, Claude Code, Cursor, Windsurf, and as an MCP server.",
+  "version": "1.2.3",
+  "author": {
+    "name": "Pushpendra Singh Baghel",
+    "url": "https://github.com/pushpendrasinghbaghel-ai"
+  },
+  "url": "https://github.com/pushpendrasinghbaghel-ai/dt-copilot-agents",
+  "capabilities": [
+    "generate_dashboard",
+    "deploy_dashboard",
+    "install_agent",
+    "list_personas"
+  ],
+  "skills": [
+    {
+      "id": "dashboard-generator",
+      "name": "Dashboard Generator",
+      "description": "Generate Dynatrace dashboards for any persona and company",
+      "tags": ["dynatrace", "dashboard", "observability", "CIO", "SRE", "CISO", "monitoring", "demo"]
+    }
+  ],
+  "invocation": {
+    "mcp": {
+      "transport": "stdio",
+      "command": "npx",
+      "args": ["dt-copilot-agents", "mcp"]
+    },
+    "cli": {
+      "install": "npx dt-copilot-agents install",
+      "info": "npx dt-copilot-agents info"
+    }
+  },
+  "interfaces": [
+    "mcp-stdio",
+    "vscode-agent",
+    "claude-code",
+    "cursor-rules",
+    "windsurf-rules",
+    "m365-copilot",
+    "openai-gpt"
+  ],
+  "keywords": ["dynatrace", "dashboard", "observability", "mcp", "agent", "demo", "SRE", "CIO", "CISO", "monitoring"]
+}

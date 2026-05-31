@@ -178,6 +178,7 @@ function showHelp() {
     npx dt-copilot-agents install cursor .
 
   Other commands:
+    npx dt-copilot-agents mcp        Start as MCP server (stdio) for agent-to-agent use
     npx dt-copilot-agents info       Show supported personas and archetypes
     npx dt-copilot-agents help       Show this help
 
@@ -218,6 +219,144 @@ function showInfo() {
   `);
 }
 
+// --- MCP Server Mode ---
+// Implements the Model Context Protocol (stdio transport) so any MCP-compatible
+// agent (Claude, Cursor, Windsurf, etc.) can discover and call this as a tool.
+function startMcpServer() {
+  const readline = require('readline');
+  const rl = readline.createInterface({ input: process.stdin, terminal: false });
+
+  const serverInfo = {
+    name: 'dt-copilot-agents',
+    version: currentVersion,
+    description: 'Generate and deploy Dynatrace demo dashboards for any persona (CIO, CTO, CISO, SRE, etc.)'
+  };
+
+  const tools = [
+    {
+      name: 'generate_dashboard',
+      description: 'Generate a Dynatrace demo dashboard JSON for a given persona and company. Returns the dashboard JSON ready to deploy with dtctl.',
+      inputSchema: {
+        type: 'object',
+        properties: {
+          persona: {
+            type: 'string',
+            description: 'The target persona: CIO, CTO, CEO, CISO, SRE, IT Head, App Ops, MLOps, Platform Eng, VP Eng',
+            enum: ['CIO', 'CTO', 'CEO', 'CISO', 'SRE', 'IT Head', 'App Ops', 'MLOps', 'Platform Eng', 'VP Eng']
+          },
+          company: {
+            type: 'string',
+            description: 'Company name to generate the dashboard for (e.g. "Tata Steel", "HDFC Bank")'
+          },
+          industry: {
+            type: 'string',
+            description: 'Industry vertical (optional — auto-detected if not provided)',
+            enum: ['E-Commerce', 'Manufacturing', 'SaaS', 'Financial Services', 'Retail', 'Healthcare', 'Telco', 'Auto-detect']
+          },
+          mode: {
+            type: 'string',
+            description: 'Data mode: demo (inline synthetic), live (real tenant data), ingest (synthetic+live queries), interview (discovery-first)',
+            enum: ['demo', 'live', 'ingest', 'interview'],
+            default: 'demo'
+          }
+        },
+        required: ['persona', 'company']
+      }
+    },
+    {
+      name: 'install_agent',
+      description: 'Install the Dynatrace Dashboard Generator agent into a local IDE (VS Code, Claude Code, Cursor, or Windsurf)',
+      inputSchema: {
+        type: 'object',
+        properties: {
+          platform: {
+            type: 'string',
+            description: 'Target IDE platform',
+            enum: ['vscode', 'claude-code', 'cursor', 'windsurf', 'all']
+          },
+          targetDir: {
+            type: 'string',
+            description: 'Target directory for project-level installs (claude-code, cursor, windsurf). Defaults to current directory.'
+          }
+        },
+        required: ['platform']
+      }
+    },
+    {
+      name: 'list_personas',
+      description: 'List all supported dashboard personas and industry archetypes',
+      inputSchema: { type: 'object', properties: {} }
+    }
+  ];
+
+  function send(obj) {
+    process.stdout.write(JSON.stringify(obj) + '\n');
+  }
+
+  function handleRequest(req) {
+    const { id, method, params } = req;
+
+    if (method === 'initialize') {
+      send({ jsonrpc: '2.0', id, result: { protocolVersion: '2024-11-05', serverInfo, capabilities: { tools: {} } } });
+      return;
+    }
+
+    if (method === 'tools/list') {
+      send({ jsonrpc: '2.0', id, result: { tools } });
+      return;
+    }
+
+    if (method === 'tools/call') {
+      const { name, arguments: toolArgs } = params;
+
+      if (name === 'list_personas') {
+        send({ jsonrpc: '2.0', id, result: { content: [{ type: 'text', text: JSON.stringify({ personas: ['CIO','CTO','CEO','CISO','SRE','IT Head','App Ops','MLOps','Platform Eng','VP Eng'], industries: ['E-Commerce','Manufacturing','SaaS','Financial Services','Retail','Healthcare','Telco'] }, null, 2) }] } });
+        return;
+      }
+
+      if (name === 'install_agent') {
+        try {
+          install(toolArgs.platform || 'all', path.resolve(toolArgs.targetDir || process.cwd()));
+          send({ jsonrpc: '2.0', id, result: { content: [{ type: 'text', text: `Successfully installed for ${toolArgs.platform}. Restart your IDE to activate.` }] } });
+        } catch (e) {
+          send({ jsonrpc: '2.0', id, error: { code: -32000, message: e.message } });
+        }
+        return;
+      }
+
+      if (name === 'generate_dashboard') {
+        const { persona = 'CIO', company, industry = 'Auto-detect', mode = 'demo' } = toolArgs;
+        const instructions = `To generate this dashboard, invoke the Dashboard Generator agent with:\n\n@Dashboard Generator ${persona} dashboard for ${company}${industry !== 'Auto-detect' ? ` (${industry})` : ''} — mode: ${mode}\n\nOr use the knowledge base at: ${path.join(packageRoot, 'knowledge', 'dashboard-generator.md')}`;
+        send({ jsonrpc: '2.0', id, result: { content: [{ type: 'text', text: instructions }] } });
+        return;
+      }
+
+      send({ jsonrpc: '2.0', id, error: { code: -32601, message: `Unknown tool: ${name}` } });
+      return;
+    }
+
+    if (method === 'notifications/initialized') {
+      return; // no response needed
+    }
+
+    send({ jsonrpc: '2.0', id, error: { code: -32601, message: `Method not found: ${method}` } });
+  }
+
+  let buffer = '';
+  rl.on('line', (line) => {
+    buffer += line;
+    try {
+      const req = JSON.parse(buffer);
+      buffer = '';
+      handleRequest(req);
+    } catch (e) {
+      // incomplete JSON — keep buffering
+    }
+  });
+
+  process.stderr.write(`dt-copilot-agents MCP server v${currentVersion} ready (stdio)\n`);
+}
+
 // --- Main ---
 switch (command) {
   case 'install':
@@ -227,6 +366,9 @@ switch (command) {
     }
     install(platform, path.resolve(targetDir));
     checkForUpdates();
+    break;
+  case 'mcp':
+    startMcpServer();
     break;
   case 'info':
     showInfo();

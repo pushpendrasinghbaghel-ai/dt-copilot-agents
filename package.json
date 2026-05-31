@@ -1,7 +1,7 @@
 {
   "name": "dt-copilot-agents",
-  "version": "1.2.3",
-  "description": "Cross-platform AI agents for generating Dynatrace demo dashboards. Supports VS Code Copilot, Claude Code, Cursor, Windsurf, M365 Copilot, and OpenAI GPTs.",
+  "version": "1.2.4",
+  "description": "Cross-platform AI agents for generating Dynatrace demo dashboards. Supports VS Code Copilot, Claude Code, Cursor, Windsurf, M365 Copilot, and OpenAI GPTs. Also available as an MCP server.",
   "keywords": [
     "dynatrace",
     "copilot",
@@ -19,7 +19,21 @@
     "devops",
     "cio",
     "ciso",
-    "mlops"
+    "mlops",
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "agent-tool",
+    "a2a",
+    "agent2agent",
+    "smithery",
+    "tool-use",
+    "llm-tool",
+    "dashboard-generator",
+    "monitoring",
+    "apm",
+    "kubernetes",
+    "platform-engineering"
   ],
   "author": "Pushpendra Singh Baghel",
   "license": "MIT",
@@ -42,6 +56,8 @@
     "m365-copilot/",
     "openai/",
     "install.ps1",
-    "README.md"
+    "README.md",
+    "smithery.yaml",
+    ".well-known/"
   ]
 }
